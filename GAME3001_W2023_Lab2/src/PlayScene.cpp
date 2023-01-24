@@ -36,6 +36,11 @@ void PlayScene::Draw()
 void PlayScene::Update()
 {
 	UpdateDisplayList();
+
+	if (m_pStarship->IsEnabled())
+	{
+		CollisionManager::CircleAABBCheck(m_pTarget, m_pStarship);
+	}
 }
 
 void PlayScene::Clean()
