@@ -76,10 +76,10 @@ void PlayScene::GUI_Function() const
 
 	ImGui::Begin("Lab 2", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar);
 
-	static float position[2] = {m_pTarget->GetTransform()->position.x, m_pTarget->GetTransform()->position.y};
+	/*static float position[2] = {m_pTarget->GetTransform()->position.x, m_pTarget->GetTransform()->position.y};
 	if (ImGui::SliderFloat2("Target Position", position, 0.0f, 800.0f)) {
 		m_pTarget->GetTransform()->position = glm::vec2(position[0], position[1]);
-	}
+	}*/ // Causing a breakpoint??? Figure this out.
 	
 	ImGui::End();
 }
