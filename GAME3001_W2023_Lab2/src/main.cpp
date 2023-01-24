@@ -33,7 +33,7 @@ int main(int argc, char* args[])
 		}
 
 		// delta time
-		const auto delta_time = static_cast<float>(SDL_GetTicks()) - frame_start / 1000.0f;
+		const auto delta_time = (static_cast<float>(SDL_GetTicks()) - frame_start) / 1000.0f;
 		Game::Instance().SetDeltaTime(delta_time);
 
 		frames++;
