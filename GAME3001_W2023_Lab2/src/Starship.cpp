@@ -76,7 +76,8 @@ void Starship::SetAccelerationRate(const float rate)
 
 void Starship::SetDesiredVelocity(const glm::vec2 target_position)
 {
-	m_desiredVelocity = Util::Normalize(target_position - GetTransform()->position) * m_maxSpeed;
+	SetTargetPosition(target_position);
+	m_desiredVelocity = Util::Normalize(target_position - GetTransform()->position);
 	GetRigidBody()->velocity = m_desiredVelocity - GetRigidBody()->velocity;
 
 }

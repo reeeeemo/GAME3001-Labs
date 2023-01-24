@@ -19,6 +19,17 @@ PlayScene::~PlayScene()
 void PlayScene::Draw()
 {
 	DrawDisplayList();
+
+	if (m_bDebugView)
+	{
+		Util::DrawCircle(m_pTarget->GetTransform->position, m_pTarget->GetWidth() * 0.5f);
+
+		if (m_pStarship->IsEnabled())
+		{
+			Util::DrawRect(m_pStarship->GetTransform()->position - glm::vec2(m_pStarship->GetWidth() * 0.5, m_pStarship->GetHeight() * 0.5), m_pStarship->GetWidth(), m_pStarship->GetHeight());
+		}
+	}
+
 	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
 }
 
@@ -110,6 +121,42 @@ void PlayScene::GUI_Function()
 	{
 		m_pStarship->SetEnabled(toggleSeek);
 	}
-	
+
+	ImGui::Separator();
+	static float speed = m_pStarship->GetMaxSpeed();
+	if(ImGui::SliderFloat("Max Speed", &speed, 0.0f, 200.0f))
+	{
+		m_pStarship->SetMaxSpeed(speed);
+	}
+
+	ImGui::Separator();
+	static float acceleration = m_pStarship->GetAccelerationRate();
+	if (ImGui::SliderFloat("Acceleration Rate", &acceleration, 0.0f, 50.0f))
+	{
+		m_pStarship->SetAccelerationRate(acceleration);
+	}
+
+	ImGui::Separator();
+	static float turn_rate = m_pStarship->GetTurnRate();
+	if (ImGui::SliderFloat("Turn Rate", &turn_rate, 0.0f, 20.0f))
+	{
+		m_pStarship->SetTurnRate(turn_rate);
+	}
+
+	ImGui::Separator();
+
+	if(ImGui::Button("Reset"))
+	{
+		// Reset Ship's position
+		m_pStarship->GetTransform()->position = glm::vec2(100.0f, 400.0f);
+		// Reset Target's position
+		m_pTarget->GetTransform()->position = glm::vec2(500.0f, 100.0f);
+		// Reset current Heading (orientation), velocity, and acceleration
+		m_pStarship->SetCurrentHeading(0.0f);
+		m_pStarship->GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+		m_pStarship->GetRigidBody()->acceleration = m_pStarship->GetCurrentDirection() * m_pStarship->GetAccelerationRate();
+
+		m_pStarship->SetTargetPosition(m_pTarget->GetTransform()->position);
+	}
 	ImGui::End();
 }
