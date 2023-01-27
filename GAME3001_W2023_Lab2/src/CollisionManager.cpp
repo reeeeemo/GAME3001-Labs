@@ -1,4 +1,5 @@
 #include "CollisionManager.h"
+#include "CollisionManager.h"
 #include "Util.h"
 #include <algorithm>
 
@@ -17,10 +18,10 @@ bool CollisionManager::SquaredRadiusCheck(GameObject* object1, GameObject* objec
 	const glm::vec2 p1 = object1->GetTransform()->position;
 	const glm::vec2 p2 = object2->GetTransform()->position;
 
-	if (const int half_heights = static_cast<int>((object1->GetHeight() + object2->GetHeight()) * 0.5); 
-		SquaredDistance(p1, p2) < (half_heights * half_heights)) 
+	if (const int half_heights = static_cast<int>((object1->GetHeight() + object2->GetHeight()) * 0.5);
+		SquaredDistance(p1, p2) < (half_heights * half_heights))
 	{
-		if (!object2->GetRigidBody()->isColliding) 
+		if (!object2->GetRigidBody()->isColliding)
 		{
 			object2->GetRigidBody()->isColliding = true;
 
@@ -61,7 +62,7 @@ bool CollisionManager::AABBCheck(GameObject* object1, GameObject* object2)
 		p1.y + p1_height > p2.y
 		)
 	{
-		if (!object2->GetRigidBody()->isColliding) 
+		if (!object2->GetRigidBody()->isColliding)
 		{
 
 			object2->GetRigidBody()->isColliding = true;
@@ -132,7 +133,7 @@ bool CollisionManager::LineRectCheck(const glm::vec2 line_start, const glm::vec2
 
 	// if ANY of the above are true, the line
 	// has hit the rectangle
-	if (left || right || top || bottom) 
+	if (left || right || top || bottom)
 	{
 		return true;
 	}
@@ -269,10 +270,10 @@ bool CollisionManager::CircleAABBCheck(GameObject* object1, GameObject* object2)
 
 	// aabb
 
-	if (const auto box_start = object2->GetTransform()->position - glm::vec2(half_box_width, half_box_height); 
+	if (const auto box_start = object2->GetTransform()->position - glm::vec2(half_box_width, half_box_height);
 		CircleAABBSquaredDistance(circle_centre, circle_radius, box_start, object2->GetWidth(), object2->GetHeight()) <= (circle_radius * circle_radius))
 	{
-		if (!object2->GetRigidBody()->isColliding) 
+		if (!object2->GetRigidBody()->isColliding)
 		{
 			object2->GetRigidBody()->isColliding = true;
 
@@ -285,40 +286,11 @@ bool CollisionManager::CircleAABBCheck(GameObject* object1, GameObject* object2)
 			switch (object2->GetType())
 			{
 			case GameObjectType::TARGET:
-				std::cout << "Collision with Planet!" << std::endl;
 				SoundManager::Instance().PlaySound("yay", 0);
 				break;
-			case GameObjectType::SHIP:
+			case GameObjectType::AGENT:
 			{
-				SoundManager::Instance().PlaySound("thunder", 0);
-				const auto velocity_x = object1->GetRigidBody()->velocity.x;
-				const auto velocity_y = object1->GetRigidBody()->velocity.y;
-
-				if ((attack_vector.x > 0 && attack_vector.y < 0) || (attack_vector.x < 0 && attack_vector.y < 0))
-					// top right or top left
-				{
-					if (angle <= 45)
-					{
-						object1->GetRigidBody()->velocity = glm::vec2(velocity_x, -velocity_y);
-					}
-					else
-					{
-						object1->GetRigidBody()->velocity = glm::vec2(-velocity_x, velocity_y);
-					}
-				}
-
-				if ((attack_vector.x > 0 && attack_vector.y > 0) || (attack_vector.x < 0 && attack_vector.y > 0))
-					// bottom right or bottom left
-				{
-					if (angle <= 135)
-					{
-						object1->GetRigidBody()->velocity = glm::vec2(-velocity_x, velocity_y);
-					}
-					else
-					{
-						object1->GetRigidBody()->velocity = glm::vec2(velocity_x, -velocity_y);
-					}
-				}
+				SoundManager::Instance().PlaySound("yay", 0);
 			}
 			break;
 			default:
@@ -363,7 +335,7 @@ bool CollisionManager::LOSCheck(Agent* agent, const glm::vec2 end_point, const s
 		const auto height = static_cast<float>(object->GetHeight());
 		auto object_offset = glm::vec2(width * 0.5f, height * 0.5f);
 		const auto rect_start = object->GetTransform()->position - object_offset;
-		
+
 
 		switch (object->GetType())
 		{
@@ -406,6 +378,75 @@ bool CollisionManager::LOSCheck(Agent* agent, const glm::vec2 end_point, const s
 
 	// if the line does not collide with an object that is the target then LOS is false
 	return false;
+}
+
+void CollisionManager::RotateAABB(GameObject* object1, const float angle)
+{
+	// create an array of vec2s using right winding order (TL, TR, BR, BL)
+	glm::vec2 points[4];
+
+	const glm::vec2 position = object1->GetTransform()->position;
+
+	const auto width = object1->GetRigidBody()->bounds.x;
+	const float half_width = width * 0.5f;
+	const auto height = object1->GetRigidBody()->bounds.y;
+	const float half_height = height * 0.5f;
+
+	// check if object1 is centered
+	if (object1->isCentered())
+	{
+		// compute points
+		points[0] = glm::vec2(position.x - half_width, position.y - half_height);
+		points[1] = glm::vec2(position.x + half_width, position.y - half_height);
+		points[2] = glm::vec2(position.x + half_width, position.y + half_height);
+		points[3] = glm::vec2(position.x - half_width, position.y + half_height);
+	}
+	else
+	{
+		// compute points
+		points[0] = glm::vec2(position.x, position.y);
+		points[1] = glm::vec2(position.x + width, position.y);
+		points[2] = glm::vec2(position.x + width, position.y + height);
+		points[3] = glm::vec2(position.x, position.y + height);
+	}
+
+	// rotate each point by the desired angle
+	for (int i = 0; i < 4; ++i)
+	{
+		points[i] = Util::RotatePoint(points[i], angle, position);
+	}
+
+	// initialize extents
+	auto top_left = glm::vec2(INFINITY, INFINITY);
+	auto bot_right = glm::vec2(-INFINITY, -INFINITY);
+
+	// compute extents (top_left and bot_right)
+	for (const auto point : points)
+	{
+		if (top_left.x > point.x)
+		{
+			top_left.x = point.x;
+		}
+
+		if (top_left.y > point.y)
+		{
+			top_left.y = point.y;
+		}
+
+		if (bot_right.x < point.x)
+		{
+			bot_right.x = point.x;
+		}
+
+		if (bot_right.y < point.y)
+		{
+			bot_right.y = point.y;
+		}
+	}
+
+	// compute new width and height values for object1
+	object1->SetWidth(static_cast<int>(bot_right.x - top_left.x));
+	object1->SetHeight(static_cast<int>(bot_right.y - top_left.y));
 }
 
 

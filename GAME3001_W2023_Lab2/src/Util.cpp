@@ -1,4 +1,5 @@
 #include "Util.h"
+
 #include <glm/gtc/constants.hpp>
 #include <glm/gtx/norm.hpp>
 #include <SDL.h>
@@ -46,7 +47,7 @@ glm::vec2 Util::Clamp(const glm::vec2 vec, const float max_length)
 		const auto mag = sqrt(sqr_magnitude);
 		const auto normalized_x = vec.x / mag;
 		const auto normalized_y = vec.y / mag;
-		return {normalized_x * max_length, normalized_y * max_length};
+		return { normalized_x * max_length, normalized_y * max_length };
 	}
 	return vec;
 }
@@ -139,7 +140,7 @@ glm::vec2 Util::Lerp(const glm::vec2 p0, const glm::vec2 p1, const float t)
 {
 	const auto lerp_xs = Lerp(p0.x, p1.x, t);
 	const auto lerp_ys = Lerp(p0.y, p1.y, t);
-	return {lerp_xs, lerp_ys};
+	return { lerp_xs, lerp_ys };
 }
 
 /**
@@ -158,7 +159,7 @@ float Util::LerpUnclamped(const float a, const float b, const float t)
 float Util::LerpAngle(const float a, const float b, const float t)
 {
 	auto num = Util::Repeat(b - a, 360.0);
-	if (num > 180.0f) 
+	if (num > 180.0f)
 	{
 		num -= 360.0f;
 	}
@@ -183,7 +184,7 @@ glm::vec2 Util::RandomRange(const glm::vec2 p0, const glm::vec2 p1)
 {
 	const auto random_x = RandomRange(p0.x, p1.x);
 	const auto random_y = RandomRange(p0.y, p1.y);
-	return {random_x, random_y};
+	return { random_x, random_y };
 }
 
 /**
@@ -220,7 +221,7 @@ float Util::Min(const float a, const float b)
 */
 glm::vec2 Util::Max(const glm::vec2 vec_a, const glm::vec2 vec_b)
 {
-	return { glm::max(vec_a.x, vec_b.x), glm::max(vec_a.y, vec_b.y)};
+	return { glm::max(vec_a.x, vec_b.x), glm::max(vec_a.y, vec_b.y) };
 }
 
 float Util::Max(const float a, const float b)
@@ -243,7 +244,7 @@ glm::vec2 Util::Negate(const glm::vec2 vec)
 */
 glm::vec2 Util::Inverse(const glm::vec2 vec)
 {
-	return {1.0f / vec.x, 1.0f / vec.y};
+	return { 1.0f / vec.x, 1.0f / vec.y };
 }
 
 
@@ -256,7 +257,7 @@ glm::vec2 Util::Normalize(const glm::vec2 vec)
 	glm::vec2 dest;
 	const auto x = vec.x;
 	const auto y = vec.y;
-	if (auto length = (x * x) + (y * y); length > 0) 
+	if (auto length = (x * x) + (y * y); length > 0)
 	{
 		length = 1.0f / sqrt(length);
 		dest.x = vec.x * length;
@@ -288,7 +289,7 @@ float Util::SignedAngle(const glm::vec2 from, const glm::vec2 to)
 	return unsigned_angle * sign;
 }
 
-void Util::DrawLine(const glm::vec2 start, const glm::vec2 end, const glm::vec4 colour, SDL_Renderer* renderer)
+void Util::DrawLine(const glm::vec2 start, const glm::vec2 end, const glm::vec4 colour, SDL_Renderer * renderer)
 {
 	const auto [r, g, b, a] = ToSDLColour(colour);
 
@@ -297,7 +298,7 @@ void Util::DrawLine(const glm::vec2 start, const glm::vec2 end, const glm::vec4 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 }
 
-void Util::DrawRect(const glm::vec2 position, const int width, const int height, const glm::vec4 colour, SDL_Renderer* renderer)
+void Util::DrawRect(const glm::vec2 position, const int width, const int height, const glm::vec4 colour, SDL_Renderer * renderer)
 {
 	const auto [r, g, b, a] = ToSDLColour(colour);
 
@@ -312,7 +313,7 @@ void Util::DrawRect(const glm::vec2 position, const int width, const int height,
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 }
 
-void Util::DrawFilledRect(const glm::vec2 position, const int width, const int height, const glm::vec4 fill_colour, SDL_Renderer* renderer)
+void Util::DrawFilledRect(const glm::vec2 position, const int width, const int height, const glm::vec4 fill_colour, SDL_Renderer * renderer)
 {
 	const auto [r, g, b, a] = ToSDLColour(fill_colour);
 
@@ -327,7 +328,7 @@ void Util::DrawFilledRect(const glm::vec2 position, const int width, const int h
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 }
 
-void Util::DrawCircle(const glm::vec2 centre, const float radius, const glm::vec4 colour, const ShapeType type, SDL_Renderer* renderer)
+void Util::DrawCircle(const glm::vec2 centre, const float radius, const glm::vec4 colour, const ShapeType type, SDL_Renderer * renderer)
 {
 	const auto [r, g, b, a] = ToSDLColour(colour);
 
@@ -404,7 +405,7 @@ void Util::DrawCircle(const glm::vec2 centre, const float radius, const glm::vec
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 }
 
-void Util::DrawCapsule(const glm::vec2 position, const int width, const int height, const glm::vec4 colour, SDL_Renderer* renderer)
+void Util::DrawCapsule(const glm::vec2 position, const int width, const int height, const glm::vec4 colour, SDL_Renderer * renderer)
 {
 	float radius;
 	const float half_width = floor(static_cast<float>(width) * 0.5f);
@@ -433,7 +434,7 @@ void Util::DrawCapsule(const glm::vec2 position, const int width, const int heig
 	}
 }
 
-float Util::GetClosestEdge(const glm::vec2 vec_a, GameObject* object)
+float Util::GetClosestEdge(const glm::vec2 vec_a, GameObject * object)
 {
 	const auto width = static_cast<float>(object->GetWidth());
 	const auto height = static_cast<float>(object->GetHeight());
@@ -462,4 +463,23 @@ SDL_Color Util::ToSDLColour(const glm::vec4 colour)
 	color.b = static_cast<Uint8>(floor(colour.b * 255.0f));
 	color.a = static_cast<Uint8>(floor(colour.a * 255.0f));
 	return color;
+}
+
+glm::vec2 Util::RotatePoint(glm::vec2 point, const float angle, const glm::vec2 pivot)
+{
+	const float s = sin(angle * Deg2Rad);
+	const float c = cos(angle * Deg2Rad);
+
+	// translate point back to origin:
+	point.x -= pivot.x;
+	point.y -= pivot.y;
+
+	// rotate point
+	const float new_x = point.x * c - point.y * s;
+	const float new_y = point.x * s + point.y * c;
+
+	// translate point back:
+	point.x = new_x + pivot.x;
+	point.y = new_y + pivot.y;
+	return point;
 }

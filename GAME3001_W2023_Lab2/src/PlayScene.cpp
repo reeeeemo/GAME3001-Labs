@@ -4,7 +4,6 @@
 
 // required for IMGUI
 #include "imgui.h"
-#include "imgui_sdl.h"
 #include "Renderer.h"
 #include "Util.h"
 
@@ -22,11 +21,13 @@ void PlayScene::Draw()
 
 	if (m_bDebugView)
 	{
-		Util::DrawCircle(m_pTarget->GetTransform->position, m_pTarget->GetWidth() * 0.5f);
+		Util::DrawCircle(m_pTarget->GetTransform()->position, m_pTarget->GetWidth() * 0.5f);
 
 		if (m_pStarship->IsEnabled())
 		{
 			Util::DrawRect(m_pStarship->GetTransform()->position - glm::vec2(m_pStarship->GetWidth() * 0.5, m_pStarship->GetHeight() * 0.5), m_pStarship->GetWidth(), m_pStarship->GetHeight());
+
+			CollisionManager::RotateAABB(m_pStarship, m_pStarship->GetCurrentHeading());
 		}
 	}
 
@@ -87,6 +88,9 @@ void PlayScene::Start()
 	m_pStarship->SetEnabled(false);
 
 	AddChild(m_pStarship);
+
+	// Preload Sounds
+	SoundManager::Instance().Load("../Assets/Audio/yay.ogg", "yay", SoundType::SOUND_SFX);
 
 	ImGuiWindowFrame::Instance().SetGuiFunction(std::bind(&PlayScene::GUI_Function, this));
 	
@@ -156,11 +160,17 @@ void PlayScene::GUI_Function()
 		m_pStarship->GetTransform()->position = glm::vec2(100.0f, 400.0f);
 		// Reset Target's position
 		m_pTarget->GetTransform()->position = glm::vec2(500.0f, 100.0f);
-		// Reset current Heading (orientation), velocity, and acceleration
+		// Reset current Heading (orientation)
 		m_pStarship->SetCurrentHeading(0.0f);
-		m_pStarship->GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
-		m_pStarship->GetRigidBody()->acceleration = m_pStarship->GetCurrentDirection() * m_pStarship->GetAccelerationRate();
+		m_pStarship->SetCurrentDirection(glm::vec2(1.0f, 0.0f));
 
+		// Reset Acceleration Rate
+		m_pStarship->SetAccelerationRate(4.0f);
+
+		// Reset the turn Rate
+		m_pStarship->SetTurnRate(5.0f);
+
+		// Reset the Target for the starship
 		m_pStarship->SetTargetPosition(m_pTarget->GetTransform()->position);
 	}
 	ImGui::End();

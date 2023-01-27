@@ -6,7 +6,7 @@
 Starship::Starship() {
 	TextureManager::Instance().Load("../Assets/textures/ncl.png", "starship");
 
-	const auto size = TextureManager::Instance().GetTextureSize("");
+	const auto size = TextureManager::Instance().GetTextureSize("starship");
 	SetWidth(static_cast<int>(size.x));
 	SetHeight(static_cast<int>(size.y));
 	GetTransform()->position = glm::vec2(0.0f,0.0f);

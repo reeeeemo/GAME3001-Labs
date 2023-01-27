@@ -34,9 +34,10 @@ public:
 
 	static bool LOSCheck(Agent* agent, glm::vec2 end_point, const std::vector<DisplayObject*>& objects, DisplayObject* target);
 
+	static void RotateAABB(GameObject* object1, float angle);
 private:
 	CollisionManager();
 	~CollisionManager();
 };
 
-#endif /* defined (__COLLISION_MANAGER__) */
+#endif /* defined (__COLLISION_MANAGER__) *//

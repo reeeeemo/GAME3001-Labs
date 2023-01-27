@@ -3,11 +3,8 @@
 #define __STARSHIP_H__
 
 #include "Agent.h"
-#include "Agent.h"
-#include "Agent.h"
 
-
-class Starship final : public Agent {
+class Starship : public Agent {
 public:
 	Starship();
 	~Starship();
