@@ -47,12 +47,23 @@ bool CollisionManager::SquaredRadiusCheck(GameObject* object1, GameObject* objec
 bool CollisionManager::AABBCheck(GameObject* object1, GameObject* object2)
 {
 	// prepare relevant variables
-	const auto p1 = object1->GetTransform()->position;
-	const auto p2 = object2->GetTransform()->position;
+	auto p1 = object1->GetTransform()->position;
+	auto p2 = object2->GetTransform()->position;
 	const auto p1_width = static_cast<float>(object1->GetWidth());
 	const auto p1_height = static_cast<float>(object1->GetHeight());
 	const auto p2_width = static_cast<float>(object2->GetWidth());
 	const auto p2_height = static_cast<float>(object2->GetHeight());
+
+	if (object1->isCentered())
+	{
+		p1 += glm::vec2(-p1_width * 0.5f, -p1_height * 0.5f);
+	}
+
+	if (object1->isCentered())
+	{
+		p2 += glm::vec2(-p2_width * 0.5f, -p2_height * 0.5f);
+	}
+
 
 	if (
 		p1.x < p2.x + p2_width &&
@@ -67,13 +78,9 @@ bool CollisionManager::AABBCheck(GameObject* object1, GameObject* object2)
 			object2->GetRigidBody()->isColliding = true;
 
 			switch (object2->GetType()) {
-			case GameObjectType::TARGET:
-				std::cout << "Collision with Target!" << std::endl;
-				SoundManager::Instance().PlaySound("yay", 0);
-				break;
 			case GameObjectType::OBSTACLE:
 				std::cout << "Collision with Obstacle!" << std::endl;
-				SoundManager::Instance().PlaySound("yay", 0);
+				SoundManager::Instance().PlaySound("thunder", 0);
 				break;
 			default:
 

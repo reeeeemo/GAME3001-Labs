@@ -24,6 +24,10 @@ void PlayScene::Draw()
 		// Draw Collider Bounds for the Target
 		Util::DrawCircle(m_pTarget->GetTransform()->position, m_pTarget->GetWidth() * 0.5f);
 
+		Util::DrawRect(m_pObstacle->GetTransform()->position -
+			glm::vec2(m_pObstacle->GetWidth() * 0.5f, m_pObstacle->GetHeight() * 0.5f),
+			m_pObstacle->GetWidth(), m_pObstacle->GetHeight());
+
 		if(m_pStarShip->IsEnabled())
 		{
 			Util::DrawRect(m_pStarShip->GetTransform()->position -
@@ -32,6 +36,7 @@ void PlayScene::Draw()
 
 			CollisionManager::RotateAABB(m_pStarShip, m_pStarShip->GetCurrentHeading());
 		}
+
 	}
 
 	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
@@ -44,6 +49,8 @@ void PlayScene::Update()
 	if(m_pStarShip->IsEnabled())
 	{
 		CollisionManager::CircleAABBCheck(m_pTarget, m_pStarShip);
+
+		CollisionManager::AABBCheck(m_pStarShip, m_pObstacle);
 	}
 }
 
@@ -80,8 +87,8 @@ void PlayScene::Start()
 
 	// Add the Target to the Scene
 	m_pTarget = new Target(); // instantiate an object of type Target
-	m_pTarget->GetTransform()->position = glm::vec2(500.0f, 100.0f);
-	AddChild(m_pTarget);
+	m_pTarget->GetTransform()->position = glm::vec2(640.0f, 300.0f);
+	AddChild(m_pTarget, 1);
 
 	// Add the StarShip to the Scene
 	m_pStarShip = new StarShip();
@@ -89,11 +96,17 @@ void PlayScene::Start()
 	m_pStarShip->SetTargetPosition(m_pTarget->GetTransform()->position);
 	m_pStarShip->SetCurrentDirection(glm::vec2(1.0f, 0.0f)); // facing right
 	m_pStarShip->SetEnabled(false);
-	AddChild(m_pStarShip);
+	AddChild(m_pStarShip, 2);
+
+	m_pObstacle = new Obstacle();
+	m_pObstacle->GetTransform()->position = glm::vec2(450.0f, 300.0f);
+	AddChild(m_pObstacle, 1);
 
 	// Preload Sounds
 
 	SoundManager::Instance().Load("../Assets/Audio/yay.ogg", "yay", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/Audio/thunder.ogg", "thunder", SoundType::SOUND_SFX);
+
 
 	ImGuiWindowFrame::Instance().SetGuiFunction(std::bind(&PlayScene::GUI_Function, this));
 }
@@ -120,12 +133,22 @@ void PlayScene::GUI_Function()
 	ImGui::Separator();
 
 	// Target Properties
-	static float position[2] = { m_pTarget->GetTransform()->position.x,
+	static float target_position[2] = { m_pTarget->GetTransform()->position.x,
 		m_pTarget->GetTransform()->position.y };
-	if(ImGui::SliderFloat2("Target Position", position, 0.0f, 800.0f))
+	if(ImGui::SliderFloat2("Target Position", target_position, 0.0f, 800.0f))
 	{
-		m_pTarget->GetTransform()->position = glm::vec2(position[0], position[1]);
+		m_pTarget->GetTransform()->position = glm::vec2(target_position[0], target_position[1]);
 		m_pStarShip->SetTargetPosition(m_pTarget->GetTransform()->position);
+	}
+
+	ImGui::Separator();
+
+	// Obstacle Properties
+	static float obstacle_position[2] = { m_pObstacle->GetTransform()->position.x,
+		m_pObstacle->GetTransform()->position.y };
+	if (ImGui::SliderFloat2("Obstacle Position", obstacle_position, 0.0f, 800.0f))
+	{
+		m_pObstacle->GetTransform()->position = glm::vec2(obstacle_position[0], obstacle_position[1]);
 	}
 
 	ImGui::Separator();

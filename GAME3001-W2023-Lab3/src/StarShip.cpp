@@ -17,6 +17,7 @@ StarShip::StarShip()
 	GetRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	GetRigidBody()->isColliding = false;
 	SetType(GameObjectType::AGENT);
+	setIsCentered(true);
 
 	// Starting Motion Properties
 	m_maxSpeed = 50.0f; // a maximum number of pixels moved per frame

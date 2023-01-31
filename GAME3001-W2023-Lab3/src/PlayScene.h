@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "Target.h"
 #include "StarShip.h"
+#include "Obstacle.h"
 
 class PlayScene : public Scene
 {
@@ -27,6 +28,7 @@ private:
 	// Game Objects for the Scene
 	Target* m_pTarget;
 	StarShip* m_pStarShip;
+	Obstacle* m_pObstacle;
 
 	// Debugging Variables
 	bool m_bDebugView;
