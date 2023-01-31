@@ -26,6 +26,7 @@ StarShip::StarShip()
 
 	SetCurrentDirection(glm::vec2(1.0f, 0.0f)); // Facing Right
 
+	SetLOSDistance(300.0f);
 }
 
 StarShip::~StarShip()
@@ -120,6 +121,8 @@ void StarShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 		}
 
 	}
+	UpdateWhiskers(45.0f);
+
 }
 
 void StarShip::m_move()

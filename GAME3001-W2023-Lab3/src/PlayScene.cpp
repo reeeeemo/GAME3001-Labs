@@ -35,6 +35,14 @@ void PlayScene::Draw()
 				m_pStarShip->GetWidth(), m_pStarShip->GetHeight());
 
 			CollisionManager::RotateAABB(m_pStarShip, m_pStarShip->GetCurrentHeading());
+
+			Util::DrawLine(m_pStarShip->GetTransform()->position, m_pStarShip->GetLeftLOSEndPoint()
+				, m_pStarShip->GetLineColour(0));
+			Util::DrawLine(m_pStarShip->GetTransform()->position, m_pStarShip->GetMiddleLOSEndPoint()
+				, m_pStarShip->GetLineColour(1));
+			Util::DrawLine(m_pStarShip->GetTransform()->position, m_pStarShip->GetRightLOSEndPoint()
+				, m_pStarShip->GetLineColour(2));
+
 		}
 
 	}
