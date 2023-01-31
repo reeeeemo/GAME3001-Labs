@@ -59,6 +59,28 @@ void PlayScene::Update()
 		CollisionManager::CircleAABBCheck(m_pTarget, m_pStarShip);
 
 		CollisionManager::AABBCheck(m_pStarShip, m_pObstacle);
+
+		// Obstacle information
+		const auto boxWidth = m_pObstacle->GetWidth();
+		const int halfBoxWidth = boxWidth * 0.5f;
+		const auto boxHeight = m_pObstacle->GetHeight();
+		const auto halfBoxHeight = boxHeight * 0.5f;
+		const auto boxStart = m_pObstacle->GetTransform()->position - glm::vec2(halfBoxWidth, halfBoxHeight);
+
+		// Check every whisker to see if it is colliding with the obstacle
+		m_pStarShip->GetCollisionWhiskers()[0] = CollisionManager::LineRectCheck(m_pStarShip->GetTransform()->position,
+			m_pStarShip->GetLeftLOSEndPoint(), boxStart, boxWidth, boxHeight);
+
+		m_pStarShip->GetCollisionWhiskers()[1] = CollisionManager::LineRectCheck(m_pStarShip->GetTransform()->position,
+			m_pStarShip->GetMiddleLOSEndPoint(), boxStart, boxWidth, boxHeight);
+
+		m_pStarShip->GetCollisionWhiskers()[2] = CollisionManager::LineRectCheck(m_pStarShip->GetTransform()->position,
+			m_pStarShip->GetRightLOSEndPoint(), boxStart, boxWidth, boxHeight);
+
+		for (int i = 0; i < 3; ++i)
+		{
+			m_pStarShip->SetLineColour(i, (m_pStarShip->GetCollisionWhiskers()[i]) ? glm::vec4(1, 0, 0, 1) : glm::vec4(0, 1, 0, 1));
+		}
 	}
 }
 
@@ -183,6 +205,14 @@ void PlayScene::GUI_Function()
 	static float turn_rate = m_pStarShip->GetTurnRate();
 	if (ImGui::SliderFloat("Turn Rate", &turn_rate, 0.0f, 20.0f))
 	{
+		m_pStarShip->SetTurnRate(turn_rate);
+	}
+
+	ImGui::Separator();
+
+	// Whisker properties
+	static float whisker_angle = m_pStarShip->GetWhiskerAngle();
+	if (ImGui::SliderFloat("Whisker Angle", &whisker_angle, 10.0f, 60.0f)) {
 		m_pStarShip->SetTurnRate(turn_rate);
 	}
 
