@@ -3,6 +3,8 @@
 #define __STARSHIP__
 
 #include "Agent.h"
+#include "Obstacle.h"
+
 class StarShip : public Agent
 {
 public:
@@ -27,6 +29,7 @@ public:
 	void SetTurnRate(float angle);
 	void SetAccelerationRate(float rate);
 	void SetDesiredVelocity(glm::vec2 target_position);
+	void SetObstacle(Obstacle* obstacleToSet);
 
 	// public functions
 	void Seek();
@@ -40,6 +43,9 @@ private:
 
 	// where we want to go
 	glm::vec2 m_desiredVelocity;
+
+	// Obstacle
+	Obstacle* m_pObstacle;
 
 	// private function
 	void m_move();

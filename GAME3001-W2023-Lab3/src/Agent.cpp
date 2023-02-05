@@ -6,15 +6,21 @@ Agent::Agent()
 {
 	// Initialize Whisker Colour
 	m_lineColour[0] = glm::vec4(0,0,1,1); // Left line colour
-	m_lineColour[1] = glm::vec4(0, 1, 1, 1); // Right line colour
-	m_lineColour[2] = glm::vec4(0, 0, 1, 1); // Middle line colour
+	m_lineColour[1] = glm::vec4(0, 0, 1, 1); // Middle line colour
+	m_lineColour[2] = glm::vec4(0, 1, 1, 1); // Right line colour
+	m_lineColour[3] = glm::vec4(0, 1, 1, 1); // Middle Right line colour
+	m_lineColour[4] = glm::vec4(0, 0, 1, 1); // Middle Left line colour
+
 
 	// Initialize the whisker collision booleans
 	m_collisionWhiskers[0] = false;
 	m_collisionWhiskers[1] = false;
 	m_collisionWhiskers[2] = false;
+	m_collisionWhiskers[3] = false;
+	m_collisionWhiskers[4] = false;
 
-	m_whiskerAngle = 45;
+
+	m_whiskerAngle = 60;
 }
 
 Agent::~Agent()
@@ -65,6 +71,16 @@ glm::vec2 Agent::GetRightLOSEndPoint() const
 	return m_rightLOSEndPoint;
 }
 
+glm::vec2 Agent::GetMiddleRightLOSEndPoint() const
+{
+	return m_middleRightLOSEndPoint;
+}
+
+glm::vec2 Agent::GetMiddleLeftLOSEndPoint() const
+{
+	return m_middleLeftLOSEndPoint;
+}
+
 bool* Agent::GetCollisionWhiskers()
 {
 	return m_collisionWhiskers;
@@ -95,6 +111,16 @@ void Agent::SetRightLOSEndPoint(const glm::vec2 point)
 	m_rightLOSEndPoint = point;
 }
 
+void Agent::SetMiddleRightLOSEndPoint(glm::vec2 point)
+{
+	m_middleRightLOSEndPoint = point;
+}
+
+void Agent::SetMiddleLeftLOSEndPoint(glm::vec2 point)
+{
+	m_middleLeftLOSEndPoint = point;
+}
+
 void Agent::SetLineColour(const int index, glm::vec4 colour)
 {
 	m_lineColour[index] = colour;
@@ -122,6 +148,16 @@ void Agent::UpdateWhiskers(float angle)
 	x = sin((GetCurrentHeading() + m_whiskerAngle + 90.0f) * Util::Deg2Rad);
 	y = cos((GetCurrentHeading() + m_whiskerAngle + 90.0f) * Util::Deg2Rad);
 	SetRightLOSEndPoint(GetTargetPosition() + glm::vec2(x, -y) * GetLOSDistance() * 0.75f);
+
+	// Middle Right Whisker
+	x = sin((GetCurrentHeading() + m_whiskerAngle + 90.0f + 75.0f) * Util::Deg2Rad);
+	y = cos((GetCurrentHeading() + m_whiskerAngle + 90.0f + 75.0f) * Util::Deg2Rad);
+	SetMiddleRightLOSEndPoint(GetTargetPosition() + glm::vec2(x, -y) * GetLOSDistance() * 0.9f);
+
+	// Middle Left Whisker
+	x = sin((GetCurrentHeading() - m_whiskerAngle + 90.0f + 75.0f) * Util::Deg2Rad);
+	y = cos((GetCurrentHeading() - m_whiskerAngle + 90.0f + 75.0f) * Util::Deg2Rad);
+	SetMiddleLeftLOSEndPoint(GetTargetPosition() + glm::vec2(x, -y) * GetLOSDistance() * 0.9f);
 }
 
 void Agent::SetTargetPosition(const glm::vec2 new_position)

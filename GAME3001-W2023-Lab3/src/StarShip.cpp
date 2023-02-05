@@ -26,7 +26,7 @@ StarShip::StarShip()
 
 	SetCurrentDirection(glm::vec2(1.0f, 0.0f)); // Facing Right
 
-	SetLOSDistance(300.0f);
+	SetLOSDistance(250.0f);
 }
 
 StarShip::~StarShip()
@@ -68,6 +68,7 @@ glm::vec2 StarShip::GetDesiredVelocity() const
 	return m_desiredVelocity;
 }
 
+
 void StarShip::SetMaxSpeed(const float speed)
 {
 	m_maxSpeed = speed;
@@ -90,8 +91,17 @@ void StarShip::SetDesiredVelocity(const glm::vec2 target_position)
 	GetRigidBody()->velocity = m_desiredVelocity - GetRigidBody()->velocity;
 }
 
+void StarShip::SetObstacle(Obstacle* obstacleToSet)
+{
+	m_pObstacle = obstacleToSet;
+}
+
 void StarShip::Seek()
 {
+	float radius = 100.0f;
+	float distanceFromTarget = Util::Distance(GetTransform()->position, GetTargetPosition());
+
+
 	SetDesiredVelocity(GetTargetPosition());
 
 	const glm::vec2 steering_direction = GetDesiredVelocity() - GetCurrentDirection();
@@ -99,27 +109,34 @@ void StarShip::Seek()
 	LookWhereYoureGoing(steering_direction);
 
 	GetRigidBody()->acceleration = GetCurrentDirection() * GetAccelerationRate();
+
+	if (distanceFromTarget < radius) {
+		GetRigidBody()->acceleration *= distanceFromTarget / radius;
+	}
 }
 
 void StarShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 {
-	float target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction);
+	float target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction) + 90.0f;
+	float distance = Util::Distance(GetTransform()->position, m_pObstacle->GetTransform()->position);
+	
+	const float turn_sensitivity = 40.0f;
+	float force = 750 / distance;
 
-	const float turn_sensitivity = 3.0f;
 
-	if(GetCollisionWhiskers()[0] || GetCollisionWhiskers()[1])
+	// If we are colliding
+	if (GetCollisionWhiskers()[0] || GetCollisionWhiskers()[1] || GetCollisionWhiskers()[4])
 	{
-		target_rotation += GetTurnRate() * turn_sensitivity;
-	} else if (GetCollisionWhiskers()[2])
-	{
-		target_rotation -= GetTurnRate() * turn_sensitivity;
+		target_rotation += GetTurnRate() * turn_sensitivity * force;
 	}
-
+	else if (GetCollisionWhiskers()[2] || GetCollisionWhiskers()[3])
+	{
+		target_rotation -= GetTurnRate() * turn_sensitivity * force;
+	}
 
 	SetCurrentHeading(Util::LerpUnclamped(GetCurrentHeading(), GetCurrentHeading() + target_rotation, GetTurnRate() * Game::Instance().GetDeltaTime()));
 
 	UpdateWhiskers(GetWhiskerAngle());
-
 }
 
 void StarShip::m_move()

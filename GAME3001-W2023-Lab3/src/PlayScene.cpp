@@ -42,7 +42,10 @@ void PlayScene::Draw()
 				, m_pStarShip->GetLineColour(1));
 			Util::DrawLine(m_pStarShip->GetTransform()->position, m_pStarShip->GetRightLOSEndPoint()
 				, m_pStarShip->GetLineColour(2));
-
+			Util::DrawLine(m_pStarShip->GetTransform()->position, m_pStarShip->GetMiddleRightLOSEndPoint()
+				, m_pStarShip->GetLineColour(3));
+			Util::DrawLine(m_pStarShip->GetTransform()->position, m_pStarShip->GetMiddleLeftLOSEndPoint()
+				, m_pStarShip->GetLineColour(4));
 		}
 
 	}
@@ -57,7 +60,6 @@ void PlayScene::Update()
 	if(m_pStarShip->IsEnabled())
 	{
 		CollisionManager::CircleAABBCheck(m_pTarget, m_pStarShip);
-
 		CollisionManager::AABBCheck(m_pStarShip, m_pObstacle);
 
 		// Obstacle information
@@ -76,8 +78,12 @@ void PlayScene::Update()
 
 		m_pStarShip->GetCollisionWhiskers()[2] = CollisionManager::LineRectCheck(m_pStarShip->GetTransform()->position,
 			m_pStarShip->GetRightLOSEndPoint(), boxStart, boxWidth, boxHeight);
+		m_pStarShip->GetCollisionWhiskers()[3] = CollisionManager::LineRectCheck(m_pStarShip->GetTransform()->position,
+			m_pStarShip->GetMiddleRightLOSEndPoint(), boxStart, boxWidth, boxHeight);
+		m_pStarShip->GetCollisionWhiskers()[4] = CollisionManager::LineRectCheck(m_pStarShip->GetTransform()->position,
+			m_pStarShip->GetMiddleLeftLOSEndPoint(), boxStart, boxWidth, boxHeight);
 
-		for (int i = 0; i < 3; ++i)
+		for (int i = 0; i < 5; ++i)
 		{
 			m_pStarShip->SetLineColour(i, (m_pStarShip->GetCollisionWhiskers()[i]) ? glm::vec4(1, 0, 0, 1) : glm::vec4(0, 1, 0, 1));
 		}
@@ -131,6 +137,7 @@ void PlayScene::Start()
 	m_pObstacle = new Obstacle();
 	m_pObstacle->GetTransform()->position = glm::vec2(450.0f, 300.0f);
 	AddChild(m_pObstacle, 1);
+	m_pStarShip->SetObstacle(m_pObstacle);
 
 	// Preload Sounds
 
