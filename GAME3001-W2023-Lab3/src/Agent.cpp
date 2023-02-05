@@ -152,12 +152,12 @@ void Agent::UpdateWhiskers(float angle)
 	// Middle Right Whisker
 	x = sin((GetCurrentHeading() + m_whiskerAngle + 90.0f + 75.0f) * Util::Deg2Rad);
 	y = cos((GetCurrentHeading() + m_whiskerAngle + 90.0f + 75.0f) * Util::Deg2Rad);
-	SetMiddleRightLOSEndPoint(GetTargetPosition() + glm::vec2(x, -y) * GetLOSDistance() * 0.9f);
+	SetMiddleRightLOSEndPoint(GetTargetPosition() + glm::vec2(x, -y) * GetLOSDistance() * 0.75f);
 
 	// Middle Left Whisker
 	x = sin((GetCurrentHeading() - m_whiskerAngle + 90.0f + 75.0f) * Util::Deg2Rad);
 	y = cos((GetCurrentHeading() - m_whiskerAngle + 90.0f + 75.0f) * Util::Deg2Rad);
-	SetMiddleLeftLOSEndPoint(GetTargetPosition() + glm::vec2(x, -y) * GetLOSDistance() * 0.9f);
+	SetMiddleLeftLOSEndPoint(GetTargetPosition() + glm::vec2(x, -y) * GetLOSDistance() * 0.75f);
 }
 
 void Agent::SetTargetPosition(const glm::vec2 new_position)

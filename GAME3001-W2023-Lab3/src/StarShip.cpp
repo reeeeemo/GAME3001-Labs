@@ -121,17 +121,16 @@ void StarShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 	float distance = Util::Distance(GetTransform()->position, m_pObstacle->GetTransform()->position);
 	
 	const float turn_sensitivity = 40.0f;
-	float force = 750 / distance;
 
 
 	// If we are colliding
 	if (GetCollisionWhiskers()[0] || GetCollisionWhiskers()[1] || GetCollisionWhiskers()[4])
 	{
-		target_rotation += GetTurnRate() * turn_sensitivity * force;
+		target_rotation += GetTurnRate() * turn_sensitivity;
 	}
 	else if (GetCollisionWhiskers()[2] || GetCollisionWhiskers()[3])
 	{
-		target_rotation -= GetTurnRate() * turn_sensitivity * force;
+		target_rotation -= GetTurnRate() * turn_sensitivity;
 	}
 
 	SetCurrentHeading(Util::LerpUnclamped(GetCurrentHeading(), GetCurrentHeading() + target_rotation, GetTurnRate() * Game::Instance().GetDeltaTime()));
