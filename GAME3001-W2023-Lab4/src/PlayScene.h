@@ -44,8 +44,8 @@ private:
 	void m_computeTileCosts();
 
 	// Convienience functions to convert world to grid space
-	Tile* m_getTile(int col, int row);
-	Tile* m_getTile(glm::vec2 grid_position);
+	Tile* m_getTile(const int col, const int row) const;
+	Tile* m_getTile(const glm::vec2 grid_position) const;
 
 	// Heuristic
 	// We'll add this later.

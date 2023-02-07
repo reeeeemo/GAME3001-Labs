@@ -116,18 +116,18 @@ void PlayScene::GUI_Function()
 	if (ImGui::SliderInt2("Start Position", start_position, 0, Config::COL_NUM - 1))
 	{
 		// Constrain the object within max rows
-		if (start_position[1] >Config::ROW_NUM - 1)
+		if (start_position[1] > Config::ROW_NUM - 1)
 		{
 			start_position[1] = Config::ROW_NUM - 1;
 		}
 
 		// Convert grid space to world space
-		m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(UNVISITED));
+		m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(UNVISITED);
 		m_pStarShip->GetTransform()->position = m_getTile(start_position[0], start_position[1])->GetTransform()->position + offset;
 		m_pStarShip->SetGridPosition(start_position[0], start_position[1]);
 		m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(START);
 	}
-	ImGui::Separator();,
+	ImGui::Separator();
 
 	// Target Properties
 		static int goal_position[2] = { static_cast<int>(m_pTarget->GetGridPosition().x),static_cast<int>(m_pTarget->GetGridPosition().y) };
@@ -140,7 +140,7 @@ void PlayScene::GUI_Function()
 		}
 
 		// Convert grid space to world space
-		m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(UNVISITED));
+		m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(UNVISITED);
 		m_pTarget->GetTransform()->position = m_getTile(goal_position[0], goal_position[1])->GetTransform()->position + offset;
 		m_pTarget->SetGridPosition(goal_position[0], goal_position[1]);
 		m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(GOAL);
@@ -167,6 +167,7 @@ void PlayScene::m_buildGrid()
 			tile->SetEnabled(false);
 			m_pGrid.push_back(tile);
 		}
+
 	}
 
 	// setup the neighbour references for each tile in the grid
@@ -177,7 +178,6 @@ void PlayScene::m_buildGrid()
 		for (int col = 0; col < Config::COL_NUM; ++col)
 		{
 			Tile* tile = m_getTile(col, row);
-
 			// TopMost Neighbour
 			if (row == 0)
 			{
@@ -199,7 +199,7 @@ void PlayScene::m_buildGrid()
 			}
 
 			// BottomMost Neighbour
-			if (col == Config::ROW_NUM - 1)
+			if (row == Config::ROW_NUM - 1)
 			{
 				tile->SetNeighbourTile(BOTTOM_TILE, nullptr);
 
@@ -211,7 +211,7 @@ void PlayScene::m_buildGrid()
 			}
 
 			// LeftMost Neighbour
-			if (col == Config::COL_NUM + 1)
+			if (col == 0)
 			{
 				tile->SetNeighbourTile(LEFT_TILE, nullptr);
 
@@ -221,6 +221,7 @@ void PlayScene::m_buildGrid()
 				tile->SetNeighbourTile(LEFT_TILE, m_getTile(col - 1, row));
 
 			}
+
 		}
 	}
 
@@ -247,12 +248,12 @@ void PlayScene::m_computeTileCosts()
 	// For next lab part	
 }
 
-Tile* PlayScene::m_getTile(int col, int row)
+Tile* PlayScene::m_getTile(int col, int row) const
 {
 	return m_pGrid[(row * Config::COL_NUM) + col];
 }
 
-Tile* PlayScene::m_getTile(glm::vec2 grid_position)
+Tile* PlayScene::m_getTile(glm::vec2 grid_position) const
 {
 	const auto col = grid_position.x;
 	const auto row = grid_position.y;
