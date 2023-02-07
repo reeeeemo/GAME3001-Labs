@@ -101,3 +101,115 @@ void PlayScene::GUI_Function()
 	
 	ImGui::End();
 }
+
+void PlayScene::m_buildGrid()
+{
+	const auto tile_size = Config::TILE_SIZE;
+
+	// Layout a grid of tiles
+	for (int row = 0; row < Config::ROW_NUM; ++row)
+	{
+		for (int col = 0; col < Config::COL_NUM; ++col)
+		{
+			Tile* tile = new Tile();
+			// World space position
+			tile->GetTransform()->position = glm::vec2(col * tile_size, row * tile_size);
+			tile->SetGridPosition(col, row); // Grid Position
+			tile->SetParent(this);
+			tile->AddLabels();
+			AddChild(tile);
+			tile->SetEnabled(false);
+			m_pGrid.push_back(tile);
+		}
+	}
+
+	// setup the neighbour references for each tile in the grid
+	// tiles = nodes in our graph
+
+	for (int row = 0; row < Config::ROW_NUM; ++row)
+	{
+		for (int col = 0; col < Config::COL_NUM; ++col)
+		{
+			Tile* tile = m_getTile(col, row);
+
+			// TopMost Neighbour
+			if (row == 0)
+			{
+				tile->SetNeighbourTile(TOP_TILE, nullptr);
+			} else
+			{
+				tile->SetNeighbourTile(TOP_TILE, m_getTile(col, row -1));
+			}
+
+			// RightMost Neighbour
+			if (col == Config::COL_NUM - 1)
+			{
+				tile->SetNeighbourTile(RIGHT_TILE, nullptr);
+
+			} else
+			{
+				tile->SetNeighbourTile(RIGHT_TILE, m_getTile(col + 1, row));
+
+			}
+
+			// BottomMost Neighbour
+			if (col == Config::ROW_NUM - 1)
+			{
+				tile->SetNeighbourTile(BOTTOM_TILE, nullptr);
+
+			}
+			else
+			{
+				tile->SetNeighbourTile(BOTTOM_TILE, m_getTile(col, row + 1));
+
+			}
+
+			// LeftMost Neighbour
+			if (col == Config::COL_NUM + 1)
+			{
+				tile->SetNeighbourTile(LEFT_TILE, nullptr);
+
+			}
+			else
+			{
+				tile->SetNeighbourTile(LEFT_TILE, m_getTile(col - 1, row));
+
+			}
+		}
+	}
+
+}
+
+bool PlayScene::m_getGridEnabled() const
+{
+	return m_isGridEnabled;
+}
+
+void PlayScene::m_setGridEnabled(bool state)
+{
+	m_isGridEnabled = state;
+
+	for (auto tile : m_pGrid)
+	{
+		tile->SetEnabled(m_isGridEnabled); // Enables each tile object
+		tile->SetLabelsEnabled(m_isGridEnabled); // Enables the corresponding labels
+	}
+}
+
+void PlayScene::m_computeTileCosts()
+{
+	// For next lab part	
+}
+
+Tile* PlayScene::m_getTile(int col, int row)
+{
+	return m_pGrid[(row * Config::COL_NUM) + col];
+}
+
+Tile* PlayScene::m_getTile(glm::vec2 grid_position)
+{
+	const auto col = grid_position.x;
+	const auto row = grid_position.y;
+
+	return m_getTile(col, row);
+}
