@@ -1,7 +1,7 @@
 #pragma once
 #ifndef __HEURISTIC__
 #define __HEURISTIC__
-enum Heuristic
+enum class Heuristic
 {
 	MANHATTAN,
 	EUCLIDEAN,

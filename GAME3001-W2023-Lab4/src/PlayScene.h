@@ -6,6 +6,7 @@
 #include "Target.h"
 #include "StarShip.h"
 #include "Tile.h"
+#include "Heuristic.h"
 
 
 class PlayScene : public Scene
@@ -48,7 +49,7 @@ private:
 	Tile* m_getTile(const glm::vec2 grid_position) const;
 
 	// Heuristic
-	// We'll add this later.
+	Heuristic m_currentHeuristic;
 };
 
 #endif /* defined (__PLAY_SCENE__) */

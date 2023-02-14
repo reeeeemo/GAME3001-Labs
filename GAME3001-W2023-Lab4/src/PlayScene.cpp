@@ -61,19 +61,19 @@ void PlayScene::Start()
 	m_guiTitle = "Play Scene";
 
 	m_buildGrid();
+	m_currentHeuristic = Heuristic::MANHATTAN;
 
-	auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
 
 	// Add the Target to the Scene
 	m_pTarget = new Target(); // instantiate an object of type Target
-	m_pTarget->GetTransform()->position = m_getTile(15, 11)->GetTransform()->position + offset;
+	m_pTarget->GetTransform()->position = m_getTile(15, 11)->GetTransform()->position + Config::TILE_OFFSET;
 	m_pTarget->SetGridPosition(15.0f, 11.0f);
 	m_getTile(15, 11)->SetTileStatus(GOAL);
 	AddChild(m_pTarget, 1);
 
 	// Add the StarShip to the Scene
 	m_pStarShip = new StarShip();
-	m_pStarShip->GetTransform()->position = m_getTile(1, 3)->GetTransform()->position + offset;
+	m_pStarShip->GetTransform()->position = m_getTile(1, 3)->GetTransform()->position + Config::TILE_OFFSET;
 	m_pStarShip->SetGridPosition(1.0, 3.0f);
 	m_getTile(1, 3)->SetTileStatus(START);
 	m_pStarShip->SetTargetPosition(m_pTarget->GetTransform()->position);
@@ -85,13 +85,15 @@ void PlayScene::Start()
 	SoundManager::Instance().Load("../Assets/Audio/yay.ogg", "yay", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/thunder.ogg", "thunder", SoundType::SOUND_SFX);
 
+	m_computeTileCosts();
+
 	ImGuiWindowFrame::Instance().SetGuiFunction(std::bind(&PlayScene::GUI_Function, this));
 }
 
 void PlayScene::GUI_Function()
 {
-	auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
 	// Always open with a NewFrame
+
 	ImGui::NewFrame();
 
 	// See examples by uncommenting the following - also look at imgui_demo.cpp in the IMGUI filter
@@ -123,7 +125,7 @@ void PlayScene::GUI_Function()
 
 		// Convert grid space to world space
 		m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(UNVISITED);
-		m_pStarShip->GetTransform()->position = m_getTile(start_position[0], start_position[1])->GetTransform()->position + offset;
+		m_pStarShip->GetTransform()->position = m_getTile(start_position[0], start_position[1])->GetTransform()->position + Config::TILE_OFFSET;
 		m_pStarShip->SetGridPosition(start_position[0], start_position[1]);
 		m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(START);
 	}
@@ -141,9 +143,10 @@ void PlayScene::GUI_Function()
 
 		// Convert grid space to world space
 		m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(UNVISITED);
-		m_pTarget->GetTransform()->position = m_getTile(goal_position[0], goal_position[1])->GetTransform()->position + offset;
+		m_pTarget->GetTransform()->position = m_getTile(goal_position[0], goal_position[1])->GetTransform()->position + Config::TILE_OFFSET;
 		m_pTarget->SetGridPosition(goal_position[0], goal_position[1]);
 		m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(GOAL);
+		m_computeTileCosts();
 	}
 	ImGui::End();
 }
@@ -245,7 +248,31 @@ void PlayScene::m_setGridEnabled(bool state)
 
 void PlayScene::m_computeTileCosts()
 {
-	// For next lab part	
+	float distance = 0.0f;
+	float dx = 0.0f;
+	float dy = 0.0f;
+
+	// for reach tile in the grid, loop
+	for (auto tile : m_pGrid)
+	{
+		// compute the distance from each tile to the goal tile
+		// distance (f) =tile cost (g) + heuristic estimate (h)
+		switch(m_currentHeuristic)
+		{
+		case Heuristic::EUCLIDEAN:
+			// Calculates the euclidean distance ("as the crow flies") for each tile.
+			distance = Util::Distance(tile->GetGridPosition(), m_pTarget->GetGridPosition());
+
+			break;
+		case Heuristic::MANHATTAN:
+			dx = abs(tile->GetGridPosition().x - m_pTarget->GetGridPosition().x);
+			dy = abs(tile->GetGridPosition().y - m_pTarget->GetGridPosition().y);
+			distance = dx + dy;
+			break;
+		}
+
+		tile->SetTileCost(distance);
+	}
 }
 
 Tile* PlayScene::m_getTile(int col, int row) const

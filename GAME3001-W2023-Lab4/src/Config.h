@@ -14,6 +14,7 @@ public:
 	static constexpr int COL_NUM = 20;
 	static constexpr int TILE_SIZE = 40;
 	static constexpr int TILE_COST = 1;
+	static constexpr glm::vec2 TILE_OFFSET = glm::vec2(TILE_SIZE * 0.5f, TILE_SIZE * 0.5f);
 	static constexpr int MINE_NUM = 50;
 	static constexpr int SCORE = 0;
 	static constexpr int LIVES = 5;

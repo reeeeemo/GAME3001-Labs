@@ -100,16 +100,15 @@ void Tile::SetTileStatus(TileStatus status)
 
 void Tile::AddLabels()
 {
-	auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
 
 	// Cost Label
 	m_costLabel = new Label("99.9", "Consolas", 12);
-	m_costLabel->GetTransform()->position = GetTransform()->position + offset + glm::vec2(0.0f, -6.0f);
+	m_costLabel->GetTransform()->position = GetTransform()->position + Config::TILE_OFFSET + glm::vec2(0.0f, -6.0f);
 	GetParent()->AddChild(m_costLabel);
 	m_costLabel->SetEnabled(false);
 	// Status Label
 	m_statusLabel = new Label("-", "Consolas", 12);
-	m_statusLabel->GetTransform()->position = GetTransform()->position + offset + glm::vec2(0.0f, 6.0f);
+	m_statusLabel->GetTransform()->position = GetTransform()->position + Config::TILE_OFFSET + glm::vec2(0.0f, 6.0f);
 	GetParent()->AddChild(m_statusLabel);
 	m_statusLabel->SetEnabled(false);
 
