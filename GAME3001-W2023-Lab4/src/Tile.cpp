@@ -25,6 +25,9 @@ void Tile::Draw()
 	case GOAL:
 		Util::DrawFilledRect(GetTransform()->position, GetWidth(), GetHeight(), glm::vec4(1.0f, 0.5f, 0.5f, 1.0f));
 		break;
+	case IMPASSABLE:
+		Util::DrawFilledRect(GetTransform()->position, GetWidth(), GetHeight(), glm::vec4(0.5, 0.5, 0.5, 1.0f));
+		break;
 	default:
 		Util::DrawRect(GetTransform()->position, GetWidth(), GetHeight());
 		break;

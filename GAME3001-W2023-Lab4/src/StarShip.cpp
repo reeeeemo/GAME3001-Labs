@@ -125,24 +125,6 @@ void StarShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 
 void StarShip::m_move()
 {
-	auto distance = Util::Distance(GetTransform()->position, GetTargetPosition());
-	std::cout << "distance: " << distance << "\n";
-	if( distance > 100.0f)
-	{
-		Seek();
-	}
-	else if(distance <= 5.0f)
-	{
-		GetRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
-		GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
-	}
-	else
-	{
-		auto factor = distance / 200.0f;
-		GetRigidBody()->acceleration *= factor;
-		UpdateWhiskers(GetWhiskerAngle());
-	}
-	
 
 	// maybe a switch - case
 

@@ -44,9 +44,18 @@ private:
 	void m_setGridEnabled(bool state);
 	void m_computeTileCosts();
 
+	// Calculate shortest path functions
+
+	// Tile lists for pathfinding
+	std::vector<Tile*> m_pOpenList;
+	std::vector<Tile*> m_pClosedList;
+	// TODO: some kind of data structure for the path list.
+
+
 	// Convienience functions to convert world to grid space
 	Tile* m_getTile(const int col, const int row) const;
 	Tile* m_getTile(const glm::vec2 grid_position) const;
+	void m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, int rowEnd); // Makes it easier to set chunks of impassable objects at a time.
 
 	// Heuristic
 	Heuristic m_currentHeuristic;

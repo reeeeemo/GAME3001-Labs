@@ -80,6 +80,10 @@ void PlayScene::Start()
 	m_pStarShip->SetCurrentDirection(glm::vec2(1.0f, 0.0f)); // facing right
 	AddChild(m_pStarShip, 2);
 
+	// Mark some tiles as impassable
+	m_SetAsObstacle(9, 0, 9, 7);
+	m_SetAsObstacle(5, 7, 5, 14);
+
 	// Preload Sounds
 
 	SoundManager::Instance().Load("../Assets/Audio/yay.ogg", "yay", SoundType::SOUND_SFX);
@@ -300,4 +304,15 @@ Tile* PlayScene::m_getTile(glm::vec2 grid_position) const
 	const auto row = grid_position.y;
 
 	return m_getTile(col, row);
+}
+
+void PlayScene::m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, int rowEnd)
+{
+	for (int i = columnStart; i <= columnEnd; i++)
+	{
+		for (int j = rowStart; j <= rowEnd; j++)
+		{
+			m_getTile(i, j)->SetTileStatus(IMPASSABLE);
+		}
+	}
 }
