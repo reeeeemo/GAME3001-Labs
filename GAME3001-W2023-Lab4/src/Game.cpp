@@ -87,6 +87,7 @@ bool Game::Init(const char* title, const int x, const int y, const int width, co
 	}
 
 	std::cout << "init success" << std::endl;
+
 	m_bRunning = true; // everything initialized successfully - start the main loop
 
 	return true;
