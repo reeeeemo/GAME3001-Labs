@@ -83,6 +83,7 @@ void PlayScene::Start()
 	// Mark some tiles as impassable
 	m_SetAsObstacle(9, 0, 9, 7);
 	m_SetAsObstacle(5, 7, 5, 14);
+	m_SetAsObstacle(13, 7, 13, 14);
 
 	// Preload Sounds
 
@@ -139,6 +140,43 @@ void PlayScene::GUI_Function()
 		if (start_position[1] > Config::ROW_NUM - 1)
 		{
 			start_position[1] = Config::ROW_NUM - 1;
+		}
+		TileStatus currentTileStatus = m_getTile(glm::vec2(start_position[0], start_position[1]))->GetTileStatus();
+		if (currentTileStatus == IMPASSABLE) // If we cannot pass through this object.
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				// Probably could just check neighbor list.
+
+				// Right-most X tile
+				currentTileStatus = m_getTile(glm::vec2(start_position[0]++, start_position[1]))->GetTileStatus();
+				if (currentTileStatus != IMPASSABLE)
+				{
+					start_position[0] += 1;
+				}
+
+				// Left-most X tile
+				currentTileStatus = m_getTile(glm::vec2(start_position[0]--, start_position[1]))->GetTileStatus();
+				if (currentTileStatus != IMPASSABLE)
+				{
+					start_position[0] -= 1;
+				}
+
+				// Top-most Y tile
+				currentTileStatus = m_getTile(glm::vec2(start_position[0], start_position[1]++))->GetTileStatus();
+				if (currentTileStatus != IMPASSABLE)
+				{
+					start_position[1] += 1;
+				}
+
+				// Bottom-most Y tile
+				currentTileStatus = m_getTile(glm::vec2(start_position[0], start_position[1]--))->GetTileStatus();
+				if (currentTileStatus != IMPASSABLE)
+				{
+					start_position[1] -= 1;
+				}
+
+			}
 		}
 
 		// Convert grid space to world space
@@ -291,6 +329,42 @@ void PlayScene::m_computeTileCosts()
 
 		tile->SetTileCost(distance);
 	}
+}
+
+void PlayScene::m_findShortestPath()
+{
+	// Some A* pseudocode
+	// Step 1: Initialization
+
+	// Step 2. Loop until the OpenList is empty or the goal is found
+
+	//		Step 2a - Init variables for minimum distance
+
+	//		Step 2b - Add only valid neighbours to the neighbor list
+
+	//		loop through each neighbour in a right-winding order (top - right - bottom - left) (try to make a sorted order)
+
+	//		Step 2c - For every valid neighbour in the neighbour nlist -> check if it has the minimum distance.
+	//		or -> Alternatively -> the neighbour could be the goal tile.
+	//		Step 2c1 -> Check if the neighbour is not the goal
+	//		Step 2d -> Add top tile of the open_list to the path_list
+	//		Step 2e -> Add the min_tile to the open_list
+	//		Step 2f -> Push all remaining neighbours on to the closed list
+
+
+	// Note: Watchout for recursive code (function that calls itself).
+}
+
+void PlayScene::m_displayPathList()
+{
+}
+
+void PlayScene::m_resetPathFinding()
+{
+}
+
+void PlayScene::m_resetSimulation()
+{
 }
 
 Tile* PlayScene::m_getTile(int col, int row) const

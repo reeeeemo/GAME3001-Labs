@@ -45,12 +45,16 @@ private:
 	void m_computeTileCosts();
 
 	// Calculate shortest path functions
+	void m_findShortestPath();
+	void m_displayPathList();
+	void m_resetPathFinding();
+	void m_resetSimulation();
 
 	// Tile lists for pathfinding
 	std::vector<Tile*> m_pOpenList;
 	std::vector<Tile*> m_pClosedList;
 	// TODO: some kind of data structure for the path list.
-
+	// Suggestions: Queue data structure or a linked list.
 
 	// Convienience functions to convert world to grid space
 	Tile* m_getTile(const int col, const int row) const;
