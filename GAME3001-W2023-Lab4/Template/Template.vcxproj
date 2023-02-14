@@ -113,6 +113,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include\GL;$(ProjectDir)include\GLEW;$(ProjectDir)include\GLM;$(ProjectDir)include\GLUT;$(ProjectDir)include\IL;$(ProjectDir)include\IMGUI;$(ProjectDir)include\IMGUI_SDL;$(ProjectDir)include\SDL;$(ProjectDir)include\SDL_Image;$(ProjectDir)include\SDL_Mixer;$(ProjectDir)include\SDL_net;$(ProjectDir)include\SDL2_ttf;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

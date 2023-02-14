@@ -144,22 +144,18 @@ void PlayScene::GUI_Function()
 		TileStatus currentTileStatus = m_getTile(glm::vec2(start_position[0], start_position[1]))->GetTileStatus();
 		if (currentTileStatus == IMPASSABLE) // If we cannot pass through this object.
 		{
-			for (int i = 0; i < 4; i++)
-			{
-				// Probably could just check neighbor list.
-
 				// Right-most X tile
 				currentTileStatus = m_getTile(glm::vec2(start_position[0]++, start_position[1]))->GetTileStatus();
 				if (currentTileStatus != IMPASSABLE)
 				{
-					start_position[0] += 1;
+					start_position[0] -= 1;
 				}
 
 				// Left-most X tile
 				currentTileStatus = m_getTile(glm::vec2(start_position[0]--, start_position[1]))->GetTileStatus();
 				if (currentTileStatus != IMPASSABLE)
 				{
-					start_position[0] -= 1;
+					start_position[0] += 1;
 				}
 
 				// Top-most Y tile
@@ -175,8 +171,6 @@ void PlayScene::GUI_Function()
 				{
 					start_position[1] -= 1;
 				}
-
-			}
 		}
 
 		// Convert grid space to world space
