@@ -335,7 +335,8 @@ void PlayScene::m_findShortestPath()
 	while (!m_pOpenList.empty())
 	{
 		// Get current tile and cost. Then erase it.
-		const Tile* currentTile = m_pOpenList.front();
+		Tile* currentTile = m_pOpenList.front();
+		Tile* nextTile = currentTile;
 		float currentCost = currentTile->GetTileCost();
 
 		m_pOpenList.erase(m_pOpenList.begin());
@@ -344,26 +345,69 @@ void PlayScene::m_findShortestPath()
 		// Throw the 4 adjacent tiles into the open list. 0 = Top, 1 = Right, 2 = Bottom, 3 = Left.
 		for (int i = 0; i < static_cast<int>(NUM_OF_NEIGHBOUR_TILES); i++)
 		{
-			/*if (currentTile->GetNeighbourTile(static_cast<NeighbourTile>(i))->GetTileStatus != TileStatus::IMPASSABLE)
+			bool isOnClosedList = false;
+			Tile* neighbourTile = currentTile->GetNeighbourTile(static_cast<NeighbourTile>(i));
+			std::cout << neighbourTile->GetTileStatus() << std::endl;
+			if (neighbourTile->GetTileStatus() != TileStatus::IMPASSABLE) // As long as we can actually grab the tile.
 			{
-				m_pOpenList.push_back(currentTile->GetNeighbourTile(static_cast<NeighbourTile>(i)));
-			}*/
+				// Checks closed list to see if tile  exists on there.
+				for (Tile* tile : m_pClosedList)
+				{
+					if (tile == neighbourTile)
+					{
+						isOnClosedList = true;
+					}
+				}
 
-			// Check to see if the new cost put into the vector is less than the current best option.
-			if (m_pOpenList.at(i)->GetTileCost() < currentCost)
-			{
-				currentCost = m_pOpenList.at(i)->GetTileCost();
-				currentTile = m_pOpenList.at(i);
+				if (!isOnClosedList)
+				{
+					m_pOpenList.push_back(neighbourTile);
+
+					// If tile is goal, break automatically.
+					if (neighbourTile->GetTileStatus() == TileStatus::GOAL)
+					{
+						currentCost = neighbourTile->GetTileCost();
+						nextTile = neighbourTile;
+						break;
+					}
+					// Check to see if the new cost put into the vector is less than the current best option.
+					if (neighbourTile->GetTileCost() < currentCost)
+					{
+						currentCost = neighbourTile->GetTileCost();
+						nextTile = neighbourTile;
+					}
+				}
+				
 			}
 		}
 
-		std::cout << currentTile->GetTileCost() << std::endl;
+		// Sets current tile to the next available tile. Add to path list.
+		currentTile = nextTile;
+		m_pPathList.push(currentTile);
 
-		for (int i = static_cast<int>(NUM_OF_NEIGHBOUR_TILES) - 1; i >= 0 ; i--)
+		// Push remaining tiles to the closed list. ONLY IF it is not the next tile.
+		for (int i = 0; i < m_pOpenList.size(); i++)
 		{
-			m_pOpenList.pop_back();
+			if (m_pOpenList.at(i) != currentTile)
+			{
+				m_pClosedList.push_back(m_pOpenList.at(i));
+				m_pOpenList.erase(m_pOpenList.begin() + i);
+				m_pOpenList.shrink_to_fit();
+			}
 		}
 
+		if (currentTile->GetTileStatus() == TileStatus::GOAL)
+		{
+			m_pOpenList.clear();
+			m_pOpenList.shrink_to_fit();
+		}
+
+
+	}
+	for (int i = 0; i < m_pPathList.size(); i++)
+	{
+		std::cout << m_pPathList.top()->GetGridPosition().x << " " << m_pPathList.top()->GetGridPosition().y << std::endl;
+		m_pPathList.pop();
 	}
 	// Some A* pseudocode
 	// Step 1: Initialization
