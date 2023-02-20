@@ -58,7 +58,7 @@ private:
 	// TODO: some kind of data structure for the path list.
 	// Suggestions: Queue data structure or a linked list.
 
-	std::priority_queue<Tile*> m_pPathList;
+	std::queue<Tile*> m_pPathList;
 
 	// Convienience functions to convert world to grid space
 	Tile* m_getTile(const int col, const int row) const;

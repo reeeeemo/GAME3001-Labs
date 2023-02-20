@@ -332,7 +332,7 @@ void PlayScene::m_findShortestPath()
 	// Get starting tile position.
 	m_pOpenList.push_back(m_getTile(m_pStarShip->GetGridPosition()));
 	int j = 0;
-	while (j != 5)
+	while (j != 50)
 	{
 		// Get current tile and cost. Then erase it.
 		Tile* currentTile = m_pOpenList.front();
@@ -340,7 +340,6 @@ void PlayScene::m_findShortestPath()
 		float currentCost = currentTile->GetTileCost();
 
 		m_pOpenList.clear();
-		m_pPathList.push(currentTile);
 
 		// Throw the 4 adjacent tiles into the open list. 0 = Top, 1 = Right, 2 = Bottom, 3 = Left.
 		for (int i = 0; i < static_cast<int>(NUM_OF_NEIGHBOUR_TILES); i++)
@@ -391,12 +390,12 @@ void PlayScene::m_findShortestPath()
 				m_pClosedList.push_back(tile);
 
 			}
-			std::cout << "erased value\n";
 		}
 
 		m_pOpenList.clear();
-		m_pOpenList.push_back(currentTile);
+		m_pOpenList.shrink_to_fit();
 
+		m_pOpenList.push_back(currentTile);
 
 		/*if (currentTile->GetTileStatus() != TileStatus::GOAL)
 		{
@@ -407,12 +406,14 @@ void PlayScene::m_findShortestPath()
 			break;
 		}*/
 
+		std::cout << m_pPathList.front()->GetGridPosition().x << " " << m_pPathList.front()->GetGridPosition().y << std::endl;
+		m_pPathList.pop();
 		j++;
 	}
 
 	while (!m_pPathList.empty())
 	{
-		std::cout << m_pPathList.top()->GetGridPosition().x << " " << m_pPathList.top()->GetGridPosition().y << std::endl;
+		std::cout << m_pPathList.front()->GetGridPosition().x << " " << m_pPathList.front()->GetGridPosition().y << std::endl;
 		m_pPathList.pop();
 	}
 	// Some A* pseudocode
