@@ -331,23 +331,22 @@ void PlayScene::m_findShortestPath()
 {
 	// Get starting tile position.
 	m_pOpenList.push_back(m_getTile(m_pStarShip->GetGridPosition()));
-
-	while (!m_pOpenList.empty())
+	int j = 0;
+	while (j != 5)
 	{
 		// Get current tile and cost. Then erase it.
 		Tile* currentTile = m_pOpenList.front();
 		Tile* nextTile = currentTile;
 		float currentCost = currentTile->GetTileCost();
 
-		m_pOpenList.erase(m_pOpenList.begin());
-
+		m_pOpenList.clear();
+		m_pPathList.push(currentTile);
 
 		// Throw the 4 adjacent tiles into the open list. 0 = Top, 1 = Right, 2 = Bottom, 3 = Left.
 		for (int i = 0; i < static_cast<int>(NUM_OF_NEIGHBOUR_TILES); i++)
 		{
 			bool isOnClosedList = false;
 			Tile* neighbourTile = currentTile->GetNeighbourTile(static_cast<NeighbourTile>(i));
-			std::cout << neighbourTile->GetTileStatus() << std::endl;
 			if (neighbourTile->GetTileStatus() != TileStatus::IMPASSABLE) // As long as we can actually grab the tile.
 			{
 				// Checks closed list to see if tile  exists on there.
@@ -366,7 +365,6 @@ void PlayScene::m_findShortestPath()
 					// If tile is goal, break automatically.
 					if (neighbourTile->GetTileStatus() == TileStatus::GOAL)
 					{
-						currentCost = neighbourTile->GetTileCost();
 						nextTile = neighbourTile;
 						break;
 					}
@@ -386,25 +384,33 @@ void PlayScene::m_findShortestPath()
 		m_pPathList.push(currentTile);
 
 		// Push remaining tiles to the closed list. ONLY IF it is not the next tile.
-		for (int i = 0; i < m_pOpenList.size(); i++)
+		for (Tile* tile : m_pOpenList)
 		{
-			if (m_pOpenList.at(i) != currentTile)
+			if (tile != currentTile)
 			{
-				m_pClosedList.push_back(m_pOpenList.at(i));
-				m_pOpenList.erase(m_pOpenList.begin() + i);
-				m_pOpenList.shrink_to_fit();
+				m_pClosedList.push_back(tile);
+
 			}
+			std::cout << "erased value\n";
 		}
 
-		if (currentTile->GetTileStatus() == TileStatus::GOAL)
+		m_pOpenList.clear();
+		m_pOpenList.push_back(currentTile);
+
+
+		/*if (currentTile->GetTileStatus() != TileStatus::GOAL)
 		{
-			m_pOpenList.clear();
-			m_pOpenList.shrink_to_fit();
-		}
+			m_pOpenList.push_back(currentTile);
+		} else
+		{
+			std::cout << "goal found\n\n\n";
+			break;
+		}*/
 
-
+		j++;
 	}
-	for (int i = 0; i < m_pPathList.size(); i++)
+
+	while (!m_pPathList.empty())
 	{
 		std::cout << m_pPathList.top()->GetGridPosition().x << " " << m_pPathList.top()->GetGridPosition().y << std::endl;
 		m_pPathList.pop();
