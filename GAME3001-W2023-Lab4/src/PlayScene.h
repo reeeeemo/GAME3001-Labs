@@ -2,6 +2,8 @@
 #ifndef __PLAY_SCENE__
 #define __PLAY_SCENE__
 
+#include <queue>
+
 #include "Scene.h"
 #include "Target.h"
 #include "StarShip.h"
@@ -55,6 +57,8 @@ private:
 	std::vector<Tile*> m_pClosedList;
 	// TODO: some kind of data structure for the path list.
 	// Suggestions: Queue data structure or a linked list.
+
+	std::priority_queue<Tile*> m_pPathList;
 
 	// Convienience functions to convert world to grid space
 	Tile* m_getTile(const int col, const int row) const;

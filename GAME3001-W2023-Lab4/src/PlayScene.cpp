@@ -92,6 +92,8 @@ void PlayScene::Start()
 
 	m_computeTileCosts();
 
+	m_findShortestPath();
+
 	ImGuiWindowFrame::Instance().SetGuiFunction(std::bind(&PlayScene::GUI_Function, this));
 }
 
@@ -327,6 +329,42 @@ void PlayScene::m_computeTileCosts()
 
 void PlayScene::m_findShortestPath()
 {
+	// Get starting tile position.
+	m_pOpenList.push_back(m_getTile(m_pStarShip->GetGridPosition()));
+
+	while (!m_pOpenList.empty())
+	{
+		// Get current tile and cost. Then erase it.
+		const Tile* currentTile = m_pOpenList.front();
+		float currentCost = currentTile->GetTileCost();
+
+		m_pOpenList.erase(m_pOpenList.begin());
+
+
+		// Throw the 4 adjacent tiles into the open list. 0 = Top, 1 = Right, 2 = Bottom, 3 = Left.
+		for (int i = 0; i < static_cast<int>(NUM_OF_NEIGHBOUR_TILES); i++)
+		{
+			/*if (currentTile->GetNeighbourTile(static_cast<NeighbourTile>(i))->GetTileStatus != TileStatus::IMPASSABLE)
+			{
+				m_pOpenList.push_back(currentTile->GetNeighbourTile(static_cast<NeighbourTile>(i)));
+			}*/
+
+			// Check to see if the new cost put into the vector is less than the current best option.
+			if (m_pOpenList.at(i)->GetTileCost() < currentCost)
+			{
+				currentCost = m_pOpenList.at(i)->GetTileCost();
+				currentTile = m_pOpenList.at(i);
+			}
+		}
+
+		std::cout << currentTile->GetTileCost() << std::endl;
+
+		for (int i = static_cast<int>(NUM_OF_NEIGHBOUR_TILES) - 1; i >= 0 ; i--)
+		{
+			m_pOpenList.pop_back();
+		}
+
+	}
 	// Some A* pseudocode
 	// Step 1: Initialization
 
@@ -347,6 +385,8 @@ void PlayScene::m_findShortestPath()
 
 
 	// Note: Watchout for recursive code (function that calls itself).
+
+
 }
 
 void PlayScene::m_displayPathList()
