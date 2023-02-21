@@ -68,14 +68,14 @@ void PlayScene::Start()
 	m_pTarget = new Target(); // instantiate an object of type Target
 	m_pTarget->GetTransform()->position = m_getTile(15, 11)->GetTransform()->position + Config::TILE_OFFSET;
 	m_pTarget->SetGridPosition(15.0f, 11.0f);
-	m_getTile(15, 11)->SetTileStatus(GOAL);
+	m_getTile(15, 11)->SetTileStatus(TileStatus::GOAL);
 	AddChild(m_pTarget, 1);
 
 	// Add the StarShip to the Scene
 	m_pStarShip = new StarShip();
 	m_pStarShip->GetTransform()->position = m_getTile(1, 3)->GetTransform()->position + Config::TILE_OFFSET;
 	m_pStarShip->SetGridPosition(1.0, 3.0f);
-	m_getTile(1, 3)->SetTileStatus(START);
+	m_getTile(1, 3)->SetTileStatus(TileStatus::START);
 	m_pStarShip->SetTargetPosition(m_pTarget->GetTransform()->position);
 	m_pStarShip->SetCurrentDirection(glm::vec2(1.0f, 0.0f)); // facing right
 	AddChild(m_pStarShip, 2);
@@ -144,42 +144,42 @@ void PlayScene::GUI_Function()
 			start_position[1] = Config::ROW_NUM - 1;
 		}
 		TileStatus currentTileStatus = m_getTile(glm::vec2(start_position[0], start_position[1]))->GetTileStatus();
-		if (currentTileStatus == IMPASSABLE) // If we cannot pass through this object.
+		if (currentTileStatus == TileStatus::IMPASSABLE) // If we cannot pass through this object.
 		{
 				// Right-most X tile
 				currentTileStatus = m_getTile(glm::vec2(start_position[0]++, start_position[1]))->GetTileStatus();
-				if (currentTileStatus != IMPASSABLE)
+				if (currentTileStatus != TileStatus::IMPASSABLE)
 				{
 					start_position[0] -= 1;
 				}
 
 				// Left-most X tile
 				currentTileStatus = m_getTile(glm::vec2(start_position[0]--, start_position[1]))->GetTileStatus();
-				if (currentTileStatus != IMPASSABLE)
+				if (currentTileStatus != TileStatus::IMPASSABLE)
 				{
 					start_position[0] += 1;
 				}
 
 				// Top-most Y tile
 				currentTileStatus = m_getTile(glm::vec2(start_position[0], start_position[1]++))->GetTileStatus();
-				if (currentTileStatus != IMPASSABLE)
+				if (currentTileStatus != TileStatus::IMPASSABLE)
 				{
 					start_position[1] += 1;
 				}
 
 				// Bottom-most Y tile
 				currentTileStatus = m_getTile(glm::vec2(start_position[0], start_position[1]--))->GetTileStatus();
-				if (currentTileStatus != IMPASSABLE)
+				if (currentTileStatus != TileStatus::IMPASSABLE)
 				{
 					start_position[1] -= 1;
 				}
 		}
 
 		// Convert grid space to world space
-		m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(UNVISITED);
+		m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(TileStatus::UNVISITED);
 		m_pStarShip->GetTransform()->position = m_getTile(start_position[0], start_position[1])->GetTransform()->position + Config::TILE_OFFSET;
 		m_pStarShip->SetGridPosition(start_position[0], start_position[1]);
-		m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(START);
+		m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(TileStatus::START);
 	}
 	ImGui::Separator();
 
@@ -194,10 +194,10 @@ void PlayScene::GUI_Function()
 		}
 
 		// Convert grid space to world space
-		m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(UNVISITED);
+		m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(TileStatus::UNVISITED);
 		m_pTarget->GetTransform()->position = m_getTile(goal_position[0], goal_position[1])->GetTransform()->position + Config::TILE_OFFSET;
 		m_pTarget->SetGridPosition(goal_position[0], goal_position[1]);
-		m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(GOAL);
+		m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(TileStatus::GOAL);
 		m_computeTileCosts();
 	}
 	ImGui::End();
@@ -236,44 +236,44 @@ void PlayScene::m_buildGrid()
 			// TopMost Neighbour
 			if (row == 0)
 			{
-				tile->SetNeighbourTile(TOP_TILE, nullptr);
+				tile->SetNeighbourTile(NeighbourTile::TOP_TILE, nullptr);
 			} else
 			{
-				tile->SetNeighbourTile(TOP_TILE, m_getTile(col, row -1));
+				tile->SetNeighbourTile(NeighbourTile::TOP_TILE, m_getTile(col, row -1));
 			}
 
 			// RightMost Neighbour
 			if (col == Config::COL_NUM - 1)
 			{
-				tile->SetNeighbourTile(RIGHT_TILE, nullptr);
+				tile->SetNeighbourTile(NeighbourTile::RIGHT_TILE, nullptr);
 
 			} else
 			{
-				tile->SetNeighbourTile(RIGHT_TILE, m_getTile(col + 1, row));
+				tile->SetNeighbourTile(NeighbourTile::RIGHT_TILE, m_getTile(col + 1, row));
 
 			}
 
 			// BottomMost Neighbour
 			if (row == Config::ROW_NUM - 1)
 			{
-				tile->SetNeighbourTile(BOTTOM_TILE, nullptr);
+				tile->SetNeighbourTile(NeighbourTile::BOTTOM_TILE, nullptr);
 
 			}
 			else
 			{
-				tile->SetNeighbourTile(BOTTOM_TILE, m_getTile(col, row + 1));
+				tile->SetNeighbourTile(NeighbourTile::BOTTOM_TILE, m_getTile(col, row + 1));
 
 			}
 
 			// LeftMost Neighbour
 			if (col == 0)
 			{
-				tile->SetNeighbourTile(LEFT_TILE, nullptr);
+				tile->SetNeighbourTile(NeighbourTile::LEFT_TILE, nullptr);
 
 			}
 			else
 			{
-				tile->SetNeighbourTile(LEFT_TILE, m_getTile(col - 1, row));
+				tile->SetNeighbourTile(NeighbourTile::LEFT_TILE, m_getTile(col - 1, row));
 
 			}
 
@@ -379,13 +379,13 @@ Tile* PlayScene::m_getTile(glm::vec2 grid_position) const
 	return m_getTile(col, row);
 }
 
-void PlayScene::m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, int rowEnd)
+void PlayScene::m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, int rowEnd) const
 {
 	for (int i = columnStart; i <= columnEnd; i++)
 	{
 		for (int j = rowStart; j <= rowEnd; j++)
 		{
-			m_getTile(i, j)->SetTileStatus(IMPASSABLE);
+			m_getTile(i, j)->SetTileStatus(TileStatus::IMPASSABLE);
 		}
 	}
 }

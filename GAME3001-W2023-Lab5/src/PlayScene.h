@@ -63,7 +63,7 @@ private:
 	// Convienience functions to convert world to grid space
 	Tile* m_getTile(const int col, const int row) const;
 	Tile* m_getTile(const glm::vec2 grid_position) const;
-	void m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, int rowEnd); // Makes it easier to set chunks of impassable objects at a time.
+	void m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, int rowEnd) const; // Makes it easier to set chunks of impassable objects at a time.
 
 	// Heuristic
 	Heuristic m_currentHeuristic;
