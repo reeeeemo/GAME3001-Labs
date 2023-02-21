@@ -10,6 +10,7 @@
 #include "Tile.h"
 #include "Heuristic.h"
 #include "TileComparator.h"
+#include "Obstacle.h"
 
 
 class PlayScene : public Scene
@@ -46,6 +47,15 @@ private:
 	bool m_getGridEnabled() const;
 	void m_setGridEnabled(bool state);
 	void m_computeTileCosts();
+
+	// Obstacle list
+	std::vector<Obstacle*> m_pObstacles;
+	void m_pBuildObstacles();
+
+	// Obstacle Utility functions.
+	void m_removeObstacleAt(int col, int row);
+	void m_removeObstacleAt(glm::vec2 grid_position);
+	void m_removeAllObstacles();
 
 	// Calculate shortest path functions
 	void m_findShortestPath();

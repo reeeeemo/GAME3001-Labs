@@ -60,6 +60,7 @@ void PlayScene::Start()
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 
+	m_pBuildObstacles();
 	m_buildGrid();
 	m_currentHeuristic = Heuristic::MANHATTAN;
 
@@ -279,6 +280,43 @@ void PlayScene::m_computeTileCosts()
 
 		tile->SetTileCost(distance);
 	}
+}
+
+void PlayScene::m_pBuildObstacles()
+{
+	for (int i = 0; i < 300; ++i)
+	{
+		m_pObstacles.push_back(new Obstacle());
+	}
+}
+
+void PlayScene::m_removeObstacleAt(int col, int row)
+{
+	for (Obstacle* obstacle : m_pObstacles)
+	{
+		if (obstacle != nullptr)
+		{
+			if (static_cast<int>(obstacle->GetGridPosition().x) == col && static_cast<int>(obstacle->GetGridPosition().y) == row)
+			{
+				RemoveChild(obstacle);
+				m_pObstacles[(row * Config::COL_NUM) + col] = new Obstacle();
+			}
+		}
+	}
+}
+
+void PlayScene::m_removeObstacleAt(glm::vec2 grid_position)
+{
+	m_removeObstacleAt(static_cast<int>(grid_position.x), static_cast<int>(grid_position.y));
+}
+
+void PlayScene::m_removeAllObstacles()
+{
+	for (Obstacle* obstacle : m_pObstacles)
+	{
+		RemoveChild(obstacle);
+	}
+	m_pObstacles.clear();
 }
 
 void PlayScene::m_findShortestPath()
