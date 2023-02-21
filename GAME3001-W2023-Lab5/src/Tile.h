@@ -47,7 +47,7 @@ private:
 	Label* m_statusLabel;
 
 	Tile* m_pTileParent;
-	Tile* m_neighbours[NeighbourTile::NUM_OF_NEIGHBOUR_TILES];
+	Tile* m_neighbours[static_cast<int>(NeighbourTile::NUM_OF_NEIGHBOUR_TILES)];
 };
 
 
