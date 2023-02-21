@@ -69,6 +69,9 @@ void PlayScene::Start()
 	m_initalizeTileMap();
 	m_buildTileMap();
 
+	// Update path-finding costs
+	m_computeTileCosts();
+
 
 	m_findShortestPath();
 
@@ -77,7 +80,6 @@ void PlayScene::Start()
 	SoundManager::Instance().Load("../Assets/Audio/yay.ogg", "yay", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/thunder.ogg", "thunder", SoundType::SOUND_SFX);
 
-	m_computeTileCosts();
 
 	ImGuiWindowFrame::Instance().SetGuiFunction(std::bind(&PlayScene::GUI_Function, this));
 }
@@ -101,6 +103,52 @@ void PlayScene::GUI_Function()
 	{
 		m_isGridEnabled = toggleGrid;
 		m_setGridEnabled(m_isGridEnabled);
+	}
+
+	ImGui::Separator();
+
+	// TItle Map Properties
+	if (ImGui::CollapsingHeader("Tile Map"))
+	{
+		static char* tile_map[300];
+
+		for (int i = 0; i < m_tileMap.length(); i++)
+		{
+			tile_map[i] = new char[i];
+			sprintf(tile_map[i], "%c + %d", m_tileMap[i], i);
+
+			if ((i % 20) != 0)
+			{
+				ImGui::SameLine();
+			}
+
+			if (m_tileMap[i] == 'S')
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.360f, 0.721f, 0.360f, 1.0f));
+			}
+			else if (m_tileMap[i] == 'G')
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.850f, 0.325f, 0.309f, 1.0f));
+			}
+			else
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.007f, 0.458f, 0.847f, 1.0f));
+			}
+
+			if (ImGui::Button(tile_map[i], ImVec2(15, 15)))
+			{
+				if (m_tileMap[i] != 'S' && m_tileMap[i] != 'G')
+				{
+					m_tileMap[i] = (m_tileMap[i] == '-') ? 'I' : '-';
+					m_removeAllObstacles();
+					m_pBuildObstacles();
+					m_buildTileMap();
+					m_resetPathFinding();
+				}
+			}
+
+			ImGui::PopStyleColor();
+		}
 	}
 
 	ImGui::Separator();
