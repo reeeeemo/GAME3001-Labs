@@ -9,7 +9,8 @@ enum TileStatus
 	CLOSED,
 	IMPASSABLE,
 	GOAL,
-	START
+	START,
+	PATH
 };
 
 #endif /* defined (__TILE_STATUS__) */
