@@ -65,20 +65,9 @@ void PlayScene::Start()
 
 
 	// Add the Target to the Scene
-	m_pTarget = new Target(); // instantiate an object of type Target
-	m_pTarget->GetTransform()->position = m_getTile(15, 11)->GetTransform()->position + Config::TILE_OFFSET;
-	m_pTarget->SetGridPosition(15.0f, 11.0f);
-	m_getTile(15, 11)->SetTileStatus(TileStatus::GOAL);
-	AddChild(m_pTarget, 1);
+	m_addObjectToGrid(m_pStarShip, 1, 3, TileStatus::START);
 
-	// Add the StarShip to the Scene
-	m_pStarShip = new StarShip();
-	m_pStarShip->GetTransform()->position = m_getTile(1, 3)->GetTransform()->position + Config::TILE_OFFSET;
-	m_pStarShip->SetGridPosition(1.0, 3.0f);
-	m_getTile(1, 3)->SetTileStatus(TileStatus::START);
-	m_pStarShip->SetTargetPosition(m_pTarget->GetTransform()->position);
-	m_pStarShip->SetCurrentDirection(glm::vec2(1.0f, 0.0f)); // facing right
-	AddChild(m_pStarShip, 2);
+	m_addObjectToGrid(m_pTarget	, 15, 11, TileStatus::START);
 
 	// Mark some tiles as impassable
 	m_SetAsObstacle(9, 0, 9, 7);
@@ -143,43 +132,11 @@ void PlayScene::GUI_Function()
 		{
 			start_position[1] = Config::ROW_NUM - 1;
 		}
-		TileStatus currentTileStatus = m_getTile(glm::vec2(start_position[0], start_position[1]))->GetTileStatus();
-		if (currentTileStatus == TileStatus::IMPASSABLE) // If we cannot pass through this object.
-		{
-				// Right-most X tile
-				currentTileStatus = m_getTile(glm::vec2(start_position[0]++, start_position[1]))->GetTileStatus();
-				if (currentTileStatus != TileStatus::IMPASSABLE)
-				{
-					start_position[0] -= 1;
-				}
 
-				// Left-most X tile
-				currentTileStatus = m_getTile(glm::vec2(start_position[0]--, start_position[1]))->GetTileStatus();
-				if (currentTileStatus != TileStatus::IMPASSABLE)
-				{
-					start_position[0] += 1;
-				}
+		m_moveGameObject(m_pStarShip, start_position[0], start_position[1], TileStatus::START);
+		
 
-				// Top-most Y tile
-				currentTileStatus = m_getTile(glm::vec2(start_position[0], start_position[1]++))->GetTileStatus();
-				if (currentTileStatus != TileStatus::IMPASSABLE)
-				{
-					start_position[1] += 1;
-				}
-
-				// Bottom-most Y tile
-				currentTileStatus = m_getTile(glm::vec2(start_position[0], start_position[1]--))->GetTileStatus();
-				if (currentTileStatus != TileStatus::IMPASSABLE)
-				{
-					start_position[1] -= 1;
-				}
-		}
-
-		// Convert grid space to world space
-		m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(TileStatus::UNVISITED);
-		m_pStarShip->GetTransform()->position = m_getTile(start_position[0], start_position[1])->GetTransform()->position + Config::TILE_OFFSET;
-		m_pStarShip->SetGridPosition(start_position[0], start_position[1]);
-		m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(TileStatus::START);
+		
 	}
 	ImGui::Separator();
 
@@ -193,11 +150,8 @@ void PlayScene::GUI_Function()
 			goal_position[1] = Config::ROW_NUM - 1;
 		}
 
-		// Convert grid space to world space
-		m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(TileStatus::UNVISITED);
-		m_pTarget->GetTransform()->position = m_getTile(goal_position[0], goal_position[1])->GetTransform()->position + Config::TILE_OFFSET;
-		m_pTarget->SetGridPosition(goal_position[0], goal_position[1]);
-		m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(TileStatus::GOAL);
+		m_moveGameObject(m_pStarShip, goal_position[0], goal_position[1], TileStatus::GOAL);
+
 		m_computeTileCosts();
 	}
 	ImGui::End();
@@ -388,4 +342,30 @@ void PlayScene::m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, in
 			m_getTile(i, j)->SetTileStatus(TileStatus::IMPASSABLE);
 		}
 	}
+}
+
+
+template <typename T>
+void PlayScene::m_addObjectToGrid(T*& object, int col, int row, TileStatus status)
+{
+	object = new T();
+	object->GetTransform()->position = m_getTile(col, row)->GetTransform()->position + Config::TILE_OFFSET;
+	object->SetGridPosition(static_cast<float>(col), static_cast<float>(row));
+	m_getTile(col, row)->SetTileStatus(status);
+	AddChild(object);
+}
+
+template <typename T>
+void PlayScene::m_moveGameObject(T*& object, int col, int row, TileStatus status)
+{
+	// Ignore changes to the Impassable tiles
+if (m_getTile(object->GetGridPosition())->GetTileStatus() != TileStatus::IMPASSABLE)
+	{
+		m_getTile(object->GetGridPosition())->SetTileStatus(TileStatus::UNVISITED);
+	}
+	// Convert grid space to world space
+	m_getTile(object->GetGridPosition())->SetTileStatus(TileStatus::UNVISITED);
+	object->GetTransform()->position = m_getTile(col, row)->GetTransform()->position + Config::TILE_OFFSET;
+	object->SetGridPosition(col, row);
+	m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(status);
 }

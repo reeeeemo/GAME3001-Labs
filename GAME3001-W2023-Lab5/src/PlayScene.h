@@ -9,6 +9,7 @@
 #include "StarShip.h"
 #include "Tile.h"
 #include "Heuristic.h"
+#include "TileComparator.h"
 
 
 class PlayScene : public Scene
@@ -58,15 +59,24 @@ private:
 	// TODO: some kind of data structure for the path list.
 	// Suggestions: Queue data structure or a linked list.
 
-	std::queue<Tile*> m_pPathList;
+	std::priority_queue<Tile*, std::vector<Tile*>, TileComparator > m_pPathList;
 
 	// Convienience functions to convert world to grid space
 	Tile* m_getTile(const int col, const int row) const;
 	Tile* m_getTile(const glm::vec2 grid_position) const;
+
+	template <typename T>
+	void m_addObjectToGrid(T*& object, int col, int row, TileStatus status);
+
+
+	template <typename T>
+	void m_moveGameObject(T*& object, int col, int row, TileStatus status);
+
 	void m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, int rowEnd) const; // Makes it easier to set chunks of impassable objects at a time.
 
 	// Heuristic
 	Heuristic m_currentHeuristic;
 };
+
 
 #endif /* defined (__PLAY_SCENE__) */
