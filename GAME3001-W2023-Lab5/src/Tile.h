@@ -24,6 +24,8 @@ public:
 	// Getters (Accessors) and Setters (Mutators)
 	[[nodiscard]] Tile* GetNeighbourTile(const NeighbourTile position) const;
 	void SetNeighbourTile(NeighbourTile position, Tile* tile);
+	std::vector<Tile*> GetNeighbourTiles();
+
 	[[nodiscard]] Tile* GetTileParent() const;
 	void SetTileParent(Tile* parent_tile);
 
@@ -47,7 +49,7 @@ private:
 	Label* m_statusLabel;
 
 	Tile* m_pTileParent;
-	Tile* m_neighbours[static_cast<int>(NeighbourTile::NUM_OF_NEIGHBOUR_TILES)];
+	std::vector<Tile*> m_neighbours;
 };
 
 

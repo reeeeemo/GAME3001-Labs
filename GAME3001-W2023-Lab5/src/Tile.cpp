@@ -10,6 +10,8 @@ Tile::Tile() : m_cost(0.0f)
 {
 	SetWidth(Config::TILE_SIZE);
 	SetHeight(Config::TILE_SIZE);
+	m_neighbours = std::vector<Tile*>(static_cast<int>(NeighbourTile::NUM_OF_NEIGHBOUR_TILES));
+	m_pTileParent = nullptr;
 }
 
 Tile::~Tile()
@@ -59,6 +61,11 @@ Tile* Tile::GetNeighbourTile(const NeighbourTile position) const
 void Tile::SetNeighbourTile(NeighbourTile position, Tile* tile)
 {
 	m_neighbours[static_cast<int>(position)] = tile;
+}
+
+std::vector<Tile*> Tile::GetNeighbourTiles()
+{
+	return m_neighbours;
 }
 
 Tile* Tile::GetTileParent() const

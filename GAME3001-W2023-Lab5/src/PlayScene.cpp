@@ -1,6 +1,7 @@
 #include "PlayScene.h"
 #include "Game.h"
 #include "EventManager.h"
+#include <windows.h>
 
 // required for IMGUI
 #include "imgui.h"
@@ -64,16 +65,12 @@ void PlayScene::Start()
 	m_buildGrid();
 	m_currentHeuristic = Heuristic::MANHATTAN;
 
+	// Build Tile Map
+	m_initalizeTileMap();
+	m_buildTileMap();
 
-	// Add the Target to the Scene
-	m_addObjectToGrid(m_pStarShip, 1, 3, TileStatus::START);
 
-	m_addObjectToGrid(m_pTarget	, 15, 11, TileStatus::START);
-
-	// Mark some tiles as impassable
-	m_SetAsObstacle(9, 0, 9, 7);
-	m_SetAsObstacle(5, 7, 5, 14);
-	m_SetAsObstacle(13, 7, 13, 14);
+	m_findShortestPath();
 
 	// Preload Sounds
 
@@ -81,8 +78,6 @@ void PlayScene::Start()
 	SoundManager::Instance().Load("../Assets/Audio/thunder.ogg", "thunder", SoundType::SOUND_SFX);
 
 	m_computeTileCosts();
-
-	m_findShortestPath();
 
 	ImGuiWindowFrame::Instance().SetGuiFunction(std::bind(&PlayScene::GUI_Function, this));
 }
@@ -321,41 +316,120 @@ void PlayScene::m_removeAllObstacles()
 
 void PlayScene::m_findShortestPath()
 {
-	
-	// Some A* pseudocode
-	// Step 1: Initialization
+	m_getTile(m_pStarShip->GetGridPosition())->SetTileParent(nullptr);
+	m_pOpenList.push(m_getTile(m_pStarShip->GetGridPosition()));
+	bool goal_found = false;
 
-	// Step 2. Loop until the OpenList is empty or the goal is found
+	while (!m_pOpenList.empty() && !goal_found)
+	{
+		const auto current_node = m_pOpenList.top(); // Tile with least F
+		std::cout << current_node->GetGridPosition().x << ", " << current_node->GetGridPosition().y << std::endl;
 
-	//		Step 2a - Init variables for minimum distance
+		m_pOpenList.pop();
+		current_node->SetTileStatus(TileStatus::CLOSED);
 
-	//		Step 2b - Add only valid neighbours to the neighbor list
+		for (auto neighbour : current_node->GetNeighbourTiles())
+		{
+			// Ignore these
+			if (neighbour == nullptr || neighbour->GetTileStatus() == TileStatus::IMPASSABLE)
+			{
+				continue;
+			}
 
-	//		loop through each neighbour in a right-winding order (top - right - bottom - left) (try to make a sorted order)
+			if (neighbour->GetTileStatus() == TileStatus::GOAL)
+			{
+				goal_found = true;
+				neighbour->SetTileParent(current_node);
+				std::cout << "Goal Found at: " << neighbour->GetGridPosition().x << ". " << neighbour->GetGridPosition().y << std::endl;
+				m_pPathList.push_front(neighbour);
+			}
 
-	//		Step 2c - For every valid neighbour in the neighbour nlist -> check if it has the minimum distance.
-	//		or -> Alternatively -> the neighbour could be the goal tile.
-	//		Step 2c1 -> Check if the neighbour is not the goal
-	//		Step 2d -> Add top tile of the open_list to the path_list
-	//		Step 2e -> Add the min_tile to the open_list
-	//		Step 2f -> Push all remaining neighbours on to the closed list
+			if (neighbour->GetTileStatus() == TileStatus::UNVISITED)
+			{
+				neighbour->SetTileParent((current_node));
+				neighbour->SetTileStatus(TileStatus::OPEN);
+				m_pOpenList.push(neighbour);
+			}
+		}
+	}
 
-
-	// Note: Watchout for recursive code (function that calls itself).
-
-
+	if(goal_found)
+	{
+		m_pathFound = true;
+		m_buildPathList();
+		m_displayPathList();
+	} else
+	{
+		const auto handle = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(handle, 4);
+		std::cout << "No path Found!" << std::endl;
+		SetConsoleTextAttribute(handle, 15);
+	}
 }
 
-void PlayScene::m_displayPathList()
+void PlayScene::m_buildPathList()
 {
+	while(m_pPathList.front()->GetTileParent() != nullptr)
+	{
+		m_pPathList.push_front(m_pPathList.front()->GetTileParent());
+	}
+}
+
+void PlayScene::m_displayPathList() const
+{
+	std::cout << "Total Path Length is: " << m_pPathList.size() - 1 << std::endl;
+	std::cout << "Path List is: " << std::endl;
+	std::cout << "========================================" << std::endl;
+	for (const auto node : m_pPathList)
+	{
+		node->SetTileStatus(TileStatus::PATH);
+		std::cout << node->GetGridPosition().x << ", " << node->GetGridPosition().y << std::endl;
+	}
 }
 
 void PlayScene::m_resetPathFinding()
 {
+	// Remove all nodes from the open list.
+	while(!m_pOpenList.empty())
+	{
+		m_pOpenList.pop();
+	}
+
+	// Remove all nodes from the path list
+	while (!m_pOpenList.empty())
+	{
+		m_pPathList.pop_front();
+	}
+
+	// Reset path found
+	m_pathFound = false;
+
+	// Mark all the tiles in the grid marked anything other than UNVISITED
+	for (Tile* tile : m_pGrid)
+	{
+		if (tile->GetTileStatus() == TileStatus::OPEN ||
+			tile->GetTileStatus() == TileStatus::CLOSED ||
+			tile->GetTileStatus() == TileStatus::PATH)
+		{
+			tile->SetTileStatus(TileStatus::UNVISITED);
+		}
+	}
+
+	m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(TileStatus::START);
+	m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(TileStatus::GOAL);
+
 }
 
 void PlayScene::m_resetSimulation()
 {
+	m_removeAllObstacles();
+	m_pBuildObstacles();
+	RemoveChild(m_pStarShip);
+	RemoveChild(m_pTarget);
+	m_initalizeTileMap();
+	m_buildTileMap();
+	m_computeTileCosts();
+	m_resetPathFinding();
 }
 
 Tile* PlayScene::m_getTile(int col, int row) const
@@ -371,6 +445,7 @@ Tile* PlayScene::m_getTile(glm::vec2 grid_position) const
 	return m_getTile(col, row);
 }
 
+// Setts a specific amount of tiles as an obstacle.
 void PlayScene::m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, int rowEnd) const
 {
 	for (int i = columnStart; i <= columnEnd; i++)
@@ -380,6 +455,91 @@ void PlayScene::m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, in
 			m_getTile(i, j)->SetTileStatus(TileStatus::IMPASSABLE);
 		}
 	}
+}
+
+void PlayScene::m_initalizeTileMap()
+{
+	m_tileMap = "----------I----------";
+	m_tileMap += "---------I----------";
+	m_tileMap += "---------I----------";
+	m_tileMap += "--S------I----------";
+	m_tileMap += "---------I----------";
+	m_tileMap += "---------I----------";
+	m_tileMap += "-----I---I---I------";
+	m_tileMap += "-----I-------I------";
+	m_tileMap += "-----I-------I------";
+	m_tileMap += "-----I-------I------";
+	m_tileMap += "-----I-------I------";
+	m_tileMap += "-----I-------I-G----";
+	m_tileMap += "-----I-------I------";
+	m_tileMap += "-----I-------I------";
+	m_tileMap += "-----I-------I------";
+}
+
+
+void PlayScene::m_buildTileMap()
+{
+	int obstacles_count = 0;
+
+	for (int row = 0; row < Config::ROW_NUM; ++row)
+	{
+		for (int col = 0; col < Config::COL_NUM; ++col)
+		{
+			if (m_tileMap[(row * Config::COL_NUM) + col] == 'I')
+			{
+				m_addObjectToGrid(m_pObstacles[(row * Config::COL_NUM) + col], col, row, TileStatus::IMPASSABLE);
+				obstacles_count++;
+			}
+
+			if ((m_tileMap[(row * Config::COL_NUM) + col] == 'S'))
+			{
+				m_addObjectToGrid(m_pStarShip, col, row, TileStatus::START);
+			}
+
+			if ((m_tileMap[(row * Config::COL_NUM) + col] == 'G'))
+			{
+				m_addObjectToGrid(m_pTarget, col, row, TileStatus::GOAL);
+			}
+
+			if ((m_tileMap[(row * Config::COL_NUM) + col] == '-'))
+			{
+				m_getTile(col, row)->SetTileStatus(TileStatus::UNVISITED);
+			}
+		}
+	}
+}
+
+void PlayScene::m_updateTileMap(const int col, const int row, const TileStatus status)
+{
+	switch(status)
+	{
+	case TileStatus::UNVISITED:
+		m_tileMap[(row * Config::COL_NUM) + col] = '-';
+		break;
+	case TileStatus::OPEN:
+		m_tileMap[(row * Config::COL_NUM) + col] = 'O';
+		break;
+	case TileStatus::CLOSED:
+		m_tileMap[(row * Config::COL_NUM) + col] = 'C';
+		break;
+	case TileStatus::IMPASSABLE:
+		m_tileMap[(row * Config::COL_NUM) + col] = 'I';
+		break;
+	case TileStatus::GOAL:
+		m_tileMap[(row * Config::COL_NUM) + col] = 'G';
+		break;
+	case TileStatus::START:
+		m_tileMap[(row * Config::COL_NUM) + col] = 'S';
+		break;
+	case TileStatus::PATH:
+		m_tileMap[(row * Config::COL_NUM) + col] = 'P';
+		break;
+	}
+}
+
+void PlayScene::m_updateTileMap(glm::vec2 grid_position, TileStatus status)
+{
+	m_updateTileMap(static_cast<int>(grid_position.x), static_cast<int>(grid_position.y), status);
 }
 
 
