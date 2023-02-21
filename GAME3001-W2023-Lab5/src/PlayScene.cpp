@@ -163,12 +163,62 @@ void PlayScene::GUI_Function()
 	if (static_cast<int>(m_currentHeuristic) != radio)
 	{
 		m_currentHeuristic = static_cast<Heuristic>(radio);
+		if (!m_pPathList.empty())
+		{
+			m_resetPathFinding();
+		}
 		m_computeTileCosts();
 	}
 
-	// Starship properties
+	ImGui::Separator();
+
+	if (ImGui::Button("Find Shortest Path"))
+	{
+		if (!m_pPathList.empty())
+		{
+			m_resetPathFinding();
+		}
+		m_findShortestPath();
+
+		
+	}
+
+	if (m_pathFound)
+	{
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Path Found! - Length: %d", (m_pPathList.size() - 1));
+	}
+
+	ImGui::Separator();
 
 	static int start_position[2] = { static_cast<int>(m_pStarShip->GetGridPosition().x),static_cast<int>(m_pStarShip->GetGridPosition().y) };
+	static int goal_position[2] = { static_cast<int>(m_pTarget->GetGridPosition().x),static_cast<int>(m_pTarget->GetGridPosition().y) };
+
+
+	if (ImGui::Button("Reset Path Finding"))
+	{
+		if (!m_pPathList.empty())
+		{
+			m_resetPathFinding();
+		}
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Reset Simulation"))
+	{
+		m_resetSimulation();
+		start_position[0] = static_cast<int>(m_pStarShip->GetGridPosition().x);
+		start_position[0] = static_cast<int>(m_pStarShip->GetGridPosition().y);
+		goal_position[0] = static_cast<int>(m_pTarget->GetGridPosition().x);
+		goal_position[0] = static_cast<int>(m_pTarget->GetGridPosition().y);
+	}
+
+	ImGui::Separator(); 
+
+
+	// Starship properties
+
 	if (ImGui::SliderInt2("Start Position", start_position, 0, Config::COL_NUM - 1))
 	{
 		// Constrain the object within max rows
@@ -185,7 +235,6 @@ void PlayScene::GUI_Function()
 	ImGui::Separator();
 
 	// Target Properties
-		static int goal_position[2] = { static_cast<int>(m_pTarget->GetGridPosition().x),static_cast<int>(m_pTarget->GetGridPosition().y) };
 	if (ImGui::SliderInt2("Goal Position", goal_position, 0, Config::COL_NUM - 1))
 	{
 		// Constrain the object within max rows
@@ -194,7 +243,7 @@ void PlayScene::GUI_Function()
 			goal_position[1] = Config::ROW_NUM - 1;
 		}
 
-		m_moveGameObject(m_pStarShip, goal_position[0], goal_position[1], TileStatus::GOAL);
+		m_moveGameObject(m_pTarget, goal_position[0], goal_position[1], TileStatus::GOAL);
 
 		m_computeTileCosts();
 	}
@@ -605,13 +654,24 @@ template <typename T>
 void PlayScene::m_moveGameObject(T*& object, int col, int row, TileStatus status)
 {
 	// Ignore changes to the Impassable tiles
-if (m_getTile(object->GetGridPosition())->GetTileStatus() != TileStatus::IMPASSABLE)
+	if (m_getTile(object->GetGridPosition())->GetTileStatus() != TileStatus::IMPASSABLE)
 	{
 		m_getTile(object->GetGridPosition())->SetTileStatus(TileStatus::UNVISITED);
+		m_updateTileMap(object->GetGridPosition(), TileStatus::UNVISITED);
 	}
 	// Convert grid space to world space
-	m_getTile(object->GetGridPosition())->SetTileStatus(TileStatus::UNVISITED);
 	object->GetTransform()->position = m_getTile(col, row)->GetTransform()->position + Config::TILE_OFFSET;
-	object->SetGridPosition(col, row);
-	m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(status);
+	object->SetGridPosition(static_cast<float>(col), static_cast<float>(row));
+
+	// Ignore changes to the impassable tiles
+	if (m_getTile(object->GetGridPosition())->GetTileStatus() != TileStatus::IMPASSABLE)
+	{
+		m_getTile(object->GetGridPosition())->SetTileStatus(status);
+	}
+	m_updateTileMap(col, row, status);
+
+	if (!m_pPathList.empty())
+	{
+		m_resetPathFinding();
+	}
 }
