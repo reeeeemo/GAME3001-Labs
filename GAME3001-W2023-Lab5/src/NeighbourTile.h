@@ -2,7 +2,7 @@
 #ifndef __NEIGHBOUR_TILE__
 #define __NEIGHBOUR_TILE__
 
-enum NeighbourTile
+enum class NeighbourTile
 {
 	TOP_TILE,
 	RIGHT_TILE,

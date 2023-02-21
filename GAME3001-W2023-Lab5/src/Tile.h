@@ -22,13 +22,15 @@ public:
 	void Clean() override;
 
 	// Getters (Accessors) and Setters (Mutators)
-	Tile* GetNeighbourTile(const NeighbourTile position) const;
+	[[nodiscard]] Tile* GetNeighbourTile(const NeighbourTile position) const;
 	void SetNeighbourTile(NeighbourTile position, Tile* tile);
+	[[nodiscard]] Tile* GetTileParent() const;
+	void SetTileParent(Tile* parent_tile);
 
 	float GetTileCost() const;
 	void SetTileCost(float cost);
 
-	TileStatus GetTileStatus() const;
+	[[nodiscard]] TileStatus GetTileStatus() const;
 	void SetTileStatus(TileStatus status);
 
 	// Utility Functions
@@ -44,7 +46,8 @@ private:
 	Label* m_costLabel;
 	Label* m_statusLabel;
 
-	Tile* m_neighbours[NUM_OF_NEIGHBOUR_TILES];
+	Tile* m_pTileParent;
+	Tile* m_neighbours[NeighbourTile::NUM_OF_NEIGHBOUR_TILES];
 };
 
 

@@ -19,14 +19,23 @@ void Tile::Draw()
 {
 	switch(m_status)
 	{
-	case START:
+	case TileStatus::START:
 		Util::DrawFilledRect(GetTransform()->position, GetWidth(), GetHeight(), glm::vec4(0.5f, 1.0f,0.5f,1.0f));
 		break;
-	case GOAL:
+	case TileStatus::GOAL:
 		Util::DrawFilledRect(GetTransform()->position, GetWidth(), GetHeight(), glm::vec4(1.0f, 0.5f, 0.5f, 1.0f));
 		break;
-	case IMPASSABLE:
+	case TileStatus::IMPASSABLE:
 		Util::DrawFilledRect(GetTransform()->position, GetWidth(), GetHeight(), glm::vec4(0.5, 0.5, 0.5, 1.0f));
+		break;
+	case TileStatus::PATH:
+		Util::DrawFilledRect(GetTransform()->position, GetWidth(), GetHeight(), glm::vec4(0.0f, 1.0f, 0.0f, 0.5f));
+		break;
+	case TileStatus::CLOSED:
+		Util::DrawFilledRect(GetTransform()->position, GetWidth(), GetHeight(), glm::vec4(0.1f, 0.1f, 0.1f, 0.5f));
+		break;
+	case TileStatus::OPEN:
+		Util::DrawFilledRect(GetTransform()->position, GetWidth(), GetHeight(), glm::vec4(1.0f, 0.0f, 0.5f, 0.5f));
 		break;
 	default:
 		Util::DrawRect(GetTransform()->position, GetWidth(), GetHeight());
@@ -44,12 +53,22 @@ void Tile::Clean()
 
 Tile* Tile::GetNeighbourTile(const NeighbourTile position) const
 {
-	return m_neighbours[position];
+	return m_neighbours[static_cast<int>(position)];
 }
 
 void Tile::SetNeighbourTile(NeighbourTile position, Tile* tile)
 {
-	m_neighbours[position] = tile;
+	m_neighbours[static_cast<int>(position)] = tile;
+}
+
+Tile* Tile::GetTileParent() const
+{
+	return m_pTileParent;
+}
+
+void Tile::SetTileParent(Tile* parent_tile)
+{
+	m_pTileParent = parent_tile;
 }
 
 float Tile::GetTileCost() const
@@ -80,22 +99,22 @@ void Tile::SetTileStatus(TileStatus status)
 
 	switch(m_status)
 	{
-	case UNVISITED:
+	case TileStatus::UNVISITED:
 		m_statusLabel->SetText("-");
 		break;
-	case OPEN:
+	case TileStatus::OPEN:
 		m_statusLabel->SetText("O");
 		break;
-	case CLOSED:
+	case TileStatus::CLOSED:
 		m_statusLabel->SetText("C");
 		break;
-	case IMPASSABLE:
+	case TileStatus::IMPASSABLE:
 		m_statusLabel->SetText("I");
 		break;
-	case GOAL:
+	case TileStatus::GOAL:
 		m_statusLabel->SetText("G");
 		break;
-	case START:
+	case TileStatus::START:
 		m_statusLabel->SetText("S");
 		break;
 	}
