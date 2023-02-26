@@ -54,6 +54,22 @@ void PlayScene::HandleEvents()
 	{
 		Game::Instance().ChangeSceneState(SceneState::END);
 	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_F))
+	{
+		if (!m_pPathList.empty())
+		{
+			m_resetPathFinding();
+		}
+		m_findShortestPath();
+	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_R))
+	{
+		m_resetSimulation();
+	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_T))
+	{
+		m_setGridEnabled(!m_isGridEnabled);
+	}
 }
 
 void PlayScene::Start()
@@ -80,7 +96,15 @@ void PlayScene::Start()
 	SoundManager::Instance().Load("../Assets/Audio/yay.ogg", "yay", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/thunder.ogg", "thunder", SoundType::SOUND_SFX);
 
-
+	const SDL_Color blue = { 0, 0, 255, 255 };
+	m_pInstructionLabels.push_back(new Label("F to find shortest path", "Consolas", 18, blue, glm::vec2(120.0f, 20.0f)));
+	m_pInstructionLabels.push_back(new Label("R to reset Scene", "Consolas", 18, blue, glm::vec2(120.0f, 40.0f)));
+	m_pInstructionLabels.push_back(new Label("T to toggle grid", "Consolas", 18, blue, glm::vec2(120.0f, 60.0f)));
+	for (Label* current : m_pInstructionLabels)
+	{
+		current->SetParent(this);
+		AddChild(current);
+	}
 	ImGuiWindowFrame::Instance().SetGuiFunction(std::bind(&PlayScene::GUI_Function, this));
 }
 
@@ -93,7 +117,7 @@ void PlayScene::GUI_Function()
 	// See examples by uncommenting the following - also look at imgui_demo.cpp in the IMGUI filter
 	//ImGui::ShowDemoWindow();
 	
-	ImGui::Begin("GAME3001 - W2023 - Lab4", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar );
+	ImGui::Begin("GAME3001 - W2023 - Assignment2", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar );
 
 	ImGui::Separator();
 

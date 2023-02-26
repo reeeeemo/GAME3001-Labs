@@ -34,6 +34,8 @@ private:
 	// Game Objects for the Scene
 	Target* m_pTarget;
 	StarShip* m_pStarShip;
+
+	std::vector<Label*> m_pInstructionLabels;
 	
 
 	// Debugging Variables
