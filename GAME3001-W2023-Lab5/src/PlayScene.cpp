@@ -214,6 +214,12 @@ void PlayScene::GUI_Function()
 
 	ImGui::Separator(); 
 
+	if (ImGui::Button("Start Pathfinding")) {
+		m_moveShipAcrossTilePath();
+	}
+
+	ImGui::Separator();
+
 
 	// Starship properties
 
@@ -554,6 +560,16 @@ void PlayScene::m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, in
 	}
 }
 
+void PlayScene::m_moveShipAcrossTilePath()
+{
+	for (const auto node : m_pPathList) {
+		while (m_pStarShip->GetTransform()->position != node->GetTransform()->position + Config::TILE_OFFSET) {
+			std::cout << m_pStarShip->GetGridPosition().x << " " << m_pStarShip->GetGridPosition().y << std::endl;
+			m_pStarShip->SetTargetPosition(node->GetTransform()->position + Config::TILE_OFFSET);
+		}
+	}
+}
+
 void PlayScene::m_initalizeTileMap()
 {
 	m_tileMap = "----------I----------";
@@ -591,6 +607,7 @@ void PlayScene::m_buildTileMap()
 			if ((m_tileMap[(row * Config::COL_NUM) + col] == 'S'))
 			{
 				m_addObjectToGrid(m_pStarShip, col, row, TileStatus::START);
+				m_pStarShip->SetTargetPosition(m_getTile(col, row)->GetTransform()->position + Config::TILE_OFFSET);
 			}
 
 			if ((m_tileMap[(row * Config::COL_NUM) + col] == 'G'))

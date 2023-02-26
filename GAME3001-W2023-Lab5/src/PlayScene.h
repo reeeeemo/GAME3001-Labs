@@ -83,6 +83,8 @@ private:
 
 	void m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, int rowEnd) const; // Makes it easier to set chunks of impassable objects at a time.
 
+	void m_moveShipAcrossTilePath();
+
 	// Heuristic
 	Heuristic m_currentHeuristic;
 

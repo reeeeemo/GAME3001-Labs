@@ -42,7 +42,7 @@ void StarShip::Draw()
 
 void StarShip::Update()
 {
-	//m_move();
+	m_move();
 }
 
 void StarShip::Clean()
@@ -108,32 +108,13 @@ void StarShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 
 	const float turn_sensitivity = 3.0f;
 
-	if(GetCollisionWhiskers()[0] || GetCollisionWhiskers()[1] || GetCollisionWhiskers()[2])
-	{
-		target_rotation += GetTurnRate() * turn_sensitivity;
-	}
-	else if(GetCollisionWhiskers()[3] || GetCollisionWhiskers()[4])
-	{
-		target_rotation -= GetTurnRate() * turn_sensitivity;
-	}
-
 	SetCurrentHeading(Util::LerpUnclamped(GetCurrentHeading(), 
 		GetCurrentHeading() + target_rotation, GetTurnRate() * Game::Instance().GetDeltaTime()));
-
-	UpdateWhiskers(GetWhiskerAngle());
 }
 
 void StarShip::m_move()
 {
-
-	// maybe a switch - case
-
-	// switch (behaviour)
-	//    case(seek)
-	//    case(arrive)
-	//    case(flee)
-	//    case(avoidance)
-
+	Seek();
 	//                      final Position  Position Term   Velocity      Acceleration Term
 	// Kinematic Equation-> Pf            = Pi +            Vi * (time) + (0.5) * Ai * (time * time)
 
