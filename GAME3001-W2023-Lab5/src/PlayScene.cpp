@@ -179,8 +179,6 @@ void PlayScene::GUI_Function()
 			m_resetPathFinding();
 		}
 		m_findShortestPath();
-
-		
 	}
 
 	if (m_pathFound)
@@ -209,9 +207,9 @@ void PlayScene::GUI_Function()
 	{
 		m_resetSimulation();
 		start_position[0] = static_cast<int>(m_pStarShip->GetGridPosition().x);
-		start_position[0] = static_cast<int>(m_pStarShip->GetGridPosition().y);
+		start_position[1] = static_cast<int>(m_pStarShip->GetGridPosition().y);
 		goal_position[0] = static_cast<int>(m_pTarget->GetGridPosition().x);
-		goal_position[0] = static_cast<int>(m_pTarget->GetGridPosition().y);
+		goal_position[1] = static_cast<int>(m_pTarget->GetGridPosition().y);
 	}
 
 	ImGui::Separator(); 
@@ -493,7 +491,7 @@ void PlayScene::m_resetPathFinding()
 	}
 
 	// Remove all nodes from the path list
-	while (!m_pOpenList.empty())
+	while (!m_pPathList.empty())
 	{
 		m_pPathList.pop_front();
 	}
@@ -506,7 +504,9 @@ void PlayScene::m_resetPathFinding()
 	{
 		if (tile->GetTileStatus() == TileStatus::OPEN ||
 			tile->GetTileStatus() == TileStatus::CLOSED ||
-			tile->GetTileStatus() == TileStatus::PATH)
+			tile->GetTileStatus() == TileStatus::PATH ||
+			tile->GetTileStatus() == TileStatus::START || 
+			tile->GetTileStatus() == TileStatus::GOAL)
 		{
 			tile->SetTileStatus(TileStatus::UNVISITED);
 		}
