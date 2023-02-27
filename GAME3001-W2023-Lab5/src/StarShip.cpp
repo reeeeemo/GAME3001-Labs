@@ -42,7 +42,7 @@ void StarShip::Draw()
 
 void StarShip::Update()
 {
-	m_move();
+	//m_move();
 }
 
 void StarShip::Clean()
@@ -104,9 +104,8 @@ void StarShip::Seek()
 
 void StarShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 {
-	float target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction) -90.0f;
+	float target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction);
 
-	const float turn_sensitivity = 3.0f;
 
 	SetCurrentHeading(Util::LerpUnclamped(GetCurrentHeading(), 
 		GetCurrentHeading() + target_rotation, GetTurnRate() * Game::Instance().GetDeltaTime()));
@@ -114,7 +113,6 @@ void StarShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 
 void StarShip::m_move()
 {
-	Seek();
 	//                      final Position  Position Term   Velocity      Acceleration Term
 	// Kinematic Equation-> Pf            = Pi +            Vi * (time) + (0.5) * Ai * (time * time)
 

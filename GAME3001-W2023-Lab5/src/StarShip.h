@@ -3,6 +3,8 @@
 #define __STARSHIP__
 
 #include "Agent.h"
+#include "Tile.h"
+
 class StarShip : public Agent
 {
 public:
@@ -31,6 +33,10 @@ public:
 	// public functions
 	void Seek();
 	void LookWhereYoureGoing(glm::vec2 target_direction);
+
+	// Controls movement with pathfinding
+	bool m_isPathfinding = false;
+	Tile* m_pCurrentTile;
 
 private:
 	// private movement variables
