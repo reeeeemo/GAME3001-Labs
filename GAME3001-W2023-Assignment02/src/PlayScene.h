@@ -29,7 +29,7 @@ private:
 	// IMGUI Function
 	void GUI_Function();
 	std::string m_guiTitle;
-	glm::vec2 m_mousePosition;
+	glm::ivec2 m_mousePosition;
 
 	// Game Objects for the Scene
 	Target* m_pTarget;

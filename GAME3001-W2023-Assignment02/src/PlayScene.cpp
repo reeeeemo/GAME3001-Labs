@@ -74,6 +74,26 @@ void PlayScene::HandleEvents()
 	{
 		m_SetDebugEnabled(!m_getDebugEnabled());
 	}
+	if(m_getDebugEnabled())
+	{
+		if (EventManager::Instance().MousePressed(1)) //start
+		{
+			SDL_GetMouseState(&m_mousePosition.x, &m_mousePosition.y);
+			m_moveGameObject(m_pStarShip, m_mousePosition.x / 40, m_mousePosition.y / 40, TileStatus::START);
+			m_computeTileCosts();
+			m_findShortestPath();
+
+		}
+		if (EventManager::Instance().MousePressed(3)) //goal
+		{
+			SDL_GetMouseState(&m_mousePosition.x, &m_mousePosition.y);
+			m_moveGameObject(m_pTarget, m_mousePosition.x / 40, m_mousePosition.y / 40, TileStatus::GOAL);
+			m_computeTileCosts();
+			m_findShortestPath();
+			
+		}
+	}
+	
 }
 
 void PlayScene::Start()
@@ -415,6 +435,14 @@ bool PlayScene::m_getDebugEnabled() const
 void PlayScene::m_SetDebugEnabled(bool state)
 {
 	m_bDebugView = state;
+	if(m_bDebugView)
+	{
+		m_setGridEnabled(true);
+	}
+	else
+	{
+		m_setGridEnabled(false);
+	}
 }
 
 void PlayScene::m_pBuildObstacles()
