@@ -72,7 +72,10 @@ void PlayScene::HandleEvents()
 	}
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_M))
 	{
-		//move
+		if (!m_pPathList.empty())
+		{
+			m_moveShipAcrossTilePath();
+		}
 	}
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_H))
 	{
