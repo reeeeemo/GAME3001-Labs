@@ -29,6 +29,10 @@ void PlayScene::Update()
 {
 	UpdateDisplayList();
 
+	if (!m_pPathList.empty())
+	{
+		m_moveShipAcrossTilePath();
+	}
 }
 
 void PlayScene::Clean()
@@ -72,7 +76,14 @@ void PlayScene::HandleEvents()
 	}
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_H))
 	{
-		m_SetDebugEnabled(!m_getDebugEnabled());
+		if (!debugHasBeenPressed)
+		{
+			m_SetDebugEnabled(!m_getDebugEnabled());
+			debugHasBeenPressed = true;
+		}
+	} else
+	{
+		debugHasBeenPressed = false;
 	}
 	if(m_getDebugEnabled())
 	{
@@ -260,7 +271,7 @@ void PlayScene::GUI_Function()
 	{
 		if (!m_pPathList.empty())
 		{
-			m_resetPathFinding();
+			m_moveGameObject(m_pStarShip, start_position[0], start_position[1], TileStatus::START);
 		}
 	}
 
@@ -276,13 +287,6 @@ void PlayScene::GUI_Function()
 	}
 
 	ImGui::Separator(); 
-
-	if (ImGui::Button("Start Pathfinding")) {
-		m_moveShipAcrossTilePath();
-	}
-
-	ImGui::Separator();
-
 
 	// Starship properties
 
@@ -648,11 +652,28 @@ void PlayScene::m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, in
 
 void PlayScene::m_moveShipAcrossTilePath()
 {
-	for (const auto node : m_pPathList) {
-		while (m_pStarShip->GetTransform()->position != node->GetTransform()->position + Config::TILE_OFFSET) {
-			std::cout << m_pStarShip->GetGridPosition().x << " " << m_pStarShip->GetGridPosition().y << std::endl;
-			m_pStarShip->SetTargetPosition(node->GetTransform()->position + Config::TILE_OFFSET);
+	if (!m_pPathList.empty())
+	{
+		static float time = 0.0f;
+		Tile* current_node = m_pPathList.front();
+		glm::vec2 node_position = m_getTile(current_node->GetGridPosition().x, current_node->GetGridPosition().y)->GetTransform()->position + Config::TILE_OFFSET;
+		glm::vec2 position = Util::Lerp(m_pStarShip->GetTransform()->position, node_position, time);
+		glm::vec2 rotation = Util::Normalize(node_position - m_pStarShip->GetTransform()->position);
+
+		if (m_pStarShip->GetTransform()->rotation != rotation)
+		{
+			m_pStarShip->LookWhereYoureGoing(rotation);
 		}
+
+		if (time >= 1.0f)
+		{
+			time = 0.0f;
+			m_pPathList.pop_front();
+		}
+
+		time += Game::Instance().GetDeltaTime();
+		m_pStarShip->GetTransform()->position = position;
+
 	}
 }
 

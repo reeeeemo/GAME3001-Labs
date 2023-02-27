@@ -42,7 +42,6 @@ void StarShip::Draw()
 
 void StarShip::Update()
 {
-	m_move();
 }
 
 void StarShip::Clean()
@@ -104,7 +103,7 @@ void StarShip::Seek()
 
 void StarShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 {
-	float target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction) -90.0f;
+	float target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction);
 
 	const float turn_sensitivity = 3.0f;
 

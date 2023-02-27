@@ -201,7 +201,7 @@ void PlayScene::GUI_Function()
 	{
 		if (!m_pPathList.empty())
 		{
-			m_resetPathFinding();
+			m_moveGameObject(m_pStarShip, start_position[0], start_position[1], TileStatus::START);
 		}
 	}
 
@@ -218,11 +218,6 @@ void PlayScene::GUI_Function()
 
 	ImGui::Separator(); 
 
-	if (ImGui::Button("Start Path Finding")) {
-		m_moveShipAcrossTilePath();
-	}
-
-	ImGui::Separator();
 
 
 	// Starship properties
@@ -235,7 +230,7 @@ void PlayScene::GUI_Function()
 			start_position[1] = Config::ROW_NUM - 1;
 		}
 
-		m_moveGameObject(m_pStarShip, start_position[0], start_position[1], TileStatus::START, true);
+		m_moveGameObject(m_pStarShip, start_position[0], start_position[1], TileStatus::START);
 		
 
 		
@@ -251,7 +246,7 @@ void PlayScene::GUI_Function()
 			goal_position[1] = Config::ROW_NUM - 1;
 		}
 
-		m_moveGameObject(m_pTarget, goal_position[0], goal_position[1], TileStatus::GOAL, true);
+		m_moveGameObject(m_pTarget, goal_position[0], goal_position[1], TileStatus::GOAL);
 
 		m_computeTileCosts();
 	}
@@ -689,7 +684,7 @@ void PlayScene::m_addObjectToGrid(T*& object, int col, int row, TileStatus statu
 }
 
 template <typename T>
-void PlayScene::m_moveGameObject(T*& object, int col, int row, TileStatus status, bool resetPathfinding)
+void PlayScene::m_moveGameObject(T*& object, int col, int row, TileStatus status)
 {
 	// Ignore changes to the Impassable tiles
 	if (m_getTile(object->GetGridPosition())->GetTileStatus() != TileStatus::IMPASSABLE)
@@ -708,11 +703,8 @@ void PlayScene::m_moveGameObject(T*& object, int col, int row, TileStatus status
 	}
 	m_updateTileMap(col, row, status);
 
-	if (resetPathfinding)
+	if (!m_pPathList.empty())
 	{
-		if (!m_pPathList.empty())
-		{
-			m_resetPathFinding();
-		}
+		m_resetPathFinding();
 	}
 }

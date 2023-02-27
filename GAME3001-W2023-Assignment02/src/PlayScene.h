@@ -89,6 +89,8 @@ private:
 
 	void m_moveShipAcrossTilePath();
 
+	// For button control.
+	bool debugHasBeenPressed = false;
 	// Heuristic
 	Heuristic m_currentHeuristic;
 
