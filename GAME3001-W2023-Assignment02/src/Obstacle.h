@@ -3,6 +3,7 @@
 #define __OBSTACLE__
 #include "NavigationObject.h"
 #include "SpriteSheet.h"
+#include "Frame.h"
 
 class Obstacle final : public NavigationObject
 {
@@ -17,11 +18,9 @@ public:
 	void Draw() override;
 	void Update() override;
 	void Clean() override;
-	SpriteSheet* GetSpriteSheet();
-	void SetSpriteSheet(SpriteSheet* sprite_sheet);
+
 private:
-	SpriteSheet* m_pSpriteSheet;
-	
+
 };
 
 #endif /* defined (__OBSTACLE__) */

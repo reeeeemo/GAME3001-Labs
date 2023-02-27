@@ -6,14 +6,12 @@
 
 Obstacle::Obstacle()
 {
-	//TextureManager::Instance().Load("../Assets/textures/mine.png", "obstacle");
-	TextureManager::Instance().LoadSpriteSheet("../Assets/sprites/Fences.txt", "../Assets/sprites/Fences.png", "Fences");
+	TextureManager::Instance().Load("../Assets/textures/fence.png", "fence");
 
-	//const auto size = TextureManager::Instance().GetTextureSize("obstacle");
-	SetWidth(40);
-	SetHeight(40);
+	const auto size = TextureManager::Instance().GetTextureSize("fence");
+	SetWidth(static_cast<int>(size.x));
+	SetHeight(static_cast<int>(size.y));
 
-	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("Fences"));
 	GetTransform()->position = glm::vec2(300.0f, 300.0f);
 	GetRigidBody()->bounds = glm::vec2(GetWidth(), GetHeight());
 	setIsCentered(true);
@@ -27,7 +25,7 @@ Obstacle::~Obstacle()
 
 void Obstacle::Draw()
 {
-	TextureManager::Instance().Draw("obstacle", GetTransform()->position, 0, 255, true);
+	TextureManager::Instance().Draw("fence", GetTransform()->position, 0, 255, true);
 }
 
 void Obstacle::Update()
@@ -36,14 +34,4 @@ void Obstacle::Update()
 
 void Obstacle::Clean()
 {
-}
-
-SpriteSheet* Obstacle::GetSpriteSheet()
-{
-	return m_pSpriteSheet;
-}
-
-void Obstacle::SetSpriteSheet(SpriteSheet* sprite_sheet)
-{
-	m_pSpriteSheet = sprite_sheet;
 }

@@ -20,9 +20,38 @@ PlayScene::~PlayScene()
 
 void PlayScene::Draw()
 {
+
+	if (!m_pGrid.empty())
+	{
+		for (Tile* tile : m_pGrid)
+		{
+			if (tile->GetTileStatus() != TileStatus::IMPASSABLE || tile->GetTileStatus() != TileStatus::GOAL || tile->GetTileStatus() != TileStatus::START)
+			{
+				int randomNumber = rand() % 4; // Random # between 1-4
+
+				switch (randomNumber)
+				{
+				case 0:
+					TextureManager::Instance().Draw("grass1", tile->GetTransform()->position + Config::TILE_OFFSET, 0, 255, true);
+				case 1:
+					TextureManager::Instance().Draw("grass2", tile->GetTransform()->position + Config::TILE_OFFSET, 0, 255, true);
+				case 2:
+					TextureManager::Instance().Draw("grass3", tile->GetTransform()->position + Config::TILE_OFFSET, 0, 255, true);
+				case 3:
+					TextureManager::Instance().Draw("grass4", tile->GetTransform()->position + Config::TILE_OFFSET, 0, 255, true);
+					break;
+				}
+			}
+
+		}
+
+	}
 	DrawDisplayList();
 	
 	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
+
+	
+	
 }
 
 void PlayScene::Update()
@@ -346,7 +375,7 @@ void PlayScene::m_buildGrid()
 			tile->SetGridPosition(col, row); // Grid Position
 			tile->SetParent(this);
 			tile->AddLabels();
-			AddChild(tile);
+			AddChild(tile, 10);
 			tile->SetEnabled(false);
 			m_pGrid.push_back(tile);
 		}

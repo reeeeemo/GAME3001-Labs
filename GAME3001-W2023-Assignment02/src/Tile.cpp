@@ -6,12 +6,18 @@
 #include <sstream>
 #include <iomanip>
 
+#include "TextureManager.h"
+
 Tile::Tile() : m_cost(0.0f)
 {
 	SetWidth(Config::TILE_SIZE);
 	SetHeight(Config::TILE_SIZE);
 	m_neighbours = std::vector<Tile*>(static_cast<int>(NeighbourTile::NUM_OF_NEIGHBOUR_TILES));
 	m_pTileParent = nullptr;
+	TextureManager::Instance().Load("../Assets/textures/Grass1.png", "grass1");
+	TextureManager::Instance().Load("../Assets/textures/Grass2.png", "grass2");
+	TextureManager::Instance().Load("../Assets/textures/Grass3.png", "grass3");
+	TextureManager::Instance().Load("../Assets/textures/Grass4.png", "grass4");
 }
 
 Tile::~Tile()
@@ -41,7 +47,6 @@ void Tile::Draw()
 		break;
 	default:
 		Util::DrawRect(GetTransform()->position, GetWidth(), GetHeight());
-		break;
 	}
 }
 
@@ -133,12 +138,12 @@ void Tile::AddLabels()
 	// Cost Label
 	m_costLabel = new Label("99.9", "Consolas", 12);
 	m_costLabel->GetTransform()->position = GetTransform()->position + Config::TILE_OFFSET + glm::vec2(0.0f, -6.0f);
-	GetParent()->AddChild(m_costLabel);
+	GetParent()->AddChild(m_costLabel, 1);
 	m_costLabel->SetEnabled(false);
 	// Status Label
 	m_statusLabel = new Label("-", "Consolas", 12);
 	m_statusLabel->GetTransform()->position = GetTransform()->position + Config::TILE_OFFSET + glm::vec2(0.0f, 6.0f);
-	GetParent()->AddChild(m_statusLabel);
+	GetParent()->AddChild(m_statusLabel, 1);
 	m_statusLabel->SetEnabled(false);
 
 }
