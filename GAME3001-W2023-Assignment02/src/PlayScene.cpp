@@ -66,10 +66,34 @@ void PlayScene::HandleEvents()
 	{
 		m_resetSimulation();
 	}
-	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_T))
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_M))
 	{
-		m_setGridEnabled(!m_isGridEnabled);
+		//move
 	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_H))
+	{
+		m_SetDebugEnabled(!m_getDebugEnabled());
+	}
+	if(m_getDebugEnabled())
+	{
+		if (EventManager::Instance().MousePressed(1)) //start
+		{
+			SDL_GetMouseState(&m_mousePosition.x, &m_mousePosition.y);
+			m_moveGameObject(m_pStarShip, m_mousePosition.x / 40, m_mousePosition.y / 40, TileStatus::START);
+			m_computeTileCosts();
+			m_findShortestPath();
+
+		}
+		if (EventManager::Instance().MousePressed(3)) //goal
+		{
+			SDL_GetMouseState(&m_mousePosition.x, &m_mousePosition.y);
+			m_moveGameObject(m_pTarget, m_mousePosition.x / 40, m_mousePosition.y / 40, TileStatus::GOAL);
+			m_computeTileCosts();
+			m_findShortestPath();
+			
+		}
+	}
+	
 }
 
 void PlayScene::Start()
@@ -98,8 +122,9 @@ void PlayScene::Start()
 
 	const SDL_Color blue = { 0, 0, 255, 255 };
 	m_pInstructionLabels.push_back(new Label("F to find shortest path", "Consolas", 18, blue, glm::vec2(120.0f, 20.0f)));
-	m_pInstructionLabels.push_back(new Label("R to reset Scene", "Consolas", 18, blue, glm::vec2(120.0f, 40.0f)));
-	m_pInstructionLabels.push_back(new Label("T to toggle grid", "Consolas", 18, blue, glm::vec2(120.0f, 60.0f)));
+	m_pInstructionLabels.push_back(new Label("R to reset scene", "Consolas", 18, blue, glm::vec2(120.0f, 40.0f)));
+	m_pInstructionLabels.push_back(new Label("M to move to goal position", "Consolas", 18, blue, glm::vec2(120.0f, 60.0f)));
+	m_pInstructionLabels.push_back(new Label("H to toggle debug mode", "Consolas", 18, blue, glm::vec2(120.0f, 80.0f)));
 	for (Label* current : m_pInstructionLabels)
 	{
 		current->SetParent(this);
@@ -402,6 +427,24 @@ void PlayScene::m_computeTileCosts()
 	}
 }
 
+bool PlayScene::m_getDebugEnabled() const
+{
+	return m_bDebugView;
+}
+
+void PlayScene::m_SetDebugEnabled(bool state)
+{
+	m_bDebugView = state;
+	if(m_bDebugView)
+	{
+		m_setGridEnabled(true);
+	}
+	else
+	{
+		m_setGridEnabled(false);
+	}
+}
+
 void PlayScene::m_pBuildObstacles()
 {
 	for (int i = 0; i < 300; ++i)
@@ -481,6 +524,7 @@ void PlayScene::m_findShortestPath()
 	if(goal_found)
 	{
 		m_pathFound = true;
+		SoundManager::Instance().Play_Sound("yay", 0);
 		m_buildPathList();
 		m_displayPathList();
 	} else

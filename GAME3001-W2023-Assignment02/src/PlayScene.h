@@ -29,7 +29,7 @@ private:
 	// IMGUI Function
 	void GUI_Function();
 	std::string m_guiTitle;
-	glm::vec2 m_mousePosition;
+	glm::ivec2 m_mousePosition;
 
 	// Game Objects for the Scene
 	Target* m_pTarget;
@@ -49,6 +49,8 @@ private:
 	bool m_getGridEnabled() const;
 	void m_setGridEnabled(bool state);
 	void m_computeTileCosts();
+	bool m_getDebugEnabled() const;
+	void m_SetDebugEnabled(bool state);
 
 	// Obstacle list
 	std::vector<Obstacle*> m_pObstacles;
