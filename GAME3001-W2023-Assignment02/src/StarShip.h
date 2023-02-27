@@ -3,6 +3,9 @@
 #define __STARSHIP__
 
 #include "Agent.h"
+#include "CowAnimationState.h"
+#include "Sprite.h"
+
 class StarShip : public Agent
 {
 public:
@@ -23,6 +26,16 @@ public:
 	float GetAccelerationRate() const;
 	glm::vec2 GetDesiredVelocity() const;
 
+	// Sprite stuff (not exactly convienient, but sprite sheets are kinda fun!)
+	SpriteSheet* GetSpriteSheet();
+	Animation& GetAnimation(const std::string& name);
+	bool CheckIfAnimationExists(const std::string& id);
+	void SetSpriteSheet(SpriteSheet* sprite_sheet);
+	void SetAnimation(const Animation& animation);
+	SpriteSheet* m_pSpriteSheet;
+	std::unordered_map<std::string, Animation> m_pAnimations;
+
+
 	void SetMaxSpeed(float speed);
 	void SetTurnRate(float angle);
 	void SetAccelerationRate(float rate);
@@ -31,7 +44,8 @@ public:
 	// public functions
 	void Seek();
 	void LookWhereYoureGoing(glm::vec2 target_direction);
-	
+
+
 private:
 	// private movement variables
 	float m_maxSpeed;
@@ -44,6 +58,11 @@ private:
 	// private function
 	void m_move();
 
+	// Sprite functions
+	void BuildAnimations();
+
+	// Sprite variables
+	CowAnimationState m_currentAnimationState;
 };
 
 #endif /* defined (__STARSHIP__)*/

@@ -3,14 +3,19 @@
 #include "Game.h"
 #include "TextureManager.h"
 #include "Util.h"
+#include "Sprite.h"
 
 StarShip::StarShip()
 {
-	TextureManager::Instance().Load("../Assets/textures/ncl_small.png", "starship");
+	//TextureManager::Instance().Load("../Assets/textures/cow.png", "cow");
+	TextureManager::Instance().LoadSpriteSheet("../Assets/sprites/cow.txt", "../Assets/sprites/cow.png", "cow");
+	SetWidth(32);
+	SetHeight(32);
 
-	const auto size = TextureManager::Instance().GetTextureSize("starship");
-	SetWidth(static_cast<int>(size.x));
-	SetHeight(static_cast<int>(size.y));
+	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("cow"));
+	//const auto size = TextureManager::Instance().GetTextureSize("cow");
+	//SetWidth(static_cast<int>(size.x));
+	//SetHeight(static_cast<int>(size.y));
 	GetTransform()->position = glm::vec2(0.0f, 0.0f);
 	GetRigidBody()->bounds = glm::vec2(GetWidth(), GetHeight());
 	GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
@@ -27,7 +32,7 @@ StarShip::StarShip()
 	SetCurrentDirection(glm::vec2(1.0f, 0.0f)); // Facing Right
 
 	SetLOSDistance(300.0f);
-
+	BuildAnimations();
 }
 
 StarShip::~StarShip()
@@ -36,12 +41,27 @@ StarShip::~StarShip()
 void StarShip::Draw()
 {
 	// draw the target
-	TextureManager::Instance().Draw("starship", 
-		GetTransform()->position, static_cast<double>(GetCurrentHeading()), 255, true);
+	//TextureManager::Instance().Draw("cow", 
+		//GetTransform()->position, static_cast<double>(GetCurrentHeading()), 255, true);
+	// draw the player according to animation state
+	switch (m_currentAnimationState)
+	{
+	case CowAnimationState::COW_IDLE:
+		TextureManager::Instance().PlayAnimation("cow", GetAnimation("idle"),
+			GetTransform()->position, 0.12f, 0, 255, true);
+		break;
+	case CowAnimationState::COW_RUN:
+		TextureManager::Instance().PlayAnimation("cow", GetAnimation("run"),
+			GetTransform()->position, 0.12f, 0, 255, true, SDL_FLIP_HORIZONTAL);
+		break;
+	default:
+		break;
+	}
 }
 
 void StarShip::Update()
 {
+	
 }
 
 void StarShip::Clean()
@@ -139,4 +159,52 @@ void StarShip::m_move()
 
 	// clamp our velocity at max speed
 	GetRigidBody()->velocity = Util::Clamp(GetRigidBody()->velocity, GetMaxSpeed());
+}
+
+SpriteSheet* StarShip::GetSpriteSheet()
+{
+	return m_pSpriteSheet;
+}
+
+Animation& StarShip::GetAnimation(const std::string& name)
+{
+	return m_pAnimations[name];
+}
+
+void StarShip::SetSpriteSheet(SpriteSheet* sprite_sheet)
+{
+	m_pSpriteSheet = sprite_sheet;
+}
+
+void StarShip::SetAnimation(const Animation& animation)
+{
+	if (!CheckIfAnimationExists(animation.name))
+	{
+		m_pAnimations[animation.name] = animation;
+	}
+}
+
+bool StarShip::CheckIfAnimationExists(const std::string& id)
+{
+	return m_pAnimations.find(id) != m_pAnimations.end();
+}
+
+void StarShip::BuildAnimations()
+{
+	auto idle_animation = Animation();
+
+	idle_animation.name = "idle";
+	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("cow-idle-0"));
+	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("cow-idle-1"));
+	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("cow-idle-2"));
+
+	SetAnimation(idle_animation);
+
+	auto run_animation = Animation();
+
+	run_animation.name = "run";
+	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("cow-move-0"));
+	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("cow-move-1"));
+
+	SetAnimation(run_animation);
 }

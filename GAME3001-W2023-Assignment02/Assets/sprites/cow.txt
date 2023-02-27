@@ -1,0 +1,5 @@
+cow-idle-0 0 0 32 32
+cow-idle-1 32 0 32 32
+cow-idle-2 64 0 32 32
+cow-move-0 0 32 32 32
+cow-move-1 32 32 32 32

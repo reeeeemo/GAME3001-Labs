@@ -252,6 +252,7 @@
     <ClInclude Include="..\src\Transform.h" />
     <ClInclude Include="..\src\Util.h" />
     <ClInclude Include="..\src\WindowName.h" />
+    <ClInclude Include="CowAnimationState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />

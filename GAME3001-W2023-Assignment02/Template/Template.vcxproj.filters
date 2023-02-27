@@ -317,6 +317,9 @@
     <ClInclude Include="..\src\TileComparator.h">
       <Filter>Navigation</Filter>
     </ClInclude>
+    <ClInclude Include="CowAnimationState.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md">
