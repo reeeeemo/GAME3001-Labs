@@ -48,11 +48,11 @@ void StarShip::Draw()
 	{
 	case CowAnimationState::COW_IDLE:
 		TextureManager::Instance().PlayAnimation("cow", GetAnimation("idle"),
-			GetTransform()->position, 0.12f, 0, 255, true);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
 		break;
 	case CowAnimationState::COW_RUN:
 		TextureManager::Instance().PlayAnimation("cow", GetAnimation("run"),
-			GetTransform()->position, 0.12f, 0, 255, true, SDL_FLIP_HORIZONTAL);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_HORIZONTAL);
 		break;
 	default:
 		break;
