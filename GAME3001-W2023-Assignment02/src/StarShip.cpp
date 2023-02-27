@@ -9,8 +9,8 @@ StarShip::StarShip()
 {
 	//TextureManager::Instance().Load("../Assets/textures/cow.png", "cow");
 	TextureManager::Instance().LoadSpriteSheet("../Assets/sprites/cow.txt", "../Assets/sprites/cow.png", "cow");
-	SetWidth(32);
-	SetHeight(32);
+	SetWidth(64);
+	SetHeight(64);
 
 	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("cow"));
 	//const auto size = TextureManager::Instance().GetTextureSize("cow");
