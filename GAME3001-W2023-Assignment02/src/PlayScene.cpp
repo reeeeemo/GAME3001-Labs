@@ -149,6 +149,9 @@ void PlayScene::Start()
 	SoundManager::Instance().Load("../Assets/Audio/thunder.ogg", "thunder", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/moo.mp3", "moo", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/footsteps.mp3", "footsteps", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/bgMusic.mp3", "backgroundMusic", SoundType::SOUND_MUSIC);
+
+	SoundManager::Instance().PlayMusic("backgroundMusic", -1, 0);
 
 	const SDL_Color blue = { 0, 0, 255, 255 };
 	m_pInstructionLabels.push_back(new Label("F to find shortest path", "Consolas", 17, blue, glm::vec2(120.0f, 20.0f)));
