@@ -151,10 +151,10 @@ void PlayScene::Start()
 	SoundManager::Instance().Load("../Assets/Audio/footsteps.mp3", "footsteps", SoundType::SOUND_SFX);
 
 	const SDL_Color blue = { 0, 0, 255, 255 };
-	m_pInstructionLabels.push_back(new Label("F to find shortest path", "Consolas", 18, blue, glm::vec2(120.0f, 20.0f)));
-	m_pInstructionLabels.push_back(new Label("R to reset scene", "Consolas", 18, blue, glm::vec2(120.0f, 40.0f)));
-	m_pInstructionLabels.push_back(new Label("M to move to goal position", "Consolas", 18, blue, glm::vec2(120.0f, 60.0f)));
-	m_pInstructionLabels.push_back(new Label("H to toggle debug mode", "Consolas", 18, blue, glm::vec2(120.0f, 80.0f)));
+	m_pInstructionLabels.push_back(new Label("F to find shortest path", "Consolas", 17, blue, glm::vec2(120.0f, 20.0f)));
+	m_pInstructionLabels.push_back(new Label("R to reset scene", "Consolas", 17, blue, glm::vec2(120.0f, 40.0f)));
+	m_pInstructionLabels.push_back(new Label("M to move to goal position", "Consolas", 17, blue, glm::vec2(120.0f, 60.0f)));
+	m_pInstructionLabels.push_back(new Label("H to toggle debug mode", "Consolas", 17, blue, glm::vec2(120.0f, 80.0f)));
 	for (Label* current : m_pInstructionLabels)
 	{
 		current->SetParent(this);

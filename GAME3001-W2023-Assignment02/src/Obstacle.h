@@ -2,6 +2,7 @@
 #ifndef __OBSTACLE__
 #define __OBSTACLE__
 #include "NavigationObject.h"
+#include "SpriteSheet.h"
 
 class Obstacle final : public NavigationObject
 {
@@ -16,7 +17,10 @@ public:
 	void Draw() override;
 	void Update() override;
 	void Clean() override;
+	SpriteSheet* GetSpriteSheet();
+	void SetSpriteSheet(SpriteSheet* sprite_sheet);
 private:
+	SpriteSheet* m_pSpriteSheet;
 	
 };
 
