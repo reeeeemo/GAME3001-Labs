@@ -76,7 +76,14 @@ void PlayScene::HandleEvents()
 	}
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_H))
 	{
-		m_SetDebugEnabled(!m_getDebugEnabled());
+		if (!debugHasBeenPressed)
+		{
+			m_SetDebugEnabled(!m_getDebugEnabled());
+			debugHasBeenPressed = true;
+		}
+	} else
+	{
+		debugHasBeenPressed = false;
 	}
 	if(m_getDebugEnabled())
 	{
