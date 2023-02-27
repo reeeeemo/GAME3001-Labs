@@ -49,6 +49,8 @@ private:
 	bool m_getGridEnabled() const;
 	void m_setGridEnabled(bool state);
 	void m_computeTileCosts();
+	bool m_getDebugEnabled() const;
+	void m_SetDebugEnabled(bool state);
 
 	// Obstacle list
 	std::vector<Obstacle*> m_pObstacles;
