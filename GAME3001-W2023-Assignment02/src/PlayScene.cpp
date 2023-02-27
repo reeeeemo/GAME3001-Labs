@@ -79,18 +79,32 @@ void PlayScene::HandleEvents()
 		if (EventManager::Instance().MousePressed(1)) //start
 		{
 			SDL_GetMouseState(&m_mousePosition.x, &m_mousePosition.y);
-			m_moveGameObject(m_pStarShip, m_mousePosition.x / 40, m_mousePosition.y / 40, TileStatus::START);
-			m_computeTileCosts();
-			m_findShortestPath();
+			if (!m_getTile(m_mousePosition.x / Config::TILE_SIZE, m_mousePosition.y / Config::TILE_SIZE)->GetIsEnd())
+			{
+				m_moveGameObject(m_pStarShip, m_mousePosition.x / Config::TILE_SIZE, m_mousePosition.y / Config::TILE_SIZE, TileStatus::START);
+				m_computeTileCosts();
+				m_findShortestPath();
+			}
+			else
+			{
+				std::cout << "IS GOAL" << std::endl;
+			}
+				
 
 		}
 		if (EventManager::Instance().MousePressed(3)) //goal
 		{
 			SDL_GetMouseState(&m_mousePosition.x, &m_mousePosition.y);
-			m_moveGameObject(m_pTarget, m_mousePosition.x / 40, m_mousePosition.y / 40, TileStatus::GOAL);
-			m_computeTileCosts();
-			m_findShortestPath();
-			
+			if (!m_getTile(m_mousePosition.x / Config::TILE_SIZE, m_mousePosition.y / Config::TILE_SIZE)->GetIsStart())
+			{
+				m_moveGameObject(m_pTarget, m_mousePosition.x / Config::TILE_SIZE, m_mousePosition.y / Config::TILE_SIZE, TileStatus::GOAL);
+				m_computeTileCosts();
+				m_findShortestPath();
+			}
+			else
+			{
+				std::cout << "IS START" << std::endl;
+			}
 		}
 	}
 	
@@ -279,8 +293,9 @@ void PlayScene::GUI_Function()
 		{
 			start_position[1] = Config::ROW_NUM - 1;
 		}
-
+		m_getTile(m_pStarShip->GetGridPosition())->SetIsStart(false);
 		m_moveGameObject(m_pStarShip, start_position[0], start_position[1], TileStatus::START);
+		m_getTile(m_pStarShip->GetGridPosition())->SetIsStart(true);
 		
 
 		
@@ -295,8 +310,9 @@ void PlayScene::GUI_Function()
 		{
 			goal_position[1] = Config::ROW_NUM - 1;
 		}
-
+		m_getTile(m_pTarget->GetGridPosition())->SetIsEnd(false);
 		m_moveGameObject(m_pTarget, goal_position[0], goal_position[1], TileStatus::GOAL);
+		m_getTile(m_pTarget->GetGridPosition())->SetIsEnd(true);
 
 		m_computeTileCosts();
 	}
@@ -587,7 +603,9 @@ void PlayScene::m_resetPathFinding()
 	}
 
 	m_getTile(m_pStarShip->GetGridPosition())->SetTileStatus(TileStatus::START);
+	m_getTile(m_pStarShip->GetGridPosition())->SetIsStart(true);
 	m_getTile(m_pTarget->GetGridPosition())->SetTileStatus(TileStatus::GOAL);
+	m_getTile(m_pTarget->GetGridPosition())->SetIsEnd(true);
 
 }
 
@@ -676,11 +694,13 @@ void PlayScene::m_buildTileMap()
 			{
 				m_addObjectToGrid(m_pStarShip, col, row, TileStatus::START);
 				m_pStarShip->SetTargetPosition(m_getTile(col, row)->GetTransform()->position + Config::TILE_OFFSET);
+				m_getTile(col, row)->SetIsStart(true);
 			}
 
 			if ((m_tileMap[(row * Config::COL_NUM) + col] == 'G'))
 			{
 				m_addObjectToGrid(m_pTarget, col, row, TileStatus::GOAL);
+				m_getTile(col, row)->SetIsEnd(true);
 			}
 
 			if ((m_tileMap[(row * Config::COL_NUM) + col] == '-'))

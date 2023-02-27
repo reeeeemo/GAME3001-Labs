@@ -38,6 +38,12 @@ public:
 	// Utility Functions
 	void AddLabels();
 	void SetLabelsEnabled(bool state);
+
+	bool GetIsStart() { return m_isStart;}
+	void SetIsStart(bool start) { m_isStart = start;}
+
+	bool GetIsEnd() { return m_isEnd; }
+	void SetIsEnd(bool end) { m_isEnd = end; }
 	
 
 private:
@@ -50,6 +56,9 @@ private:
 
 	Tile* m_pTileParent;
 	std::vector<Tile*> m_neighbours;
+
+	bool m_isStart;
+	bool m_isEnd;
 };
 
 
