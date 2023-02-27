@@ -201,7 +201,7 @@ void PlayScene::GUI_Function()
 	{
 		if (!m_pPathList.empty())
 		{
-			m_resetPathFinding();
+			m_moveGameObject(m_pStarShip, start_position[0], start_position[1], TileStatus::START, true);
 		}
 	}
 
@@ -218,11 +218,6 @@ void PlayScene::GUI_Function()
 
 	ImGui::Separator(); 
 
-	if (ImGui::Button("Start Path Finding")) {
-		m_moveShipAcrossTilePath();
-	}
-
-	ImGui::Separator();
 
 
 	// Starship properties
