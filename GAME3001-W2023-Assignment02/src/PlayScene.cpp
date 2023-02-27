@@ -144,6 +144,8 @@ void PlayScene::Start()
 
 	SoundManager::Instance().Load("../Assets/Audio/yay.ogg", "yay", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/thunder.ogg", "thunder", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/Audio/moo.mp3", "moo", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/Audio/footsteps.mp3", "footsteps", SoundType::SOUND_SFX);
 
 	const SDL_Color blue = { 0, 0, 255, 255 };
 	m_pInstructionLabels.push_back(new Label("F to find shortest path", "Consolas", 18, blue, glm::vec2(120.0f, 20.0f)));
@@ -544,7 +546,6 @@ void PlayScene::m_findShortestPath()
 	if(goal_found)
 	{
 		m_pathFound = true;
-		SoundManager::Instance().Play_Sound("yay", 0);
 		m_buildPathList();
 		m_displayPathList();
 	} else
@@ -665,14 +666,19 @@ void PlayScene::m_moveShipAcrossTilePath()
 			m_pStarShip->LookWhereYoureGoing(rotation);
 		}
 
-		if (time >= 1.0f)
+		if (time >= 0.75f)
 		{
 			time = 0.0f;
 			m_pPathList.pop_front();
+			SoundManager::Instance().Play_Sound("footsteps", 0);
+			if(m_pPathList.empty())
+			{
+				SoundManager::Instance().Play_Sound("moo", 0);
+			}
 		}
 
 		time += Game::Instance().GetDeltaTime();
-		m_pStarShip->GetTransform()->position = position;
+		m_pStarShip->GetTransform()->position = position;;
 
 	}
 }
