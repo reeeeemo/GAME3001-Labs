@@ -34,10 +34,6 @@ public:
 	void Seek();
 	void LookWhereYoureGoing(glm::vec2 target_direction);
 
-	// Controls movement with pathfinding
-	bool m_isPathfinding = false;
-	Tile* m_pCurrentTile;
-
 private:
 	// private movement variables
 	float m_maxSpeed;

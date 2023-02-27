@@ -79,7 +79,7 @@ private:
 
 
 	template <typename T>
-	void m_moveGameObject(T*& object, int col, int row, TileStatus status, bool resetPathfinding);
+	void m_moveGameObject(T*& object, int col, int row, TileStatus status);
 
 	void m_SetAsObstacle(int columnStart, int rowStart, int columnEnd, int rowEnd) const; // Makes it easier to set chunks of impassable objects at a time.
 
