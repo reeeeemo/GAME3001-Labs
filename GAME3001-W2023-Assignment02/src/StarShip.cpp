@@ -9,8 +9,8 @@ StarShip::StarShip()
 {
 	//TextureManager::Instance().Load("../Assets/textures/cow.png", "cow");
 	TextureManager::Instance().LoadSpriteSheet("../Assets/sprites/cow.txt", "../Assets/sprites/cow.png", "cow");
-	SetWidth(32);
-	SetHeight(32);
+	SetWidth(64);
+	SetHeight(64);
 
 	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("cow"));
 	//const auto size = TextureManager::Instance().GetTextureSize("cow");
@@ -48,11 +48,11 @@ void StarShip::Draw()
 	{
 	case CowAnimationState::COW_IDLE:
 		TextureManager::Instance().PlayAnimation("cow", GetAnimation("idle"),
-			GetTransform()->position, 0.12f, 0, 255, true);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
 		break;
 	case CowAnimationState::COW_RUN:
 		TextureManager::Instance().PlayAnimation("cow", GetAnimation("run"),
-			GetTransform()->position, 0.12f, 0, 255, true, SDL_FLIP_HORIZONTAL);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_HORIZONTAL);
 		break;
 	default:
 		break;

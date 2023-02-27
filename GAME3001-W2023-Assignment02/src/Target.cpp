@@ -4,9 +4,9 @@
 
 Target::Target()
 {
-	TextureManager::Instance().Load("../Assets/textures/Circle.png","circle");
+	TextureManager::Instance().Load("../Assets/textures/fruit.png","fruit");
 
-	const auto size = TextureManager::Instance().GetTextureSize("circle");
+	const auto size = TextureManager::Instance().GetTextureSize("fruit");
 	SetWidth(static_cast<int>(size.x));
 	SetHeight(static_cast<int>(size.y));
 	GetTransform()->position = glm::vec2(100.0f, 100.0f);
@@ -22,7 +22,7 @@ Target::~Target()
 void Target::Draw()
 {
 	// draw the target
-	TextureManager::Instance().Draw("circle", GetTransform()->position, 0, 255, true);
+	TextureManager::Instance().Draw("fruit", GetTransform()->position, 0, 255, true);
 }
 
 void Target::Update()
