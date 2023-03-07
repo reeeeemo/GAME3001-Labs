@@ -175,6 +175,12 @@ void TextureManager::Draw(const std::string& id, const int x, const int y, const
 	SDL_RenderCopyEx(Renderer::Instance().GetRenderer(), m_textureMap[id].get(), &src_rect, &dest_rect, angle, nullptr, flip);
 }
 
+void TextureManager::Draw(const std::string& id, const glm::vec2 position, const GameObject* go, const double angle, const int alpha,
+                          const bool centered, const SDL_RendererFlip flip)
+{
+	Draw(id, static_cast<int>(position.x), static_cast<int>(position.y), go , angle, alpha, centered, flip);
+}
+
 void TextureManager::DrawFrame(const std::string & id, const int x, const int y, const int frame_width,
                                const int frame_height, int& current_row,
                                int& current_frame, const int frame_number, const int row_number,

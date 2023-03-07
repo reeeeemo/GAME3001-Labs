@@ -2,6 +2,7 @@
 #ifndef __PLAY_SCENE__
 #define __PLAY_SCENE__
 
+#include "Obstacle.h"
 #include "Scene.h"
 #include "Target.h"
 #include "StarShip.h"
@@ -28,7 +29,9 @@ private:
 	// Game Objects for the Scene
 	Target* m_pTarget;
 	StarShip* m_pStarShip;
-	
+	std::vector<Obstacle*> m_pObstacles;
+
+	void BuildObstaclePool();
 
 	// Debugging Variables
 	bool m_bDebugView;

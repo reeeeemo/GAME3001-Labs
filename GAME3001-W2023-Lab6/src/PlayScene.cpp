@@ -61,6 +61,30 @@ void PlayScene::Start()
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 
+	// Add Game Objects
+	m_pTarget = new Target();
+	m_pTarget->GetTransform()->position = glm::vec2(600.0f, 300.0f);
+	AddChild(m_pTarget);
+
+	m_pStarShip = new StarShip();
+	m_pStarShip->GetTransform()->position = glm::vec2(150.0f, 300.0f);
+	AddChild(m_pStarShip);
+
+	// Add Obstacles
+	BuildObstaclePool();
+
+	m_pObstacles[0]->GetTransform()->position = glm::vec2(380.0f, 80.0f);
+	m_pObstacles[0]->SetHeight(50);
+	AddChild(m_pObstacles[0]);
+
+	m_pObstacles[1]->GetTransform()->position = glm::vec2(380.0f, 280.0f);
+	m_pObstacles[1]->SetWidth(100);
+	AddChild(m_pObstacles[1]);
+
+	m_pObstacles[2]->GetTransform()->position = glm::vec2(380.0f, 480.0f);
+	AddChild(m_pObstacles[2]);
+
+
 	// Preload Sounds
 
 	SoundManager::Instance().Load("../Assets/Audio/yay.ogg", "yay", SoundType::SOUND_SFX);
@@ -93,4 +117,12 @@ void PlayScene::GUI_Function()
 
 
 	ImGui::End();
+}
+
+void PlayScene::BuildObstaclePool()
+{
+	for (int i = 0; i < 3; ++i)
+	{
+		m_pObstacles.push_back(new Obstacle);
+	}
 }
