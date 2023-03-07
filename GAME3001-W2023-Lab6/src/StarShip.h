@@ -33,12 +33,14 @@ public:
 	// public functions
 	void Seek();
 	void LookWhereYoureGoing(glm::vec2 target_direction);
+	void Reset();
 
 private:
 	// private movement variables
 	float m_maxSpeed;
 	float m_turnRate;
 	float m_accelerationRate;
+	glm::vec2 m_startPosition;
 
 	// where we want to go
 	glm::vec2 m_desiredVelocity;
