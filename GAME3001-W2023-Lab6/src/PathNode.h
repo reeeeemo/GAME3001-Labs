@@ -6,6 +6,7 @@
 
 class PathNode : public Agent
 {
+public:
 	// Constructor
 	PathNode();
 

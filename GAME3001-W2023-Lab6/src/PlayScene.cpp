@@ -84,6 +84,11 @@ void PlayScene::Start()
 	m_pObstacles[2]->GetTransform()->position = glm::vec2(380.0f, 480.0f);
 	AddChild(m_pObstacles[2]);
 
+	// Setup the Grid
+	m_isGridEnabled = false;
+	m_buildGrid();
+	m_toggleGrid(m_isGridEnabled);
+
 
 	// Preload Sounds
 
@@ -125,4 +130,68 @@ void PlayScene::BuildObstaclePool()
 	{
 		m_pObstacles.push_back(new Obstacle);
 	}
+}
+
+void PlayScene::m_buildGrid()
+{
+	constexpr auto tile_size = Config::TILE_SIZE;
+
+	m_clearNodes(); // We will need to clear nodes because we will rebuild/redraw the grid if we move an obstacle.
+
+	// Lay out a grid of path_nodes
+	for (int row = 0; row < Config::ROW_NUM; ++row)
+	{
+		for (int col = 0; col < Config::COL_NUM; ++col)
+		{
+			PathNode* path_node = new PathNode();
+			path_node->GetTransform()->position = glm::vec2(static_cast<float>(col) * tile_size + Config::TILE_OFFSET.x,
+				static_cast<float>(row) * tile_size + Config::TILE_OFFSET.y);
+
+			// Only show grid where there arae no obstacles
+			bool keep_node = true;
+			for (auto obstacle : m_pObstacles)
+			{
+				// Determine which path_nodes to keep
+				if (CollisionManager::AABBCheck(path_node, obstacle));
+				{
+					keep_node = false;
+				}
+			}
+			if (keep_node)
+			{
+				AddChild(path_node);
+				m_pGrid.push_back(path_node);
+			} else
+			{
+				delete path_node;
+			}
+		}
+	}
+
+	// If grid is supposed to be hidden - make it so!
+	m_toggleGrid(m_isGridEnabled);
+}
+
+void PlayScene::m_toggleGrid(bool state) const
+{
+	for (auto path_node : m_pGrid)
+	{
+		path_node->SetVisible(true);
+	}
+}
+
+void PlayScene::m_clearNodes()
+{
+	m_pGrid.clear();
+	for (auto object : GetDisplayList())
+	{
+		if (object->GetType() == GameObjectType::PATH_NODE)
+		{
+			RemoveChild(object);
+		}
+	}
+}
+
+void PlayScene::m_checkShipLOS(DisplayObject* target_object) const
+{
 }
