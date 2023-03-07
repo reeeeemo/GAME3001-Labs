@@ -147,6 +147,9 @@
     <ClCompile Include="..\src\Tile.cpp">
       <Filter>Navigation</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\PathNode.cpp">
+      <Filter>Navigation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -315,6 +318,9 @@
       <Filter>Navigation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\TileComparator.h">
+      <Filter>Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PathNode.h">
       <Filter>Navigation</Filter>
     </ClInclude>
   </ItemGroup>

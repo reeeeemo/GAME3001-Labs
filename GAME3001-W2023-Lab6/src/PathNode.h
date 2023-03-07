@@ -1,0 +1,21 @@
+#pragma once
+#ifndef __PATH_NODE__
+#define __PATH_NODE__
+
+#include "Agent.h"
+
+class PathNode : public Agent
+{
+	// Constructor
+	PathNode();
+
+	// Destructor
+	~PathNode();
+
+	// Inherited via GameObject
+	void Draw() override;
+	void Update() override;
+	void Clean() override;
+};
+
+#endif // __PATH_NODE__
