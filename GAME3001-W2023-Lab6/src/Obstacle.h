@@ -1,9 +1,9 @@
 #pragma once
 #ifndef __OBSTACLE__
 #define __OBSTACLE__
-#include "NavigationObject.h"
+#include "DisplayObject.h"
 
-class Obstacle final : public NavigationObject
+class Obstacle final : public DisplayObject
 {
 public:
 	// constructors

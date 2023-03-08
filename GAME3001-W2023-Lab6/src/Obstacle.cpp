@@ -13,8 +13,8 @@ Obstacle::Obstacle()
 	SetHeight(static_cast<int>(size.y));
 
 	GetTransform()->position = glm::vec2(400.0f, 300.0f);
-	GetRigidBody()->bounds = glm::vec2(GetWidth(), GetHeight());
-	setIsCentered(true);
+	//GetRigidBody()->bounds = glm::vec2(GetWidth(), GetHeight());
+	//setIsCentered(true);
 
 	SetType(GameObjectType::OBSTACLE);
 	GetRigidBody()->isColliding = false;

@@ -21,14 +21,20 @@ PlayScene::~PlayScene()
 void PlayScene::Draw()
 {
 	DrawDisplayList();
-	
+
+	for (auto obstacle : m_pObstacles)
+	{
+		Util::DrawRect(obstacle->GetTransform()->position - glm::vec2(obstacle->GetWidth() * 0.5f,
+			obstacle->GetHeight() * 0.5f), obstacle->GetWidth(), obstacle->GetHeight());
+	}
+
 	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
 }
 
 void PlayScene::Update()
 {
 	UpdateDisplayList();
-
+	m_checkShipLOS(m_pTarget);
 }
 
 void PlayScene::Clean()
@@ -113,13 +119,58 @@ void PlayScene::GUI_Function()
 	ImGui::Separator();
 
 	// Debug Properties
-	static bool toggleGrid = false;
-	if(ImGui::Checkbox("Toggle Grid", &toggleGrid))
+	if(ImGui::Checkbox("Toggle Grid", &m_isGridEnabled))
 	{
+		m_toggleGrid(m_isGridEnabled);
 	}
 
 	ImGui::Separator();
 
+	// StarShip Properties
+	static int shipPosition[] = { static_cast<int>(m_pStarShip->GetTransform()->position.x),
+		static_cast<int>(m_pStarShip->GetTransform()->position.y) };
+	if (ImGui::SliderInt2("Ship Position", shipPosition, 0, 800))
+	{
+		m_pStarShip->GetTransform()->position.x = static_cast<float>(shipPosition[0]);
+		m_pStarShip->GetTransform()->position.y = static_cast<float>(shipPosition[1]);
+
+	}
+
+	// Allow the ship to rotate
+	static int angle;
+	if (ImGui::SliderInt("Ship Direction", &angle, -360, 360))
+	{
+		m_pStarShip->SetCurrentHeading(static_cast<float>(angle));
+	}
+
+	ImGui::Separator();
+
+	// Target Properties
+	static int targetPosition[] = { static_cast<int>(m_pTarget->GetTransform()->position.x),
+		static_cast<int>(m_pTarget->GetTransform()->position.y) };
+	if (ImGui::SliderInt2("Target Position", targetPosition, 0, 800))
+	{
+		m_pTarget->GetTransform()->position.x = static_cast<float>(targetPosition[0]);
+		m_pTarget->GetTransform()->position.y = static_cast<float>(targetPosition[1]);
+
+	}
+
+	ImGui::Separator();
+
+	// Add obstacle position control for each obstacle
+
+	for (unsigned i = 0; i < m_pObstacles.size(); ++i)
+	{
+		int obstaclePosition[] = { static_cast<int>(m_pObstacles[i]->GetTransform()->position.x),
+		static_cast<int>(m_pObstacles[i]->GetTransform()->position.y) };
+		std::string label = "Obstacle" + std::to_string(i + 1) + " Position";
+		if (ImGui::SliderInt2(label.c_str(), obstaclePosition, 0, 800))
+		{
+			m_pObstacles[i]->GetTransform()->position.x = static_cast<float>(obstaclePosition[0]);
+			m_pObstacles[i]->GetTransform()->position.y = static_cast<float>(obstaclePosition[1]);
+			m_buildGrid();
+		}
+	}
 
 	ImGui::End();
 }
@@ -128,7 +179,7 @@ void PlayScene::BuildObstaclePool()
 {
 	for (int i = 0; i < 3; ++i)
 	{
-		m_pObstacles.push_back(new Obstacle);
+		m_pObstacles.push_back(new Obstacle());
 	}
 }
 
@@ -143,13 +194,13 @@ void PlayScene::m_buildGrid()
 	{
 		for (int col = 0; col < Config::COL_NUM; ++col)
 		{
-			PathNode* path_node = new PathNode();
+			auto path_node = new PathNode();
 			path_node->GetTransform()->position = glm::vec2(static_cast<float>(col) * tile_size + Config::TILE_OFFSET.x,
 				static_cast<float>(row) * tile_size + Config::TILE_OFFSET.y);
 
-			// Only show grid where there arae no obstacles
+			// Only show grid where there are no obstacles
 			bool keep_node = true;
-			for (auto obstacle : m_pObstacles)
+			for (const auto obstacle : m_pObstacles)
 			{
 				// Determine which path_nodes to keep
 				if (CollisionManager::AABBCheck(path_node, obstacle));
@@ -163,7 +214,7 @@ void PlayScene::m_buildGrid()
 				m_pGrid.push_back(path_node);
 			} else
 			{
-				delete path_node;
+				delete path_node;	
 			}
 		}
 	}
@@ -172,11 +223,11 @@ void PlayScene::m_buildGrid()
 	m_toggleGrid(m_isGridEnabled);
 }
 
-void PlayScene::m_toggleGrid(bool state) const
+void PlayScene::m_toggleGrid(const bool state) const
 {
-	for (auto path_node : m_pGrid)
+	for (const auto path_node : m_pGrid)
 	{
-		path_node->SetVisible(true);
+		path_node->SetVisible(state);
 	}
 }
 
@@ -194,4 +245,29 @@ void PlayScene::m_clearNodes()
 
 void PlayScene::m_checkShipLOS(DisplayObject* target_object) const
 {
+	m_pStarShip->SetHasLOS(false); // Default: no LOS.
+
+	// If the ship to target distance is less than or equal to LOS distance
+	const auto ship_to_range = Util::GetClosestEdge(m_pStarShip->GetTransform()->position, target_object);
+	if (ship_to_range <= m_pStarShip->GetLOSDistance()) // We are in range.
+	{
+		std::vector<DisplayObject*> contact_list;
+		for (auto object : GetDisplayList())
+		{
+			if (object->GetType() == GameObjectType::PATH_NODE) { continue; }
+			if (object->GetType() != m_pStarShip->GetType())
+			{
+				// Check if the object is closer to the StarShip than the target.
+				const auto ship_to_object_distance =
+					Util::GetClosestEdge(m_pStarShip->GetTransform()->position, object);
+				if (ship_to_object_distance <= ship_to_range)
+				{
+					contact_list.push_back(object);
+				}
+			}
+			const auto has_LOS = CollisionManager::LOSCheck(m_pStarShip, 
+				m_pStarShip->GetTransform()->position + m_pStarShip->GetCurrentDirection() * m_pStarShip->GetLOSDistance(), contact_list, object);
+			m_pStarShip->SetHasLOS(has_LOS);
+		}
+	}
 }

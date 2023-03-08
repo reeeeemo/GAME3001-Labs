@@ -38,7 +38,7 @@ private:
 	// Create our Division Scheme (Grid of PathNodes)
 	std::vector<PathNode*> m_pGrid;
 	void m_buildGrid();
-	void m_toggleGrid(bool state) const;
+	void m_toggleGrid(const bool state) const;
 	void m_clearNodes();
 
 	// LOS functions
