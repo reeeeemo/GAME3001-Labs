@@ -239,37 +239,6 @@ void PlayScene::m_clearNodes()
 	}
 }
 
-void PlayScene::m_checkShipLOS(DisplayObject* target_object) const
-{
-	m_pStarShip->SetHasLOS(false); // default - no LOS
-
-	// if ship to target distance is less than or equal to the LOS Distance (Range)
-	const auto ship_to_range = Util::GetClosestEdge(m_pStarShip->GetTransform()->position, target_object);
-	if (ship_to_range <= m_pStarShip->GetLOSDistance())
-	{
-		// we are in range
-		std::vector<DisplayObject*> contact_list;
-		for (auto display_object : GetDisplayList())
-		{
-			if (display_object->GetType() == GameObjectType::PATH_NODE) { continue; } // ignore these
-			if ((display_object->GetType() != m_pStarShip->GetType()) && (display_object->GetType() != target_object->GetType()))
-			{
-				// check if the displayobject is closer to the starship than the target
-				const auto ship_to_object_distance = Util::GetClosestEdge(m_pStarShip->GetTransform()->position, display_object);
-				if (ship_to_object_distance <= ship_to_range)
-				{
-					contact_list.push_back(display_object);
-				}
-			}
-		}
-
-		const auto has_LOS = CollisionManager::LOSCheck(m_pStarShip,
-			m_pStarShip->GetTransform()->position + m_pStarShip->GetCurrentDirection() * m_pStarShip->GetLOSDistance(),
-			contact_list, target_object);
-		m_pStarShip->SetHasLOS(has_LOS);
-	}
-}
-
 bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object) const
 {
 	bool has_LOS = false; // Default - no LOS
@@ -308,7 +277,11 @@ bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object) cons
 
 bool PlayScene::m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object) const
 {
-	return false;
+	// Check angle to the target so we can still use LOS Distance for path_nodes
+	const auto target_direction = target_object->GetTransform()->position - path_node->GetTransform()->position;
+	const auto normalized_direction = Util::Normalize(target_direction); // Changes direction to a unit vector (length of 1).
+	path_node->SetCurrentDirection(normalized_direction);
+	return m_checkAgentLOS(path_node, target_object);
 }
 
 void PlayScene::m_checkAllNodesWithTarget(DisplayObject* target_object) const
