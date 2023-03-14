@@ -2,6 +2,7 @@
 #ifndef __PLAY_SCENE__
 #define __PLAY_SCENE__
 
+#include <fstream>
 #include "Obstacle.h"
 #include "Scene.h"
 #include "Target.h"
@@ -49,7 +50,7 @@ private:
 	bool m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object) const;
 	void m_checkAllNodesWithTarget(DisplayObject* target_object) const;
 	void m_checkAllNodesWithBoth() const;
-	void m_setPathNodeLOSDistance(int distance);
+	void m_setPathNodeLOSDistance(int distance) const;
 	LOSMode m_LOSMode{};
 	int m_pathNodeLOSDistance;
 
