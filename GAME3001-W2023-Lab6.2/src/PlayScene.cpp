@@ -286,6 +286,9 @@ bool PlayScene::m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_ob
 
 void PlayScene::m_checkAllNodesWithTarget(DisplayObject* target_object) const
 {
+	for (auto path_node : m_pGrid) {
+		m_checkPathNodeLOS(path_node, target_object);
+	}
 }
 
 void PlayScene::m_checkAllNodesWithBoth()
