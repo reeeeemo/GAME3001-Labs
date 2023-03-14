@@ -6,7 +6,7 @@ PathNode::PathNode()
 {
 	SetWidth(10);
 	SetHeight(10);
-	GetTransform()->position = glm::vec2(0, 0);
+	GetTransform()->position = glm::vec2(0.0f, 0.0f);
 	GetRigidBody()->isColliding = false;
 	SetType(GameObjectType::PATH_NODE);
 
