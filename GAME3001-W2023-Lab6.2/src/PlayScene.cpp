@@ -33,7 +33,7 @@ void PlayScene::Draw()
 void PlayScene::Update()
 {
 	UpdateDisplayList();
-	m_checkShipLOS(m_pTarget);
+	m_checkAgentLOS(m_pStarShip, m_pTarget);
 }
 
 void PlayScene::Clean()
@@ -272,7 +272,38 @@ void PlayScene::m_checkShipLOS(DisplayObject* target_object) const
 
 bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object) const
 {
-	return false;
+	bool has_LOS = false; // Default - no LOS
+
+	agent->SetHasLOS(has_LOS);
+
+	// if ship to target distance is less than or equal to the LOS Distance (Range)
+	const auto agent_to_range = Util::GetClosestEdge(m_pStarShip->GetTransform()->position, target_object);
+	if (agent_to_range <= agent->GetLOSDistance())
+	{
+		// we are in range
+		std::vector<DisplayObject*> contact_list;
+		for (auto display_object : GetDisplayList())
+		{
+			const auto agent_to_object_distance = Util::GetClosestEdge(agent->GetTransform()->position, display_object);
+
+			if (agent_to_object_distance > agent_to_range) { continue; } // Target is out of range
+			if ((display_object->GetType() != GameObjectType::AGENT)
+				&& (display_object->GetType() != GameObjectType::PATH_NODE)
+				&& (display_object->GetType() != GameObjectType::TARGET)) 
+			{
+				contact_list.push_back(display_object);
+			}
+
+		}
+
+		const glm::vec2 agent_LOS_endPoint = agent->GetTransform()->position + agent->GetCurrentDirection() * agent->GetLOSDistance();
+		has_LOS = CollisionManager::LOSCheck(agent, agent_LOS_endPoint, contact_list, target_object);
+
+		const auto LOSColour = (target_object->GetType() == GameObjectType::AGENT) ? glm::vec4(0, 0, 1, 1) : glm::vec4(0, 1, 0, 1);
+		agent->SetHasLOS(has_LOS, LOSColour);
+	}
+
+	return has_LOS;
 }
 
 bool PlayScene::m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object) const

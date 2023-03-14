@@ -7,6 +7,7 @@
 #include "Target.h"
 #include "StarShip.h"
 #include "PathNode.h"
+#include "LOSMode.h"
 
 
 class PlayScene : public Scene
@@ -50,6 +51,9 @@ private:
 	void m_checkAllNodesWithTarget(DisplayObject* target_object) const;
 	void m_checkAllNodesWithBoth();
 	void m_setPathNodeLOSDistance(int distance);
+	LOSMode m_LOSMode{};
+	int m_pathNodeLOSDistance;
+
 
 	// Debugging Variables
 	bool m_bDebugView;
