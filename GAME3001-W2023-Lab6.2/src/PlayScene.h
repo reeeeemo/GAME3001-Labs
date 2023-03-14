@@ -33,6 +33,7 @@ private:
 	StarShip* m_pStarShip;
 	std::vector<Obstacle*> m_pObstacles;
 
+
 	void BuildObstaclePool();
 
 	// Create our Division Scheme (Grid of PathNodes)
@@ -43,6 +44,12 @@ private:
 
 	// LOS functions
 	void m_checkShipLOS(DisplayObject* target_object) const;
+
+	bool m_checkAgentLOS(Agent* agent, DisplayObject* target_object) const;
+	bool m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object) const;
+	void m_checkAllNodesWithTarget(DisplayObject* target_object) const;
+	void m_checkAllNodesWithBoth();
+	void m_setPathNodeLOSDistance(int distance);
 
 	// Debugging Variables
 	bool m_bDebugView;

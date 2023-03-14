@@ -269,3 +269,25 @@ void PlayScene::m_checkShipLOS(DisplayObject* target_object) const
 		m_pStarShip->SetHasLOS(has_LOS);
 	}
 }
+
+bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object) const
+{
+	return false;
+}
+
+bool PlayScene::m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object) const
+{
+	return false;
+}
+
+void PlayScene::m_checkAllNodesWithTarget(DisplayObject* target_object) const
+{
+}
+
+void PlayScene::m_checkAllNodesWithBoth()
+{
+}
+
+void PlayScene::m_setPathNodeLOSDistance(int distance)
+{
+}
