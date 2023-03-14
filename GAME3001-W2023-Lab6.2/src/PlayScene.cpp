@@ -286,13 +286,19 @@ bool PlayScene::m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_ob
 
 void PlayScene::m_checkAllNodesWithTarget(DisplayObject* target_object) const
 {
-	for (auto path_node : m_pGrid) {
+	for (const auto path_node : m_pGrid) {
 		m_checkPathNodeLOS(path_node, target_object);
 	}
 }
 
-void PlayScene::m_checkAllNodesWithBoth()
+void PlayScene::m_checkAllNodesWithBoth() const 
 {
+	for (const auto path_node : m_pGrid) {
+		const bool LOSWithStarShip = m_checkPathNodeLOS(path_node, m_pStarShip);
+		const bool LOSWithTarget = m_checkPathNodeLOS(path_node, m_pTarget);
+		path_node->SetHasLOS(LOSWithStarShip && LOSWithTarget, glm::vec4(0,1,1,1));
+
+	}
 }
 
 void PlayScene::m_setPathNodeLOSDistance(int distance)
