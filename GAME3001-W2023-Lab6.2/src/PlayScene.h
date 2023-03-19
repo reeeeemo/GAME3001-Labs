@@ -3,7 +3,6 @@
 #define __PLAY_SCENE__
 
 #include <fstream>
-#include <queue>
 #include "Obstacle.h"
 #include "Scene.h"
 #include "Target.h"
@@ -57,9 +56,8 @@ private:
 
 
 	// Pathfinding stuff
-	void m_getShortestPath();
-
-	std::priority_queue<PathNode*, std::vector<PathNode*>, 
+	void m_getPath();
+ 
 
 	// Debugging Variables
 	bool m_bDebugView;

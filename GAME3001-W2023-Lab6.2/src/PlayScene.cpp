@@ -28,7 +28,17 @@ void PlayScene::Draw()
 			Util::DrawRect(obstacle->GetTransform()->position - glm::vec2(obstacle->GetWidth() * 0.5f,
 				obstacle->GetHeight() * 0.5f), obstacle->GetWidth(), obstacle->GetHeight());
 		}
+
+		if (m_pathFound) { // If there is a path that we can draw.
+			for (PathNode* node : m_pGrid) {
+				if (node->HasLOS()) { // If the path currently has LOS with the target.
+					
+				}
+			}
+		}
 	}
+
+	
 	
 
 	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
@@ -37,7 +47,12 @@ void PlayScene::Draw()
 void PlayScene::Update()
 {
 	UpdateDisplayList();
-	m_checkAgentLOS(m_pStarShip, m_pTarget);
+	if (m_checkAgentLOS(m_pStarShip, m_pTarget)) {
+		m_pathFound = true;
+	}
+	else {
+		m_pathFound = false;
+	}
 	switch (m_LOSMode) {
 	case LOSMode::TARGET:
 		m_checkAllNodesWithTarget(m_pTarget);
@@ -144,12 +159,15 @@ void PlayScene::GUI_Function()
 	ImGui::Separator();
 
 	if (ImGui::Button("Draw LOS Path")) {
-		m_getShortestPath();
+		m_getPath();
 	}
 
 	if (m_pathFound) {
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Path Found! - Length: %d", (m_pPathList.size() - 1));
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Path Found!");
+	}
+	else {
+		ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Path Unable to Access!");
 	}
 
 	ImGui::Separator();
@@ -357,6 +375,5 @@ void PlayScene::m_setPathNodeLOSDistance(const int distance) const
 	}
 }
 
-void PlayScene::m_getShortestPath() {
-
+void PlayScene::m_getPath() {
 }
