@@ -17,6 +17,10 @@ public:
 	void Draw() override;
 	void Update() override;
 	void Clean() override;
+	
+
+	bool m_isTarget = false;
+	bool m_isPlayer = false;
 };
 
 #endif /* defined (__PATH_NODE__) */

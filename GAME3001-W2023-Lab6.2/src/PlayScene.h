@@ -43,6 +43,7 @@ private:
 	void m_buildGrid();
 	void m_toggleGrid(bool state) const;
 	void m_clearNodes();
+	void m_updateCurrentNode(DisplayObject* target_object);
 
 	// LOS functions
 
@@ -57,6 +58,7 @@ private:
 
 	// Pathfinding stuff
 	void m_getPath();
+	std::vector<PathNode*> m_pPath;
  
 
 	// Debugging Variables

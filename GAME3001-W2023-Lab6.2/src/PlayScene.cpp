@@ -29,12 +29,19 @@ void PlayScene::Draw()
 				obstacle->GetHeight() * 0.5f), obstacle->GetWidth(), obstacle->GetHeight());
 		}
 
-		if (m_pathFound) { // If there is a path that we can draw.
-			for (PathNode* node : m_pGrid) {
-				if (node->HasLOS()) { // If the path currently has LOS with the target.
-					
+		if (m_pathFound) {
+			/*for (int i = 0; i < m_pPath.size(); i++) {
+				PathNode* next_node = nullptr;
+				if (m_pPath[i] != m_pPath.back()) {
+					next_node = m_pPath[i + 1];
 				}
-			}
+				PathNode* cur_node = m_pPath[i];
+				if (next_node != nullptr) {
+					Util::DrawLine(cur_node->GetTransform()->position, next_node->GetTransform()->position, glm::vec4(1, 1, 1, 1));
+				}
+			}*/
+
+			Util::DrawLine(m_pStarShip->GetTransform()->position, m_pTarget->GetTransform()->position, glm::vec4(0.3f, 0.1f, 0, 1));
 		}
 	}
 
@@ -47,12 +54,9 @@ void PlayScene::Draw()
 void PlayScene::Update()
 {
 	UpdateDisplayList();
-	if (m_checkAgentLOS(m_pStarShip, m_pTarget)) {
-		m_pathFound = true;
-	}
-	else {
-		m_pathFound = false;
-	}
+	m_checkAgentLOS(m_pStarShip, m_pTarget);
+
+
 	switch (m_LOSMode) {
 	case LOSMode::TARGET:
 		m_checkAllNodesWithTarget(m_pTarget);
@@ -118,6 +122,10 @@ void PlayScene::Start()
 	m_isGridEnabled = false;
 	m_buildGrid();
 	m_toggleGrid(m_isGridEnabled);
+
+	// Grab initial positions of starship and target for nodes
+	m_updateCurrentNode(m_pStarShip);
+	m_updateCurrentNode(m_pTarget);
 
 	// Preload Sounds
 
@@ -186,6 +194,7 @@ void PlayScene::GUI_Function()
 	{
 		m_pStarShip->GetTransform()->position.x = static_cast<float>(shipPosition[0]);
 		m_pStarShip->GetTransform()->position.y = static_cast<float>(shipPosition[1]);
+		m_updateCurrentNode(m_pStarShip);
 	}
 
 	// allow the ship to rotate
@@ -204,6 +213,7 @@ void PlayScene::GUI_Function()
 	{
 		m_pTarget->GetTransform()->position.x = static_cast<float>(targetPosition[0]);
 		m_pTarget->GetTransform()->position.y = static_cast<float>(targetPosition[1]);
+		m_updateCurrentNode(m_pTarget);
 	}
 
 	ImGui::Separator();
@@ -306,6 +316,33 @@ void PlayScene::m_clearNodes()
 	}
 }
 
+void PlayScene::m_updateCurrentNode(DisplayObject* target_object)
+{
+	float totalDistance = 1000.0f; // High number so can be overridden.
+	PathNode* cur_node = nullptr;
+	for (PathNode* node : m_pGrid) {
+		node->m_isTarget = false;
+		node->m_isPlayer = false;
+
+		float tempDistance = Util::Distance(node->GetTransform()->position, target_object->GetTransform()->position);
+
+		if (tempDistance < totalDistance) {
+			totalDistance = tempDistance;
+			cur_node = node;
+		}
+	}
+
+	if (cur_node != nullptr) {
+		if (target_object->GetType() == GameObjectType::TARGET) { // if target
+			cur_node->m_isTarget = true;
+		}
+		else if (target_object->GetType() == GameObjectType::AGENT) { // if player
+			cur_node->m_isPlayer = true;
+		}
+	}
+
+}
+
 bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object) const
 {
 	bool has_LOS = false; // Default - no LOS
@@ -376,4 +413,46 @@ void PlayScene::m_setPathNodeLOSDistance(const int distance) const
 }
 
 void PlayScene::m_getPath() {
+	//PathNode* plr_node = nullptr;
+	//bool goal_found = false;
+	//std::vector<PathNode*> m_pOpenList;
+	//constexpr glm::vec2 offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
+
+
+	//// Grabbing player node from list
+	//for (PathNode* node : m_pGrid) {
+	//	if (node->m_isPlayer == true) {
+	//		plr_node = node;
+	//	}
+	//}
+
+	//m_pOpenList.push_back(plr_node);
+
+
+	//while (!m_pOpenList.empty() && !goal_found) {
+	//	const auto cur_node = m_pOpenList.back();
+
+	//	m_pOpenList.pop_back();
+	//	m_pPath.push_back(cur_node);
+
+	//	glm::vec2 next_node_pos =
+	//		glm::vec2(cur_node->GetTransform()->position +
+	//			glm::vec2(cur_node->GetCurrentDirection().x * ,
+	//				cur_node->GetCurrentDirection().y * Config::TILE_SIZE));
+
+
+	//	for (PathNode* node : m_pGrid) {
+	//		if (next_node_pos == node->GetTransform()->position) {
+	//			if (node->GetType() == GameObjectType::TARGET) {
+	//				m_pOpenList.clear();
+	//				goal_found = true;
+	//			}
+	//			else {
+	//				m_pOpenList.push_back(node);
+	//			}
+	//		}
+	//	}
+
+	//}
+	m_pathFound = true;
 }
