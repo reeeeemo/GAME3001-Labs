@@ -417,7 +417,7 @@ void PlayScene::m_removeAllObstacles()
 void PlayScene::m_findShortestPath()
 {
 	m_getTile(m_pStarShip->GetGridPosition())->SetTileParent(nullptr);
-	m_pOpenList.push(m_getTile(m_pStarShip->GetGridPosition()));
+	m_pOpenList.push(m_getTile(m_pStarShip->GetGridPos(ition()));
 	bool goal_found = false;
 
 	while (!m_pOpenList.empty() && !goal_found)

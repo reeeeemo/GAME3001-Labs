@@ -143,6 +143,18 @@ void PlayScene::GUI_Function()
 
 	ImGui::Separator();
 
+	if (ImGui::Button("Draw LOS Path")) {
+		m_getShortestPath();
+	}
+
+	if (m_pathFound) {
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Path Found! - Length: %d", (m_pPathList.size() - 1));
+	}
+
+	ImGui::Separator();
+
+
 	if (ImGui::SliderInt("Path Node LOS Distance", &m_pathNodeLOSDistance, 0, 1000)) {
 		m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
 	}
@@ -343,4 +355,8 @@ void PlayScene::m_setPathNodeLOSDistance(const int distance) const
 	for (const auto path_node : m_pGrid) {
 		path_node->SetLOSDistance(static_cast<float>(distance));
 	}
+}
+
+void PlayScene::m_getShortestPath() {
+
 }

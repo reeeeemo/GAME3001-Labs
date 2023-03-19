@@ -3,6 +3,7 @@
 #define __PLAY_SCENE__
 
 #include <fstream>
+#include <queue>
 #include "Obstacle.h"
 #include "Scene.h"
 #include "Target.h"
@@ -55,9 +56,14 @@ private:
 	int m_pathNodeLOSDistance;
 
 
+	// Pathfinding stuff
+	void m_getShortestPath();
+
+	std::priority_queue<PathNode*, std::vector<PathNode*>, 
+
 	// Debugging Variables
 	bool m_bDebugView;
-
+	bool m_pathFound = false;
 
 };
 
