@@ -34,6 +34,21 @@
     <Filter Include="Navigation">
       <UniqueIdentifier>{dd0f8848-f6ff-41a0-a27f-16781c70a262}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Decision">
+      <UniqueIdentifier>{df5af185-2b66-4a83-a4b7-f63721e86628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Decision\Actions">
+      <UniqueIdentifier>{487f5183-1c50-47a9-8fbd-47c229b47ece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Decision\Agents">
+      <UniqueIdentifier>{56b6780d-a92d-42d9-835b-8178e2f6850e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Decision\Conditions">
+      <UniqueIdentifier>{73b0b457-eb50-4d2c-aa52-07583aa088f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Decision\Core">
+      <UniqueIdentifier>{555bbc3e-f716-4170-bc19-76b612d6efb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\StartScene.cpp">
@@ -117,9 +132,6 @@
     <ClCompile Include="..\src\Obstacle.cpp">
       <Filter>Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Agent.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\include\IMGUI\imgui.cpp">
       <Filter>IMGUI</Filter>
     </ClCompile>
@@ -138,9 +150,6 @@
     <ClCompile Include="..\include\IMGUI_SDL\imgui_sdl.cpp">
       <Filter>IMGUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\StarShip.cpp">
-      <Filter>Game Objects</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\NavigationObject.cpp">
       <Filter>Navigation</Filter>
     </ClCompile>
@@ -149,6 +158,12 @@
     </ClCompile>
     <ClCompile Include="..\src\PathNode.cpp">
       <Filter>Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\StarShip.cpp">
+      <Filter>Decision\Agents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Agent.cpp">
+      <Filter>Decision\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -269,9 +284,6 @@
     <ClInclude Include="..\src\Obstacle.h">
       <Filter>Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Agent.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\IMGUI\imconfig.h">
       <Filter>IMGUI</Filter>
     </ClInclude>
@@ -299,9 +311,6 @@
     <ClInclude Include="..\src\InputType.h">
       <Filter>Enums</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\StarShip.h">
-      <Filter>Game Objects</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\NavigationObject.h">
       <Filter>Navigation</Filter>
     </ClInclude>
@@ -324,6 +333,24 @@
       <Filter>Navigation</Filter>
     </ClInclude>
     <ClInclude Include="..\src\LOSMode.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ActionNode.h">
+      <Filter>Decision\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ConditionNode.h">
+      <Filter>Decision\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\TreeNode.h">
+      <Filter>Decision\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\StarShip.h">
+      <Filter>Decision\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Agent.h">
+      <Filter>Decision\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ActionState.h">
       <Filter>Enums</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,6 +4,7 @@
 
 #include <glm/vec4.hpp>
 #include "NavigationObject.h"
+#include "ActionState.h"
 
 class Agent : public NavigationObject
 {
@@ -34,6 +35,8 @@ public:
 	glm::vec4 GetLineColour(int index) const;
 	float GetWhiskerAngle() const;
 
+	ActionState GetActionState() const;
+
 	// setters
 	void SetTargetPosition(glm::vec2 new_position);
 	void SetCurrentDirection(glm::vec2 new_direction);
@@ -51,6 +54,8 @@ public:
 
 	void SetLineColour(int index, glm::vec4 colour);
 	void SetWhiskerAngle(float angle);
+
+	void SetActionState(ActionState state);
 
 	// utility function
 	void UpdateWhiskers(float angle);
@@ -75,6 +80,9 @@ private:
 	glm::vec4 m_lineColour[5];
 	bool m_collisionWhiskers[5];
 	float m_whiskerAngle;
+
+	// Action state
+	ActionState m_state;
 
 };
 
