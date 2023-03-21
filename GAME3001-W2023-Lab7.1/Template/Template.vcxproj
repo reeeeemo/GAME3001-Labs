@@ -163,9 +163,12 @@
     <ClCompile Include="..\include\IMGUI\imgui_widgets.cpp" />
     <ClCompile Include="..\include\IMGUI_SDL\imgui_sdl.cpp" />
     <ClCompile Include="..\src\Agent.cpp" />
+    <ClCompile Include="..\src\AttackAction.cpp" />
     <ClCompile Include="..\src\Button.cpp" />
     <ClCompile Include="..\src\CollisionManager.cpp" />
     <ClCompile Include="..\src\ImGuiWindowFrame.cpp" />
+    <ClCompile Include="..\src\MoveToLOSAction.cpp" />
+    <ClCompile Include="..\src\MoveToPlayerAction.cpp" />
     <ClCompile Include="..\src\NavigationObject.cpp" />
     <ClCompile Include="..\src\Obstacle.cpp" />
     <ClCompile Include="..\src\PathNode.cpp" />
@@ -208,6 +211,7 @@
     <ClInclude Include="..\src\ActionState.h" />
     <ClInclude Include="..\src\Agent.h" />
     <ClInclude Include="..\src\Animation.h" />
+    <ClInclude Include="..\src\AttackAction.h" />
     <ClInclude Include="..\src\Button.h" />
     <ClInclude Include="..\src\CollisionManager.h" />
     <ClInclude Include="..\src\CollisionShape.h" />
@@ -217,6 +221,8 @@
     <ClInclude Include="..\src\ImGuiWindowFrame.h" />
     <ClInclude Include="..\src\InputType.h" />
     <ClInclude Include="..\src\LOSMode.h" />
+    <ClInclude Include="..\src\MoveToLOSAction.h" />
+    <ClInclude Include="..\src\MoveToPlayerAction.h" />
     <ClInclude Include="..\src\NavigationObject.h" />
     <ClInclude Include="..\src\NeighbourTile.h" />
     <ClInclude Include="..\src\Obstacle.h" />
