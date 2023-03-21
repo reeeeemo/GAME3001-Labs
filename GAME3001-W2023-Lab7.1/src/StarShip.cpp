@@ -7,7 +7,7 @@
 StarShip::StarShip() : m_maxSpeed(20.0f),
 m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 500.0f))
 {
-	TextureManager::Instance().Load("../Assets/textures/ncl_small.png", "starship");
+	TextureManager::Instance().Load("../Assets/textures/d7_small.png", "starship");
 
 	const auto size = TextureManager::Instance().GetTextureSize("starship");
 	SetWidth(static_cast<int>(size.x));
@@ -25,6 +25,10 @@ m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 50
 	SetLOSDistance(400.0f);
 	SetWhiskerAngle(45.0f);
 	SetLOSColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)); // Default LOS Colour = Red
+
+	// New for Lab 7.1
+	SetActionState(ActionState::NO_ACTION);
+	m_buildPatrolPath();
 }
 
 StarShip::~StarShip()
@@ -43,7 +47,19 @@ void StarShip::Draw()
 
 void StarShip::Update()
 {
-	//m_move();
+	// Determine which action to perform
+	switch(GetActionState())
+	{
+	case ActionState::PATROL:
+		m_move();
+		break;
+	case ActionState::MOVE_TO_LOS:
+		break;
+	case ActionState::MOVE_TO_PLAYER:
+		break;
+	case ActionState::ATTACK:
+		break;
+	}
 }
 
 void StarShip::Clean()
@@ -94,6 +110,21 @@ void StarShip::SetDesiredVelocity(const glm::vec2 target_position)
 
 void StarShip::Seek()
 {
+	// New for Lab 7.1
+	// Find next waypoint if within 10px of the current waypoint
+
+	if (Util::Distance(m_patrolPath[m_wayPoint], GetTransform()->position) < 10)
+	{
+		// Check to see if you are at the last point in the path
+		if (++m_wayPoint == m_patrolPath.size())
+		{
+			// if so.. reset
+			m_wayPoint = 0;
+		}
+		SetTargetPosition(m_patrolPath[m_wayPoint]);
+	}
+
+
 		SetDesiredVelocity(GetTargetPosition());
 
 		const glm::vec2 steering_direction = GetDesiredVelocity() - GetCurrentDirection();
@@ -131,32 +162,7 @@ void StarShip::Reset()
 
 void StarShip::m_move()
 {
-	auto distance = Util::Distance(GetTransform()->position, GetTargetPosition());
-	std::cout << "distance: " << distance << "\n";
-	if( distance > 100.0f)
-	{
-		Seek();
-	}
-	else if(distance <= 5.0f)
-	{
-		GetRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
-		GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
-	}
-	else
-	{
-		auto factor = distance / 200.0f;
-		GetRigidBody()->acceleration *= factor;
-		UpdateWhiskers(GetWhiskerAngle());
-	}
-	
-
-	// maybe a switch - case
-
-	// switch (behaviour)
-	//    case(seek)
-	//    case(arrive)
-	//    case(flee)
-	//    case(avoidance)
+	Seek(); // Get our target for this frame
 
 	//                      final Position  Position Term   Velocity      Acceleration Term
 	// Kinematic Equation-> Pf            = Pi +            Vi * (time) + (0.5) * Ai * (time * time)
@@ -183,4 +189,18 @@ void StarShip::m_move()
 
 	// clamp our velocity at max speed
 	GetRigidBody()->velocity = Util::Clamp(GetRigidBody()->velocity, GetMaxSpeed());
+}
+
+void StarShip::m_buildPatrolPath()
+{
+	m_patrolPath.push_back(glm::vec2(760, 40)); // Top Right Corner node
+
+	m_patrolPath.push_back(glm::vec2(760, 560)); // Bottom Right Corner node
+
+	m_patrolPath.push_back(glm::vec2(40, 560)); // Bottom Left Corner node
+
+	m_patrolPath.push_back(glm::vec2(40, 40)); // Top Left Corner node
+
+	SetTargetPosition(m_patrolPath[m_wayPoint]);
+
 }

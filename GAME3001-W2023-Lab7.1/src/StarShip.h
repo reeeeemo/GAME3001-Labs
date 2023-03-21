@@ -46,6 +46,10 @@ private:
 	// private function
 	void m_move();
 
+	// New for Lab 7.1
+	std::vector<glm::vec2> m_patrolPath;
+	int m_wayPoint;
+	void m_buildPatrolPath();
 };
 
 #endif /* defined (__STARSHIP__)*/

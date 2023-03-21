@@ -26,9 +26,9 @@ public:
 	void SetAgent(Agent* agent);
 
 	// Condition Node Accessors
-	LOSCondition* GetLOSNode() const;
-	RadiusCondition* GetRadiusNode() const;
-	CloseCombatCondition* GetCloseCombatNode() const;
+	[[nodiscard]] LOSCondition* GetLOSNode() const;
+	[[nodiscard]] RadiusCondition* GetRadiusNode() const;
+	[[nodiscard]] CloseCombatCondition* GetCloseCombatNode() const;
 
 	// Public utility methods / convenience methods
 	TreeNode* AddNode(TreeNode* parent, TreeNode* child_node, TreeNodeType type);
@@ -37,6 +37,9 @@ public:
 	void Display() const;
 	void Update();
 	void Clean();
+
+	// Main public method
+	void MakeDecision() const; // In-order traversal
 
 private:
 	// private data members (fields)

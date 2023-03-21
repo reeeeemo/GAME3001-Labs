@@ -9,6 +9,9 @@
 #include "StarShip.h"
 #include "PathNode.h"
 
+// New for Lab 7.1
+#include "DecisionTree.h"
+#include "Background.h"
 
 class PlayScene : public Scene
 {
@@ -28,11 +31,16 @@ private:
 	std::string m_guiTitle;
 	glm::vec2 m_mousePosition;
 	bool m_isGridEnabled;
+	// New for Lab 7.1
+	int m_shipPosition[2];
+	int m_angle;
 
 	// Game Objects for the Scene
 	Target* m_pTarget;
 	StarShip* m_pStarShip;
 	std::vector<Obstacle*> m_pObstacles;
+	// New for Lab 7.1
+	Background* m_pBackground;
 
 	void BuildObstaclePool();
 
@@ -56,7 +64,8 @@ private:
 	// Debugging Variables
 	bool m_bDebugView;
 
-
+	// Decision Tree
+	DecisionTree* m_decisionTree;
 };
 
 #endif /* defined (__PLAY_SCENE__) */
