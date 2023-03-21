@@ -58,7 +58,8 @@ private:
 
 	// Pathfinding stuff
 	void m_getPath();
-	std::vector<PathNode*> m_pPath;
+	PathNode* m_pPathNode;
+	bool CheckAllObstacleCollision(PathNode* node);
  
 
 	// Debugging Variables

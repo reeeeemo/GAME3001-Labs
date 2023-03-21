@@ -30,18 +30,9 @@ void PlayScene::Draw()
 		}
 
 		if (m_pathFound) {
-			/*for (int i = 0; i < m_pPath.size(); i++) {
-				PathNode* next_node = nullptr;
-				if (m_pPath[i] != m_pPath.back()) {
-					next_node = m_pPath[i + 1];
-				}
-				PathNode* cur_node = m_pPath[i];
-				if (next_node != nullptr) {
-					Util::DrawLine(cur_node->GetTransform()->position, next_node->GetTransform()->position, glm::vec4(1, 1, 1, 1));
-				}
-			}*/
+			Util::DrawLine(m_pStarShip->GetTransform()->position, m_pPathNode->GetTransform()->position, glm::vec4(0.3, 0.3, 0.3, 1));
+			Util::DrawLine(m_pTarget->GetTransform()->position, m_pPathNode->GetTransform()->position, glm::vec4(0.3, 0.3, 0.3, 1));
 
-			Util::DrawLine(m_pStarShip->GetTransform()->position, m_pTarget->GetTransform()->position, glm::vec4(0.3f, 0.1f, 0, 1));
 		}
 	}
 
@@ -413,46 +404,47 @@ void PlayScene::m_setPathNodeLOSDistance(const int distance) const
 }
 
 void PlayScene::m_getPath() {
-	//PathNode* plr_node = nullptr;
-	//bool goal_found = false;
-	//std::vector<PathNode*> m_pOpenList;
-	//constexpr glm::vec2 offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
+	PathNode* shortestGreen = nullptr;
 
 
-	//// Grabbing player node from list
-	//for (PathNode* node : m_pGrid) {
-	//	if (node->m_isPlayer == true) {
-	//		plr_node = node;
-	//	}
-	//}
+	for (auto node : m_pGrid)
+	{
+		if (node->HasLOS())
+		{
+			if (shortestGreen == nullptr)
+			{
+				shortestGreen = node;
+			}
 
-	//m_pOpenList.push_back(plr_node);
+			if ((Util::Distance(m_pStarShip->GetTransform()->position, node->GetTransform()->position) 
+				+ Util::Distance(m_pTarget->GetTransform()->position, node->GetTransform()->position) <
+				Util::Distance(m_pStarShip->GetTransform()->position, shortestGreen->GetTransform()->position)
+				+ Util::Distance(m_pTarget->GetTransform()->position, shortestGreen->GetTransform()->position)) && !CheckAllObstacleCollision(node))
+			{
+				shortestGreen = node;
+			}
+		}
+	}
 
+	m_pPathNode = shortestGreen;
 
-	//while (!m_pOpenList.empty() && !goal_found) {
-	//	const auto cur_node = m_pOpenList.back();
+	if (m_pPathNode != nullptr)
+	{
+		m_pathFound = true;
+	} else
+	{
+		m_pathFound = false;
+	}
+}
 
-	//	m_pOpenList.pop_back();
-	//	m_pPath.push_back(cur_node);
-
-	//	glm::vec2 next_node_pos =
-	//		glm::vec2(cur_node->GetTransform()->position +
-	//			glm::vec2(cur_node->GetCurrentDirection().x * ,
-	//				cur_node->GetCurrentDirection().y * Config::TILE_SIZE));
-
-
-	//	for (PathNode* node : m_pGrid) {
-	//		if (next_node_pos == node->GetTransform()->position) {
-	//			if (node->GetType() == GameObjectType::TARGET) {
-	//				m_pOpenList.clear();
-	//				goal_found = true;
-	//			}
-	//			else {
-	//				m_pOpenList.push_back(node);
-	//			}
-	//		}
-	//	}
-
-	//}
-	m_pathFound = true;
+bool PlayScene::CheckAllObstacleCollision(PathNode* node)
+{
+	for (auto obstacle : m_pObstacles)
+	{
+		if (CollisionManager::AABBCheck(obstacle, node))
+		{
+			return true;
+		}
+	}
+	return false;
 }
