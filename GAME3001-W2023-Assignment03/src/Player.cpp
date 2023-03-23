@@ -1,5 +1,8 @@
 #include "Player.h"
+
+#include "EventManager.h"
 #include "TextureManager.h"
+#include "Util.h"
 
 Player::Player(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT)
 {
@@ -35,19 +38,19 @@ void Player::Draw()
 	{
 	case PlayerAnimationState::PLAYER_IDLE_RIGHT:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idle"),
-			GetTransform()->position, 0.12f, 0, 255, true);
+			GetTransform()->position, 0.12f, GetTransform()->rotation.r, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_IDLE_LEFT:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idle"),
-			GetTransform()->position, 0.12f, 0, 255, true, SDL_FLIP_HORIZONTAL);
+			GetTransform()->position, 0.12f,GetTransform()->rotation.r, 255, true, SDL_FLIP_VERTICAL);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_RIGHT:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("run"),
-			GetTransform()->position, 0.25f, 0, 255, true);
+			GetTransform()->position, 0.25f, GetTransform()->rotation.r, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_LEFT:
 		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("run"),
-			GetTransform()->position, 0.25f, 0, 255, true, SDL_FLIP_HORIZONTAL);
+			GetTransform()->position, 0.25f, GetTransform()->rotation.r, 255, true, SDL_FLIP_VERTICAL);
 		break;
 	default:
 		break;
@@ -56,11 +59,13 @@ void Player::Draw()
 
 void Player::Update()
 {
+	m_LookAtMouse();
 }
 
 void Player::Clean()
 {
 }
+
 
 void Player::SetAnimationState(const PlayerAnimationState new_state)
 {
@@ -89,3 +94,21 @@ void Player::BuildAnimations()
 
 	SetAnimation(run_animation);
 }
+
+void Player::m_LookAtMouse()
+{
+	glm::vec2 mousePos = EventManager::Instance().GetMousePosition();
+	float angleToMouse = atan2(mousePos.y-GetTransform()->position.y,mousePos.x-GetTransform()->position.x);
+	GetTransform()->rotation.r = angleToMouse*Util::Rad2Deg;
+	while (GetTransform()->rotation.r < 0) GetTransform()->rotation.r += 360;
+	while (GetTransform()->rotation.r > 360) GetTransform()->rotation.r -= 360;
+	if (GetTransform()->rotation.r > 90 && GetTransform()->rotation.r < 270)
+	{
+		SetAnimationState(PlayerAnimationState::PLAYER_IDLE_LEFT);
+	}
+	else
+	{
+		SetAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT);
+	}
+}
+

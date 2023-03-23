@@ -21,8 +21,8 @@ public:
 
 private:
 	void BuildAnimations();
-
 	PlayerAnimationState m_currentAnimationState;
+	void m_LookAtMouse();
 };
 
 #endif /* defined (__PLAYER__) */

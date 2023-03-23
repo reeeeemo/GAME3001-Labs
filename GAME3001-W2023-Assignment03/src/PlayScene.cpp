@@ -109,6 +109,10 @@ void PlayScene::Start()
 	m_pStarShip->GetTransform()->position = glm::vec2(150.0f, 300.0f);
 	AddChild(m_pStarShip, 2);
 
+	m_pPlayer = new Player();
+	m_pPlayer->GetTransform()->position = glm::vec2(100.0f,200.0f);
+	AddChild(m_pPlayer,2);
+
 	// Add Obstacles
 	BuildObstaclePool();
 
