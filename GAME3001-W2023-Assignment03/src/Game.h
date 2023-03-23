@@ -57,6 +57,10 @@ public:
 
 	[[nodiscard]] SDL_Window* GetWindow() const;
 
+	// Static debug mode function
+	void SetDebugMode(bool debug_mode);
+	bool GetDebugMode();
+
 private:
 	Game();
 	~Game();
@@ -73,6 +77,10 @@ private:
 
 	// storage structures
 	std::shared_ptr<SDL_Window> m_pWindow;
+	
+
+	// Debug variables
+	bool m_isDebugMode;
 };
 
 

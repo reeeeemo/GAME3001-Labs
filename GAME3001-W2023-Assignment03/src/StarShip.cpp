@@ -40,9 +40,12 @@ void StarShip::Draw()
 	TextureManager::Instance().Draw("starship", 
 		GetTransform()->position, static_cast<double>(GetCurrentHeading()), 255, true);
 
-	// draw the LOS Line
-	Util::DrawLine(GetTransform()->position,
-		GetTransform()->position + GetCurrentDirection() * GetLOSDistance(), GetLOSColour());
+	// draw the LOS Line if in debug mode
+	if (Game::Instance().GetDebugMode()) {
+		Util::DrawLine(GetTransform()->position,
+			GetTransform()->position + GetCurrentDirection() * GetLOSDistance(), GetLOSColour());
+	}
+
 }
 
 void StarShip::Update()

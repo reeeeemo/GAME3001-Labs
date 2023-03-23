@@ -25,6 +25,7 @@ public:
 	virtual void Clean() override;
 	virtual void HandleEvents() override;
 	virtual void Start() override;
+
 private:
 	// IMGUI Function
 	void GUI_Function();
@@ -60,9 +61,6 @@ private:
 	// LOS Variables (fields)
 	LOSMode m_LOSMode{};
 	int m_pathNodeLOSDistance;
-
-	// Debugging Variables
-	bool m_bDebugView;
 
 	// Decision Tree
 	DecisionTree* m_decisionTree;

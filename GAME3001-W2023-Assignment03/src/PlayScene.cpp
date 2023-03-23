@@ -78,6 +78,13 @@ void PlayScene::HandleEvents()
 	{
 		Game::Instance().ChangeSceneState(SceneState::END);
 	}
+
+	// Toggles into Debug View
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_H)) {
+		Game::Instance().SetDebugMode(!m_isGridEnabled);
+		m_isGridEnabled = !m_isGridEnabled;
+		m_toggleGrid(m_isGridEnabled);
+	}
 }
 
 void PlayScene::Start()
@@ -130,6 +137,7 @@ void PlayScene::Start()
 	ImGuiWindowFrame::Instance().SetGuiFunction(std::bind(&PlayScene::GUI_Function, this));
 }
 
+
 void PlayScene::GUI_Function()
 {
 	// Always open with a NewFrame
@@ -145,6 +153,7 @@ void PlayScene::GUI_Function()
 	// Debug Properties
 	if(ImGui::Checkbox("Toggle Grid", &m_isGridEnabled))
 	{
+		Game::Instance().SetDebugMode(m_isGridEnabled);
 		m_toggleGrid(m_isGridEnabled);
 	}
 

@@ -9,8 +9,18 @@
 
 // Game functions - DO NOT REMOVE ***********************************************
 
+void Game::SetDebugMode(bool debug_mode)
+{
+	m_isDebugMode = debug_mode;
+}
+
+bool Game::GetDebugMode()
+{
+	return m_isDebugMode;
+}
+
 Game::Game() :
-	m_bRunning(true), m_frames(0), m_pCurrentScene(nullptr), m_currentSceneState(SceneState::NO_SCENE), m_pWindow(nullptr)
+	m_bRunning(true), m_frames(0), m_pCurrentScene(nullptr), m_currentSceneState(SceneState::NO_SCENE), m_pWindow(nullptr), m_isDebugMode(false)
 {
 	srand(static_cast<unsigned>(time(nullptr)));  // random seed
 }
