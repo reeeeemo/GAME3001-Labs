@@ -1,6 +1,7 @@
 #include "Player.h"
 
 #include "EventManager.h"
+#include "Game.h"
 #include "TextureManager.h"
 #include "Util.h"
 
@@ -21,6 +22,7 @@ Player::Player(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGH
 
 	GetTransform()->position = glm::vec2(400.0f, 300.0f);
 	GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+	GetRigidBody()->velocityDampening = glm::vec2(0.90f,0.90f);
 	GetRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	GetRigidBody()->isColliding = false;
 	SetType(GameObjectType::PLAYER);
@@ -59,11 +61,24 @@ void Player::Draw()
 
 void Player::Update()
 {
+	Move();
 	m_LookAtMouse();
 }
 
 void Player::Clean()
 {
+}
+
+void Player::Move()
+{
+	const float dt =Game::Instance().GetDeltaTime();
+	const glm::vec2 initial_position = GetTransform()->position;
+	const glm::vec2 velocity_term = GetRigidBody()->velocity * dt;
+	const glm::vec2 acceleration_term = GetRigidBody()->acceleration * 0.5f;
+	const glm::vec2 final_position = initial_position + velocity_term + acceleration_term;
+	GetTransform()->position = final_position;
+	GetRigidBody()->velocity += GetRigidBody()->acceleration;
+	GetRigidBody()->velocity*=GetRigidBody()->velocityDampening;
 }
 
 

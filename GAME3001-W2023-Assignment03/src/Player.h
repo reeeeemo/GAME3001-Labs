@@ -15,6 +15,7 @@ public:
 	virtual void Draw() override;
 	virtual void Update() override;
 	virtual void Clean() override;
+	void Move();
 
 	// setters
 	void SetAnimationState(PlayerAnimationState new_state);

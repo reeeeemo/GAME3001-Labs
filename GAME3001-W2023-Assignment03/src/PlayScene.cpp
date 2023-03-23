@@ -85,6 +85,22 @@ void PlayScene::HandleEvents()
 		m_isGridEnabled = !m_isGridEnabled;
 		m_toggleGrid(m_isGridEnabled);
 	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_W))
+	{
+		m_pPlayer->GetRigidBody()->velocity.y-=12.5f;
+	}
+	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_S))
+	{
+		m_pPlayer->GetRigidBody()->velocity.y+=12.5f;
+	}
+	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_A))
+	{
+		m_pPlayer->GetRigidBody()->velocity.x-=12.5f;
+	}
+	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_D))
+	{
+		m_pPlayer->GetRigidBody()->velocity.x+=12.5f;
+	}
 }
 
 void PlayScene::Start()
@@ -110,7 +126,7 @@ void PlayScene::Start()
 	AddChild(m_pStarShip, 2);
 
 	m_pPlayer = new Player();
-	m_pPlayer->GetTransform()->position = glm::vec2(100.0f,200.0f);
+	m_pPlayer->GetTransform()->position = glm::vec2(100.0f,300.0f);
 	AddChild(m_pPlayer,2);
 
 	// Add Obstacles
