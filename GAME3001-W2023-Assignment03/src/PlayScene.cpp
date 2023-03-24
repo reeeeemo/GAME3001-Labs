@@ -107,8 +107,7 @@ void PlayScene::HandleEvents()
 	if (EventManager::Instance().MousePressed(3))
 	{
 		std::cout<< "Mouse 2 Pressed" << std::endl;
-		m_pTorpedo = new Torpedo();
-		AddChild(m_pTorpedo);
+		m_pTorpedoPool->Fire();
 	}
 }
 
@@ -138,6 +137,9 @@ void PlayScene::Start()
 	m_pPlayer->GetTransform()->position = glm::vec2(100.0f,300.0f);
 	AddChild(m_pPlayer,2);
 	Game::Instance().SetPlayer(m_pPlayer);
+
+	m_pTorpedoPool = new TorpedoPool();
+	AddChild(m_pTorpedoPool);
 
 	// Add Obstacles
 	BuildObstaclePool();

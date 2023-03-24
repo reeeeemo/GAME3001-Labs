@@ -192,6 +192,12 @@
     <ClCompile Include="..\src\Background.cpp">
       <Filter>Game Objects</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Torpedo.cpp">
+      <Filter>Decision\Agents</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Projectile.cpp">
+      <Filter>Decision\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -409,6 +415,12 @@
     </ClInclude>
     <ClInclude Include="..\src\Background.h">
       <Filter>Game Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Torpedo.h">
+      <Filter>Decision\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Projectile.h">
+      <Filter>Decision\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

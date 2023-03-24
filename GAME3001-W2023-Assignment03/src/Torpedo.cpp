@@ -21,7 +21,7 @@ void TorpedoPool::Update()
 {
     for(unsigned i = 0; i < m_torpedoes.size(); i++)
     {
-        if (m_torpedoes[i]->GetDeleteMe() == true) // If we need to delete the torpedoes
+        if (m_torpedoes[i]->GetDeleteMe()) // If we need to delete the torpedoes
         {
             delete m_torpedoes[i];
             m_torpedoes[i] = nullptr;

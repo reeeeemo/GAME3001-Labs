@@ -177,10 +177,12 @@
     <ClCompile Include="..\src\Obstacle.cpp" />
     <ClCompile Include="..\src\PathNode.cpp" />
     <ClCompile Include="..\src\PatrolAction.cpp" />
+    <ClCompile Include="..\src\Projectile.cpp" />
     <ClCompile Include="..\src\RadiusCondition.cpp" />
     <ClCompile Include="..\src\Sprite.cpp" />
     <ClCompile Include="..\src\StarShip.cpp" />
     <ClCompile Include="..\src\Tile.cpp" />
+    <ClCompile Include="..\src\Torpedo.cpp" />
     <ClCompile Include="..\src\UIControl.cpp" />
     <ClCompile Include="..\src\DisplayObject.cpp" />
     <ClCompile Include="..\src\EndScene.cpp" />
@@ -237,6 +239,7 @@
     <ClInclude Include="..\src\Obstacle.h" />
     <ClInclude Include="..\src\PathNode.h" />
     <ClInclude Include="..\src\PatrolAction.h" />
+    <ClInclude Include="..\src\Projectile.h" />
     <ClInclude Include="..\src\RadiusCondition.h" />
     <ClInclude Include="..\src\SoundType.h" />
     <ClInclude Include="..\src\Sprite.h" />
@@ -244,6 +247,7 @@
     <ClInclude Include="..\src\Tile.h" />
     <ClInclude Include="..\src\TileComparator.h" />
     <ClInclude Include="..\src\TileStatus.h" />
+    <ClInclude Include="..\src\Torpedo.h" />
     <ClInclude Include="..\src\TreeNode.h" />
     <ClInclude Include="..\src\TreeNodeType.h" />
     <ClInclude Include="..\src\UIControl.h" />

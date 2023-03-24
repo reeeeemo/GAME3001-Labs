@@ -42,7 +42,7 @@ private:
 	Target* m_pTarget;
 	StarShip* m_pStarShip;
 	Player* m_pPlayer;
-	Torpedo* m_pTorpedo;
+	TorpedoPool* m_pTorpedoPool;
 	std::vector<Obstacle*> m_pObstacles;
 	// New for Lab 7.1
 	Background* m_pBackground;
