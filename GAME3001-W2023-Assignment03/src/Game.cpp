@@ -193,6 +193,16 @@ SDL_Window* Game::GetWindow() const
 	return m_pWindow.get();
 }
 
+void Game::SetPlayer(Player* player)
+{
+	m_pPlayer = player;
+}
+
+Player* Game::GetPlayer() const
+{
+	return m_pPlayer;
+}
+
 void Game::Quit()
 {
 	m_bRunning = false;

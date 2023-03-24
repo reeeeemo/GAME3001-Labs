@@ -13,6 +13,7 @@
 #include "DecisionTree.h"
 #include "Background.h"
 #include "Player.h"
+#include "Torpedo.h"
 
 class PlayScene : public Scene
 {
@@ -41,6 +42,7 @@ private:
 	Target* m_pTarget;
 	StarShip* m_pStarShip;
 	Player* m_pPlayer;
+	Torpedo* m_pTorpedo;
 	std::vector<Obstacle*> m_pObstacles;
 	// New for Lab 7.1
 	Background* m_pBackground;

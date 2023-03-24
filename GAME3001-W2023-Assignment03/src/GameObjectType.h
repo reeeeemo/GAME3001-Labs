@@ -11,6 +11,7 @@ enum class GameObjectType {
 	TARGET,
 	PLAYER,
 	PLANE,
+	TORPEDO,
 	START_BUTTON,
 	RESTART_BUTTON,
 	BACK_BUTTON,

@@ -64,6 +64,12 @@ void PlayScene::HandleEvents()
 {
 	EventManager::Instance().Update();
 
+	// Toggles into Debug View
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_H)) {
+		Game::Instance().SetDebugMode(!m_isGridEnabled);
+		m_isGridEnabled = !m_isGridEnabled;
+		m_toggleGrid(m_isGridEnabled);
+	}
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_ESCAPE))
 	{
 		Game::Instance().Quit();
@@ -77,13 +83,6 @@ void PlayScene::HandleEvents()
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_2))
 	{
 		Game::Instance().ChangeSceneState(SceneState::END);
-	}
-
-	// Toggles into Debug View
-	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_H)) {
-		Game::Instance().SetDebugMode(!m_isGridEnabled);
-		m_isGridEnabled = !m_isGridEnabled;
-		m_toggleGrid(m_isGridEnabled);
 	}
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_W))
 	{
@@ -100,6 +99,16 @@ void PlayScene::HandleEvents()
 	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_D))
 	{
 		m_pPlayer->GetRigidBody()->velocity.x+=12.5f;
+	}
+	if (EventManager::Instance().MousePressed(1))
+	{
+		std::cout<< "Mouse 1 Pressed" << std::endl;
+	}
+	if (EventManager::Instance().MousePressed(3))
+	{
+		std::cout<< "Mouse 2 Pressed" << std::endl;
+		m_pTorpedo = new Torpedo();
+		AddChild(m_pTorpedo);
 	}
 }
 
@@ -128,6 +137,7 @@ void PlayScene::Start()
 	m_pPlayer = new Player();
 	m_pPlayer->GetTransform()->position = glm::vec2(100.0f,300.0f);
 	AddChild(m_pPlayer,2);
+	Game::Instance().SetPlayer(m_pPlayer);
 
 	// Add Obstacles
 	BuildObstaclePool();
