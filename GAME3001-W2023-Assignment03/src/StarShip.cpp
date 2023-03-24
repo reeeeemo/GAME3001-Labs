@@ -13,7 +13,7 @@ m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 50
 	SetWidth(static_cast<int>(size.x));
 	SetHeight(static_cast<int>(size.y));
 	SetMaxSpeed(20.0f);
-	SetDetectionRadius(300.0f);
+	SetDetectionRadius(200.0f);
 	GetTransform()->position = glm::vec2(0.0f, 0.0f);
 	GetRigidBody()->bounds = glm::vec2(GetWidth(), GetHeight());
 	GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
@@ -46,6 +46,10 @@ void StarShip::Draw()
 	if (Game::Instance().GetDebugMode()) {
 		Util::DrawLine(GetTransform()->position,
 			GetTransform()->position + GetCurrentDirection() * GetLOSDistance(), GetLOSColour());
+	}
+
+	if (Game::Instance().GetDebugMode()) {
+		Util::DrawCircle(GetTransform()->position,GetDetectionRadius(),GetLOSColour());
 	}
 	// If we are in debug mode, draw the collider rect.
 	if(Game::Instance().GetDebugMode())

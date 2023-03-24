@@ -169,6 +169,7 @@
     <ClCompile Include="..\src\CloseCombatCondition.cpp" />
     <ClCompile Include="..\src\CollisionManager.cpp" />
     <ClCompile Include="..\src\DecisionTree.cpp" />
+    <ClCompile Include="..\src\Enemy.cpp" />
     <ClCompile Include="..\src\ImGuiWindowFrame.cpp" />
     <ClCompile Include="..\src\LOSCondition.cpp" />
     <ClCompile Include="..\src\MoveToLOSAction.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="..\src\ConditionNode.h" />
     <ClInclude Include="..\src\Config.h" />
     <ClInclude Include="..\src\DecisionTree.h" />
+    <ClInclude Include="..\src\Enemy.h" />
     <ClInclude Include="..\src\Heuristic.h" />
     <ClInclude Include="..\src\ImGuiWindowFrame.h" />
     <ClInclude Include="..\src\InputType.h" />
