@@ -70,6 +70,12 @@ void PlayScene::HandleEvents()
 		m_isGridEnabled = !m_isGridEnabled;
 		m_toggleGrid(m_isGridEnabled);
 	}
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K)) {
+		//BASE ENEMY WILL TAKE DAMAGE
+	}
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_P)) {
+		//TOGGLE ENEMY BETWEEN PATROL AND IDLE
+	}
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_ESCAPE))
 	{
 		Game::Instance().Quit();
@@ -114,7 +120,7 @@ void PlayScene::HandleEvents()
 void PlayScene::Start()
 {
 	// Set GUI Title
-	m_guiTitle = "Lab 7.1";
+	m_guiTitle = "Assignment-3";
 
 	// Setup a few more fields
 	m_LOSMode = LOSMode::TARGET;

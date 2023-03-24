@@ -35,6 +35,13 @@ Player::~Player()
 
 void Player::Draw()
 {
+	// If we are in debug mode, draw the collider rect.
+	if(Game::Instance().GetDebugMode())
+	{
+		Util::DrawRect(GetTransform()->position -
+				glm::vec2(this->GetWidth() * 0.5f, this->GetHeight() * 0.5f),
+				this->GetWidth(), this->GetHeight());
+	}
 	// draw the player according to animation state
 	switch(m_currentAnimationState)
 	{
@@ -85,6 +92,22 @@ void Player::Move()
 void Player::SetAnimationState(const PlayerAnimationState new_state)
 {
 	m_currentAnimationState = new_state;
+}
+
+void Player::SetHealth(float health)
+{
+	m_Health = health;
+}
+
+float Player::GetHealth() const
+{
+	return m_Health;
+}
+
+void Player::TakeDamage(float dmg)
+{
+	m_Health-= dmg;
+	std::cout << "Player took " << dmg << " damage.\n";
 }
 
 void Player::BuildAnimations()

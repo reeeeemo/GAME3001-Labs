@@ -45,6 +45,13 @@ void StarShip::Draw()
 		Util::DrawLine(GetTransform()->position,
 			GetTransform()->position + GetCurrentDirection() * GetLOSDistance(), GetLOSColour());
 	}
+	// If we are in debug mode, draw the collider rect.
+	if(Game::Instance().GetDebugMode())
+	{
+		Util::DrawRect(GetTransform()->position -
+				glm::vec2(this->GetWidth() * 0.5f, this->GetHeight() * 0.5f),
+				this->GetWidth(), this->GetHeight());
+	}
 
 }
 

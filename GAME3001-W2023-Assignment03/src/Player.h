@@ -16,14 +16,19 @@ public:
 	virtual void Update() override;
 	virtual void Clean() override;
 	void Move();
+	
 
 	// setters
 	void SetAnimationState(PlayerAnimationState new_state);
+	void SetHealth(float health);
+	float GetHealth() const;
+	void TakeDamage(float dmg);
 
 private:
 	void BuildAnimations();
 	PlayerAnimationState m_currentAnimationState;
 	void m_LookAtMouse();
+	float m_Health;
 };
 
 #endif /* defined (__PLAYER__) */

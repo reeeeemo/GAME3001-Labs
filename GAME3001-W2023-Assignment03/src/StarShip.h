@@ -3,7 +3,9 @@
 #define __STARSHIP__
 
 #include "Agent.h"
-class StarShip : public Agent
+#include "Enemy.h"
+
+class StarShip : public Enemy
 {
 public:
 	// Constructor Function
