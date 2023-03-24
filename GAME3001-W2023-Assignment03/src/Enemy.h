@@ -21,6 +21,7 @@ public:
 	void SetDeleteMe(bool deleteMe);
 	void SetTargetPlayer(GameObject* targetPlayer);
 	void SetAttackDamage(float damage);
+	void SetDetectionRadius(float radius);
 	virtual void TakeDamage(float damage);
 
 	[[nodiscard]] float GetSpeed() const;
@@ -29,7 +30,8 @@ public:
 	[[nodiscard]] float GetScoreValue() const;
 	[[nodiscard]] bool GetDeleteMe() const;
 	[[nodiscard]] GameObject* GetTargetPlayer() const;
-	[[nodiscard]] float GetAttackDamage();
+	[[nodiscard]] float GetAttackDamage() const; 
+	[[nodiscard]] float GetDetectionRadius() const;
 
 	
 	//void SetAnimationState()
@@ -39,6 +41,7 @@ private:
 	float m_maxSpeed;
 	bool m_deleteMe;
 	float m_scorevalue;
+	float m_detectionRadius;
 	glm::vec2 m_veloDamp;
 	GameObject* m_pTargetPlayer;
 	float m_attackDamage;

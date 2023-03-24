@@ -70,12 +70,6 @@ void PlayScene::HandleEvents()
 		m_isGridEnabled = !m_isGridEnabled;
 		m_toggleGrid(m_isGridEnabled);
 	}
-	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K)) {
-		//BASE ENEMY WILL TAKE DAMAGE
-	}
-	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_P)) {
-		//TOGGLE ENEMY BETWEEN PATROL AND IDLE
-	}
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_ESCAPE))
 	{
 		Game::Instance().Quit();
@@ -115,6 +109,27 @@ void PlayScene::HandleEvents()
 		std::cout<< "Mouse 2 Pressed" << std::endl;
 		m_pTorpedoPool->Fire();
 	}
+
+
+	if(Game::Instance().GetDebugMode())
+	{
+		if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K)) {
+			//BASE ENEMY WILL TAKE DAMAGE
+		}
+		if (EventManager::Instance().KeyPressed(SDL_SCANCODE_P)) {
+			//TOGGLE ENEMY BETWEEN PATROL AND IDLE
+			
+			if(m_pStarShip->GetActionState()!=ActionState::PATROL)
+			{
+				m_pStarShip->SetActionState(ActionState::PATROL);
+			}
+			else
+			{
+				m_pStarShip->SetActionState(ActionState::IDLE);
+			}
+		}
+	}
+	
 }
 
 void PlayScene::Start()

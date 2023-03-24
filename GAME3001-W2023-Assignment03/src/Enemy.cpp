@@ -5,6 +5,7 @@
 
 Enemy::Enemy()
 {
+    SetTargetPlayer(Game::Instance().GetPlayer());
 }
 
 Enemy::~Enemy()
@@ -48,6 +49,21 @@ void Enemy::SetAttackDamage(float damage)
     m_attackDamage = damage;
 }
 
+void Enemy::SetDetectionRadius(float radius)
+{
+    m_detectionRadius = radius;
+}
+
+float Enemy::GetAttackDamage() const
+{
+    return m_attackDamage;
+}
+
+float Enemy::GetDetectionRadius() const
+{
+    return m_detectionRadius;
+}
+
 void Enemy::TakeDamage(float damage)
 {
     m_Health-=damage;
@@ -86,11 +102,6 @@ GameObject* Enemy::GetTargetPlayer() const
     return m_pTargetPlayer;
 }
 
-
-float Enemy::GetAttackDamage()
-{
-    return m_attackDamage;
-}
 
 EnemyPool::EnemyPool()
 { }

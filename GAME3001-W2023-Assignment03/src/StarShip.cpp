@@ -4,7 +4,7 @@
 #include "TextureManager.h"
 #include "Util.h"
 
-StarShip::StarShip() : m_maxSpeed(20.0f),
+StarShip::StarShip():
 m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 500.0f))
 {
 	TextureManager::Instance().Load("../Assets/textures/d7_small.png", "starship");
@@ -12,6 +12,8 @@ m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 50
 	const auto size = TextureManager::Instance().GetTextureSize("starship");
 	SetWidth(static_cast<int>(size.x));
 	SetHeight(static_cast<int>(size.y));
+	SetMaxSpeed(20.0f);
+	SetDetectionRadius(300.0f);
 	GetTransform()->position = glm::vec2(0.0f, 0.0f);
 	GetRigidBody()->bounds = glm::vec2(GetWidth(), GetHeight());
 	GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
@@ -69,6 +71,10 @@ void StarShip::Update()
 		break;
 	case ActionState::ATTACK:
 		break;
+	case ActionState::IDLE:
+		break;
+	case ActionState::NO_ACTION:
+		break;
 	}
 }
 
@@ -76,10 +82,6 @@ void StarShip::Clean()
 {
 }
 
-float StarShip::GetMaxSpeed() const
-{
-	return m_maxSpeed;
-}
 
 float StarShip::GetTurnRate() const
 {
@@ -96,10 +98,6 @@ glm::vec2 StarShip::GetDesiredVelocity() const
 	return m_desiredVelocity;
 }
 
-void StarShip::SetMaxSpeed(const float speed)
-{
-	m_maxSpeed = speed;
-}
 
 void StarShip::SetTurnRate(const float angle)
 {

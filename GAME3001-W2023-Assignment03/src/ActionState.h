@@ -7,6 +7,7 @@ enum class ActionState
 	ATTACK,
 	MOVE_TO_LOS,
 	MOVE_TO_PLAYER,
-	PATROL
+	PATROL,
+	IDLE
 };
 #endif /* defined (__ACTION_STATE__)*/
