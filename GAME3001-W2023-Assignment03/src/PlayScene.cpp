@@ -103,6 +103,12 @@ void PlayScene::HandleEvents()
 	if (EventManager::Instance().MousePressed(1))
 	{
 		std::cout<< "Mouse 1 Pressed" << std::endl;
+		// Will make an enemy pool for the current enemies on screen so iterating through this is not a problem
+		// If player attack radius is touching the enemy in any way, melee attack!
+		if (Util::GetClosestEdge(m_pPlayer->GetTransform()->position, m_pStarShip) <= m_pPlayer->GetRangeOfAttack()) {
+			std::cout << CollisionManager::CircleAABBSquaredDistance(m_pPlayer->GetTransform()->position, m_pPlayer->GetRangeOfAttack(), m_pStarShip->GetTransform()->position, m_pStarShip->GetWidth(), m_pStarShip->GetHeight()) << std::endl;
+			m_pPlayer->MeleeAttack();
+		}
 	}
 	if (EventManager::Instance().MousePressed(3))
 	{

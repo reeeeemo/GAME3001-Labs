@@ -16,19 +16,27 @@ public:
 	virtual void Update() override;
 	virtual void Clean() override;
 	void Move();
-	
+	void MeleeAttack();
+
 
 	// setters
 	void SetAnimationState(PlayerAnimationState new_state);
 	void SetHealth(float health);
-	float GetHealth() const;
 	void TakeDamage(float dmg);
+	void SetRangeOfAttack(float value);
+
+
+
+	// Getters
+	float GetHealth() const;
+	[[nodiscard]] float GetRangeOfAttack();
 
 private:
 	void BuildAnimations();
 	PlayerAnimationState m_currentAnimationState;
 	void m_LookAtMouse();
 	float m_Health;
+	float m_rangeOfAttack;
 };
 
 #endif /* defined (__PLAYER__) */

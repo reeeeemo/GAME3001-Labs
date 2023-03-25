@@ -14,6 +14,8 @@ Player::Player(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGH
 
 	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("spritesheet"));
 	
+	SetRangeOfAttack(50.0f);
+
 	// set frame width
 	SetWidth(53);
 
@@ -41,7 +43,11 @@ void Player::Draw()
 		Util::DrawRect(GetTransform()->position -
 				glm::vec2(this->GetWidth() * 0.5f, this->GetHeight() * 0.5f),
 				this->GetWidth(), this->GetHeight());
+
+		Util::DrawCircle(GetTransform()->position, GetRangeOfAttack());
+
 	}
+
 	// draw the player according to animation state
 	switch(m_currentAnimationState)
 	{
@@ -88,6 +94,14 @@ void Player::Move()
 	GetRigidBody()->velocity*=GetRigidBody()->velocityDampening;
 }
 
+void Player::MeleeAttack()
+{
+	// Melee Animation here
+
+	// Deals damage to target.
+	std::cout << "Melee Attack successful on enemy!\n\n";
+}
+
 
 void Player::SetAnimationState(const PlayerAnimationState new_state)
 {
@@ -104,10 +118,20 @@ float Player::GetHealth() const
 	return m_Health;
 }
 
+float Player::GetRangeOfAttack()
+{
+	return m_rangeOfAttack;
+}
+
 void Player::TakeDamage(float dmg)
 {
 	m_Health-= dmg;
 	std::cout << "Player took " << dmg << " damage.\n";
+}
+
+void Player::SetRangeOfAttack(float value)
+{
+	m_rangeOfAttack = value;
 }
 
 void Player::BuildAnimations()
