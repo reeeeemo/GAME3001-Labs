@@ -156,9 +156,12 @@ void PlayScene::Start()
 	m_pTarget->GetTransform()->position = glm::vec2(550.0f, 300.0f);
 	AddChild(m_pTarget, 2);
 
-	m_pStarShip = new StarShip();
-	m_pStarShip->GetTransform()->position = glm::vec2(150.0f, 300.0f);
-	AddChild(m_pStarShip, 2);
+	m_pEnemyPool = new EnemyPool();
+	AddChild(m_pEnemyPool);
+	
+	/*m_pStarShip = new StarShip();
+	
+	AddChild(m_pStarShip, 2);*/
 
 	m_pPlayer = new Player();
 	m_pPlayer->GetTransform()->position = glm::vec2(100.0f,300.0f);
@@ -175,6 +178,11 @@ void PlayScene::Start()
 	m_isGridEnabled = false;
 	m_buildGrid();
 	m_toggleGrid(m_isGridEnabled);
+
+	m_pStarShip = new StarShip;
+	m_pStarShip->GetTransform()->position = glm::vec2(150.0f, 300.0f);
+
+	m_pEnemyPool->Spawn(m_pStarShip);
 
 	// Create Decision Tree
 	m_decisionTree = new DecisionTree(m_pStarShip); // Using our overloaded constructor

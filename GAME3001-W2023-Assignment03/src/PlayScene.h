@@ -41,6 +41,7 @@ private:
 
 	// Game Objects for the Scene
 	Target* m_pTarget;
+	EnemyPool* m_pEnemyPool;
 	StarShip* m_pStarShip;
 	Player* m_pPlayer;
 	TorpedoPool* m_pTorpedoPool;

@@ -1,6 +1,6 @@
 #pragma once
 #ifndef __ENEMY__
-#define __ENEMY
+#define __ENEMY__
 #include "Agent.h"
 class Enemy : public Agent
 {
@@ -66,4 +66,7 @@ public:
 private:
 	std::vector<Enemy*> m_pEnemies;
 }; 
+
+
+
 #endif /* defined (__ENEMY__) */
