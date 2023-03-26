@@ -90,19 +90,16 @@ void Player::Clean()
 
 void Player::Move()
 {
+
 	if (GetRigidBody()->isColliding)
 	{
-		GetRigidBody()->velocity = -GetRigidBody()->velocity * 0.5f;
+		GetRigidBody()->velocity = -GetRigidBody()->velocity*2.0f;
 	}
-
 	const float dt =Game::Instance().GetDeltaTime();
 	const glm::vec2 initial_position = GetTransform()->position;
 	const glm::vec2 velocity_term = GetRigidBody()->velocity * dt;
 	const glm::vec2 acceleration_term = GetRigidBody()->acceleration * 0.5f;
 	const glm::vec2 final_position = initial_position + velocity_term + acceleration_term;
-
-
-
 	GetTransform()->position = final_position;
 	GetRigidBody()->velocity += GetRigidBody()->acceleration;
 	GetRigidBody()->velocity*=GetRigidBody()->velocityDampening;
@@ -126,6 +123,7 @@ void Player::SetHealth(float health)
 	m_Health = health;
 	m_maxHealth = m_Health;
 }
+
 
 float Player::GetHealth() const
 {

@@ -2,6 +2,7 @@
 #ifndef __PLAYER__
 #define __PLAYER__
 
+#include "Obstacle.h"
 #include "PlayerAnimationState.h"
 #include "Sprite.h"
 
