@@ -28,6 +28,7 @@ Player::Player(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGH
 	GetRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	GetRigidBody()->isColliding = false;
 	SetType(GameObjectType::PLAYER);
+	SetHealth(100.0f);
 
 	BuildAnimations();
 }
@@ -47,6 +48,9 @@ void Player::Draw()
 		Util::DrawCircle(GetTransform()->position, GetRangeOfAttack());
 
 	}
+
+	// Drawing the health bar for the player based on the health count.
+	Util::DrawFilledRect(GetTransform()->position - glm::vec2((m_Health / m_maxHealth * 100) / 2, 60.0f), m_Health / m_maxHealth * 100, 10.0f, glm::vec4(0, 1.0f, 0, 1.0f));
 
 	// draw the player according to animation state
 	switch(m_currentAnimationState)
@@ -111,6 +115,7 @@ void Player::SetAnimationState(const PlayerAnimationState new_state)
 void Player::SetHealth(float health)
 {
 	m_Health = health;
+	m_maxHealth = m_Health;
 }
 
 float Player::GetHealth() const

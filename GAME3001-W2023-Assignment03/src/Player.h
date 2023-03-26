@@ -36,6 +36,7 @@ private:
 	PlayerAnimationState m_currentAnimationState;
 	void m_LookAtMouse();
 	float m_Health;
+	float m_maxHealth;
 	float m_rangeOfAttack;
 };
 
