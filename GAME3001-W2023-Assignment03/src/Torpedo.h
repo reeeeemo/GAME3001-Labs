@@ -11,6 +11,7 @@ public:
     void Start() override;
     void SetExplodeAfter(float explodeAfter);
     [[nodiscard]] float GetExplodeAfter() const;
+    [[nodiscard]] float GetDamage();
 
 private:
     glm::vec2 m_mousePos;
@@ -18,6 +19,7 @@ private:
     Uint32 m_explodeTime;
     float m_deleteAfter;
     bool m_isExploded;
+    float m_damage;
 };
 
 class TorpedoPool final : public DisplayObject

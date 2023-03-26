@@ -76,6 +76,9 @@ private:
 
 	std::map<Enemy*, DecisionTree*> m_decisionTrees;
 	//DecisionTree* m_decisionTree;
+
+	// Collision Checker
+	void CheckCollision();
 };
 
 #endif /* defined (__PLAY_SCENE__) */

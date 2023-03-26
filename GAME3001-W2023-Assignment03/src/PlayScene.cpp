@@ -36,6 +36,7 @@ void PlayScene::Draw()
 
 void PlayScene::Update()
 {
+	CheckCollision();
 	UpdateDisplayList();
 	for (auto enemy : m_pEnemyPool->GetPool()) {
 		m_checkAgentLOS(enemy, m_pTarget);
@@ -457,5 +458,27 @@ void PlayScene::m_setPathNodeLOSDistance(const int distance) const
 	for (const auto path_node : m_pGrid)
 	{
 		path_node->SetLOSDistance(static_cast<float>(distance));
+	}
+}
+
+// Checks to see if there is collision between anything that it is needed for
+void PlayScene::CheckCollision()
+{
+	bool canTorpedoHitEnemy = false;
+
+	for (auto enemy : m_pEnemyPool->GetPool()) {
+		for (auto projectile : m_pTorpedoPool->GetPool()) {
+
+			if (projectile->GetRigidBody()->isColliding) {
+				canTorpedoHitEnemy = false;
+			}
+			else { canTorpedoHitEnemy = true; }
+
+			if (CollisionManager::AABBCheck(enemy, projectile)) {
+				if (canTorpedoHitEnemy) {
+					enemy->TakeDamage(projectile->GetDamage());
+				}
+			}
+		}
 	}
 }

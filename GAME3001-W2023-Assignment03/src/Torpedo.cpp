@@ -48,6 +48,7 @@ void TorpedoPool::Draw()
 Torpedo::Torpedo()
 {
     SetPlayer(Game::Instance().GetPlayer());
+    m_damage = 30.0f;
     Start();
 }
 void Torpedo::Draw()
@@ -111,6 +112,11 @@ void Torpedo::SetExplodeAfter(float explodeAfter)
 float Torpedo::GetExplodeAfter() const
 {
     return m_explodeAfter;
+}
+
+float Torpedo::GetDamage()
+{
+    return m_damage;
 }
 
 
