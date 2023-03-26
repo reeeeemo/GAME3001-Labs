@@ -53,8 +53,14 @@ void StarShip::Draw()
 			GetTransform()->position + GetCurrentDirection() * GetLOSDistance(), GetLOSColour());
 	}
 
+	// Draw the Detection Radius Circle if in debug mode
 	if (Game::Instance().GetDebugMode()) {
-		Util::DrawCircle(GetTransform()->position,GetDetectionRadius(),GetLOSColour());
+		if (m_detectedPlayer)
+		{
+			Util::DrawCircle(GetTransform()->position, GetDetectionRadius(), glm::vec4(0,1.0f,0,1.0f));
+		} else {
+			Util::DrawCircle(GetTransform()->position, GetDetectionRadius(), glm::vec4(1.0f,0,0,1.0f));
+		}
 	}
 	// If we are in debug mode, draw the collider rect.
 	if(Game::Instance().GetDebugMode())
@@ -105,6 +111,11 @@ float StarShip::GetAccelerationRate() const
 glm::vec2 StarShip::GetDesiredVelocity() const
 {
 	return m_desiredVelocity;
+}
+
+bool StarShip::IsDetectingPlayer()
+{
+	return m_detectedPlayer;
 }
 
 
@@ -220,4 +231,9 @@ void StarShip::m_buildPatrolPath()
 
 	SetTargetPosition(m_patrolPath[m_wayPoint]);
 
+}
+
+void StarShip::SetDetectingPlayer(bool value)
+{
+	m_detectedPlayer = value;
 }

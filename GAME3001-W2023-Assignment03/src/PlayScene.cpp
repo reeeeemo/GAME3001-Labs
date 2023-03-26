@@ -112,7 +112,6 @@ void PlayScene::HandleEvents()
 		// If player attack radius is touching the enemy in any way, melee attack!
 		for (auto enemy : m_pEnemyPool->GetPool()) {
 			if (Util::GetClosestEdge(m_pPlayer->GetTransform()->position, enemy) <= m_pPlayer->GetRangeOfAttack()) {
-				std::cout << CollisionManager::CircleAABBSquaredDistance(m_pPlayer->GetTransform()->position, m_pPlayer->GetRangeOfAttack(), enemy->GetTransform()->position, enemy->GetWidth(), enemy->GetHeight()) << std::endl;
 				m_pPlayer->MeleeAttack();
 				enemy->TakeDamage(m_pPlayer->GetDamage());
 			}
