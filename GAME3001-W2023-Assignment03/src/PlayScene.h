@@ -16,6 +16,8 @@
 #include "Player.h"
 #include "Torpedo.h"
 
+#include <map>
+
 class PlayScene : public Scene
 {
 public:
@@ -42,7 +44,6 @@ private:
 	// Game Objects for the Scene
 	Target* m_pTarget;
 	EnemyPool* m_pEnemyPool;
-	StarShip* m_pStarShip;
 	Player* m_pPlayer;
 	TorpedoPool* m_pTorpedoPool;
 	std::vector<Obstacle*> m_pObstacles;
@@ -72,7 +73,9 @@ private:
 	int m_pathNodeLOSDistance;
 
 	// Decision Tree
-	DecisionTree* m_decisionTree;
+
+	std::map<Enemy*, DecisionTree*> m_decisionTrees;
+	//DecisionTree* m_decisionTree;
 };
 
 #endif /* defined (__PLAY_SCENE__) */

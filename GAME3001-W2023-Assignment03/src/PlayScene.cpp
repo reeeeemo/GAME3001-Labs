@@ -37,22 +37,26 @@ void PlayScene::Draw()
 void PlayScene::Update()
 {
 	UpdateDisplayList();
-	m_checkAgentLOS(m_pStarShip, m_pTarget);
-	switch(m_LOSMode)
-	{
-	case LOSMode::TARGET:
-		m_checkAllNodesWithTarget(m_pTarget);
-		break;
-	case LOSMode::SHIP:
-		m_checkAllNodesWithTarget(m_pStarShip);
-		break;
-	case LOSMode::BOTH:
-		m_checkAllNodesWithBoth();
-		break;
+	for (auto enemy : m_pEnemyPool->GetPool()) {
+		m_checkAgentLOS(enemy, m_pTarget);
+		switch (m_LOSMode)
+		{
+		case LOSMode::TARGET:
+			m_checkAllNodesWithTarget(m_pTarget);
+			break;
+		case LOSMode::SHIP:
+			m_checkAllNodesWithTarget(enemy);
+			break;
+		case LOSMode::BOTH:
+			m_checkAllNodesWithBoth();
+			break;
+		}
 	}
 
 	// Make a decision
-	m_decisionTree->MakeDecision();
+	for (std::pair<Enemy*, DecisionTree*> mapPair : m_decisionTrees) {
+		mapPair.second->MakeDecision();
+	}
 }
 
 void PlayScene::Clean()
@@ -105,10 +109,13 @@ void PlayScene::HandleEvents()
 		std::cout<< "Mouse 1 Pressed" << std::endl;
 		// Will make an enemy pool for the current enemies on screen so iterating through this is not a problem
 		// If player attack radius is touching the enemy in any way, melee attack!
-		if (Util::GetClosestEdge(m_pPlayer->GetTransform()->position, m_pStarShip) <= m_pPlayer->GetRangeOfAttack()) {
-			std::cout << CollisionManager::CircleAABBSquaredDistance(m_pPlayer->GetTransform()->position, m_pPlayer->GetRangeOfAttack(), m_pStarShip->GetTransform()->position, m_pStarShip->GetWidth(), m_pStarShip->GetHeight()) << std::endl;
-			m_pPlayer->MeleeAttack();
+		for (auto enemy : m_pEnemyPool->GetPool()) {
+			if (Util::GetClosestEdge(m_pPlayer->GetTransform()->position, enemy) <= m_pPlayer->GetRangeOfAttack()) {
+				std::cout << CollisionManager::CircleAABBSquaredDistance(m_pPlayer->GetTransform()->position, m_pPlayer->GetRangeOfAttack(), enemy->GetTransform()->position, enemy->GetWidth(), enemy->GetHeight()) << std::endl;
+				m_pPlayer->MeleeAttack();
+			}
 		}
+		
 	}
 	if (EventManager::Instance().MousePressed(3))
 	{
@@ -124,15 +131,18 @@ void PlayScene::HandleEvents()
 		}
 		if (EventManager::Instance().KeyPressed(SDL_SCANCODE_P)) {
 			//TOGGLE ENEMY BETWEEN PATROL AND IDLE
+
+			for (auto enemy : m_pEnemyPool->GetPool()) {
+				if (enemy->GetActionState() != ActionState::PATROL)
+				{
+					enemy->SetActionState(ActionState::PATROL);
+				}
+				else
+				{
+					enemy->SetActionState(ActionState::IDLE);
+				}
+			}
 			
-			if(m_pStarShip->GetActionState()!=ActionState::PATROL)
-			{
-				m_pStarShip->SetActionState(ActionState::PATROL);
-			}
-			else
-			{
-				m_pStarShip->SetActionState(ActionState::IDLE);
-			}
 		}
 	}
 	
@@ -179,15 +189,18 @@ void PlayScene::Start()
 	m_buildGrid();
 	m_toggleGrid(m_isGridEnabled);
 
-	m_pStarShip = new StarShip;
-	m_pStarShip->GetTransform()->position = glm::vec2(150.0f, 300.0f);
-
-	m_pEnemyPool->Spawn(m_pStarShip);
+	m_pEnemyPool->Spawn(new StarShip);
 
 	// Create Decision Tree
-	m_decisionTree = new DecisionTree(m_pStarShip); // Using our overloaded constructor
-	m_decisionTree->Display(); // Optional
-	m_decisionTree->MakeDecision(); // Patrol
+
+	for (Enemy* enemy : m_pEnemyPool->GetPool()) {
+		m_decisionTrees.emplace(std::pair{enemy, new DecisionTree(enemy)}); // Using our overloaded constructor
+		m_decisionTrees[enemy]->Display(); // Optional
+		m_decisionTrees[enemy]->MakeDecision(); // Patrol
+	}
+	//m_decisionTree = new DecisionTree(m_pStarShip); // Using our overloaded constructor
+	//m_decisionTree->Display(); // Optional
+	//m_decisionTree->MakeDecision(); // Patrol
 
 	// Preload Sounds
 
@@ -228,9 +241,9 @@ void PlayScene::GUI_Function()
 
 	static int LOS_mode = static_cast<int>(m_LOSMode);
 	ImGui::Text("Path Node LOS");
-	ImGui::RadioButton("Target", &LOS_mode, static_cast<int>(LOSMode::TARGET)); ImGui::SameLine();
-	ImGui::RadioButton("StarShip", &LOS_mode, static_cast<int>(LOSMode::SHIP)); ImGui::SameLine();
-	ImGui::RadioButton("Both Target & StarShip", &LOS_mode, static_cast<int>(LOSMode::BOTH));
+	ImGui::RadioButton("Player", &LOS_mode, static_cast<int>(LOSMode::TARGET)); ImGui::SameLine();
+	ImGui::RadioButton("Enemy", &LOS_mode, static_cast<int>(LOSMode::SHIP)); ImGui::SameLine();
+	ImGui::RadioButton("Both Player & Enemy", &LOS_mode, static_cast<int>(LOSMode::BOTH));
 
 	m_LOSMode = static_cast<LOSMode>(LOS_mode);
 
@@ -244,31 +257,31 @@ void PlayScene::GUI_Function()
 	ImGui::Separator();
 
 	// StarShip Properties
-	static int shipPosition[] = { static_cast<int>(m_pStarShip->GetTransform()->position.x),
-		static_cast<int>(m_pStarShip->GetTransform()->position.y) };
-	if(ImGui::SliderInt2("Ship Position", shipPosition, 0, 800))
-	{
-		m_pStarShip->GetTransform()->position.x = static_cast<float>(shipPosition[0]);
-		m_pStarShip->GetTransform()->position.y = static_cast<float>(shipPosition[1]);
-	}
+	//static int shipPosition[] = { static_cast<int>(m_pStarShip->GetTransform()->position.x),
+	//	static_cast<int>(m_pStarShip->GetTransform()->position.y) };
+	//if(ImGui::SliderInt2("Ship Position", shipPosition, 0, 800))
+	//{
+	//	m_pStarShip->GetTransform()->position.x = static_cast<float>(shipPosition[0]);
+	//	m_pStarShip->GetTransform()->position.y = static_cast<float>(shipPosition[1]);
+	//}
 
-	// allow the ship to rotate
-	static int angle;
-	if(ImGui::SliderInt("Ship Direction", &angle, -360, 360))
-	{
-		m_pStarShip->SetCurrentHeading(static_cast<float>(angle));
-	}
+	//// allow the ship to rotate
+	//static int angle;
+	//if(ImGui::SliderInt("Ship Direction", &angle, -360, 360))
+	//{
+	//	m_pStarShip->SetCurrentHeading(static_cast<float>(angle));
+	//}
 
 	ImGui::Separator();
 
 	// Target Properties
-	static int targetPosition[] = { static_cast<int>(m_pTarget->GetTransform()->position.x),
-		static_cast<int>(m_pTarget->GetTransform()->position.y) };
-	if (ImGui::SliderInt2("Target Position", targetPosition, 0, 800))
-	{
-		m_pTarget->GetTransform()->position.x = static_cast<float>(targetPosition[0]);
-		m_pTarget->GetTransform()->position.y = static_cast<float>(targetPosition[1]);
-	}
+	//static int targetPosition[] = { static_cast<int>(m_pTarget->GetTransform()->position.x),
+	//	static_cast<int>(m_pTarget->GetTransform()->position.y) };
+	//if (ImGui::SliderInt2("Target Position", targetPosition, 0, 800))
+	//{
+	//	m_pTarget->GetTransform()->position.x = static_cast<float>(targetPosition[0]);
+	//	m_pTarget->GetTransform()->position.y = static_cast<float>(targetPosition[1]);
+	//}
 
 	ImGui::Separator();
 
@@ -430,9 +443,11 @@ void PlayScene::m_checkAllNodesWithBoth() const
 {
 	for (const auto path_node : m_pGrid)
 	{
-		const bool LOSWithStarShip = m_checkPathNodeLOS(path_node, m_pStarShip);
-		const bool LOSWithTarget = m_checkPathNodeLOS(path_node, m_pTarget);
-		path_node->SetHasLOS(LOSWithStarShip && LOSWithTarget, glm::vec4(0, 1, 1, 1));
+		for (const auto enemy : m_pEnemyPool->GetPool()) {
+			const bool LOSWithStarShip = m_checkPathNodeLOS(path_node, enemy);
+			const bool LOSWithTarget = m_checkPathNodeLOS(path_node, m_pTarget);
+			path_node->SetHasLOS(LOSWithStarShip && LOSWithTarget, glm::vec4(0, 1, 1, 1));
+		}
 	}
 }
 
