@@ -479,4 +479,9 @@ void PlayScene::CheckCollision()
 			}
 		}
 	}
+
+	for (auto obstacle : m_pObstacles)
+	{
+		CollisionManager::AABBCheck(obstacle, m_pPlayer);
+	}
 }
