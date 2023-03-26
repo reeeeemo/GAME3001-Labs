@@ -402,14 +402,13 @@ bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object) cons
 		std::vector<DisplayObject*> contact_list;
 		for (auto display_object : GetDisplayList())
 		{
-			const auto agent_to_object_distance = Util::GetClosestEdge(agent->GetTransform()->position, display_object);
-			if (agent_to_object_distance > agent_to_range) { continue;  } // target is out of range
 			if((display_object->GetType() != GameObjectType::AGENT)
 				&& (display_object->GetType() != GameObjectType::PATH_NODE)
 				&& (display_object->GetType() != GameObjectType::TARGET)
 				&& (display_object->GetType() != GameObjectType::PLAYER))
 			{
-				contact_list.push_back(display_object);
+				const auto agent_to_object_distance = Util::GetClosestEdge(agent->GetTransform()->position, display_object);
+				if (agent_to_object_distance <= agent_to_range) { contact_list.push_back(display_object);  }
 			}
 		}
 
