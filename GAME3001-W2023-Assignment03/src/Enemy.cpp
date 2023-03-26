@@ -6,6 +6,7 @@
 Enemy::Enemy()
 {
     SetTargetPlayer(Game::Instance().GetPlayer());
+    SetHealth(100.0f);
 }
 
 Enemy::~Enemy()
@@ -15,6 +16,7 @@ Enemy::~Enemy()
 void Enemy::SetHealth(float health)
 {
     m_Health = health;
+    m_maxHealth = health;
 }
 
 void Enemy::SetSpeed(float speed)
@@ -64,6 +66,11 @@ float Enemy::GetDetectionRadius() const
     return m_detectionRadius;
 }
 
+float Enemy::GetMaxHealth() const
+{
+    return m_maxHealth;
+}
+
 void Enemy::TakeDamage(float damage)
 {
     m_Health-=damage;
@@ -110,6 +117,11 @@ void EnemyPool::Update()
 {
     for (unsigned i = 0; i < m_pEnemies.size(); i++)
     {
+        // If enemy health is 0
+        if (m_pEnemies[i]->GetHealth() <= 0) {
+            m_pEnemies[i]->SetDeleteMe(true);
+        }
+
 	    if (m_pEnemies[i]->GetDeleteMe() == true)
 	    {
             delete m_pEnemies[i];

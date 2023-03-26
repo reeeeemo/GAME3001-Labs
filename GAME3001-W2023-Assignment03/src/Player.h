@@ -30,6 +30,7 @@ public:
 	// Getters
 	float GetHealth() const;
 	[[nodiscard]] float GetRangeOfAttack();
+	[[nodiscard]] float GetDamage();
 
 private:
 	void BuildAnimations();
@@ -38,6 +39,7 @@ private:
 	float m_Health;
 	float m_maxHealth;
 	float m_rangeOfAttack;
+	float m_damage;
 };
 
 #endif /* defined (__PLAYER__) */

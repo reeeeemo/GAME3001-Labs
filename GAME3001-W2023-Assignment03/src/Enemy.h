@@ -32,11 +32,12 @@ public:
 	[[nodiscard]] GameObject* GetTargetPlayer() const;
 	[[nodiscard]] float GetAttackDamage() const; 
 	[[nodiscard]] float GetDetectionRadius() const;
-
+	[[nodiscard]] float GetMaxHealth() const;
 	
 	//void SetAnimationState()
 private:
 	float m_Health;
+	float m_maxHealth;
 	float m_Speed;
 	float m_maxSpeed;
 	bool m_deleteMe;

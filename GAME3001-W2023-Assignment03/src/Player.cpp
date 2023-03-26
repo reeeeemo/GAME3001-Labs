@@ -30,6 +30,8 @@ Player::Player(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGH
 	SetType(GameObjectType::PLAYER);
 	SetHealth(100.0f);
 
+	m_damage = 10.0f;
+
 	BuildAnimations();
 }
 
@@ -102,7 +104,6 @@ void Player::MeleeAttack()
 {
 	// Melee Animation here
 
-	// Deals damage to target.
 	std::cout << "Melee Attack successful on enemy!\n\n";
 }
 
@@ -126,6 +127,11 @@ float Player::GetHealth() const
 float Player::GetRangeOfAttack()
 {
 	return m_rangeOfAttack;
+}
+
+float Player::GetDamage()
+{
+	return m_damage;
 }
 
 void Player::TakeDamage(float dmg)

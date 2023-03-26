@@ -14,7 +14,7 @@ m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 50
 	SetHeight(static_cast<int>(size.y));
 	SetMaxSpeed(20.0f);
 	SetDetectionRadius(200.0f);
-	GetTransform()->position = glm::vec2(0.0f, 0.0f);
+	GetTransform()->position = glm::vec2(300.0f, 200.0f);
 	GetRigidBody()->bounds = glm::vec2(GetWidth(), GetHeight());
 	GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 	GetRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
@@ -31,6 +31,7 @@ m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 50
 	// New for Lab 7.1
 	SetActionState(ActionState::NO_ACTION);
 	m_buildPatrolPath();
+	SetHealth(100.0f);
 }
 
 StarShip::~StarShip()
@@ -41,6 +42,10 @@ void StarShip::Draw()
 	// draw the StarShip
 	TextureManager::Instance().Draw("starship", 
 		GetTransform()->position, static_cast<double>(GetCurrentHeading()), 255, true);
+
+
+	// Draw the health based on the amount the enemy has
+	Util::DrawFilledRect(GetTransform()->position - glm::vec2((GetHealth() / GetMaxHealth() * 100) / 2, 60.0f), GetHealth() / GetMaxHealth() * 100, 10.0f, glm::vec4(0, 1.0f, 0, 1.0f));
 
 	// draw the LOS Line if in debug mode
 	if (Game::Instance().GetDebugMode()) {
