@@ -42,7 +42,6 @@ private:
 	int m_angle;
 
 	// Game Objects for the Scene
-	Target* m_pTarget;
 	EnemyPool* m_pEnemyPool;
 	Player* m_pPlayer;
 	TorpedoPool* m_pTorpedoPool;

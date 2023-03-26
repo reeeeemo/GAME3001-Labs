@@ -39,13 +39,13 @@ void PlayScene::Update()
 	CheckCollision();
 	UpdateDisplayList();
 	for (auto enemy : m_pEnemyPool->GetPool()) {
-		m_checkAgentLOS(enemy, m_pTarget);
+		m_checkAgentLOS(enemy, m_pPlayer);
 		switch (m_LOSMode)
 		{
-		case LOSMode::TARGET:
-			m_checkAllNodesWithTarget(m_pTarget);
+		case LOSMode::PLAYER:
+			m_checkAllNodesWithTarget(m_pPlayer);
 			break;
-		case LOSMode::SHIP:
+		case LOSMode::ENEMY:
 			m_checkAllNodesWithTarget(enemy);
 			break;
 		case LOSMode::BOTH:
@@ -156,17 +156,14 @@ void PlayScene::Start()
 	m_guiTitle = "Assignment-3";
 
 	// Setup a few more fields
-	m_LOSMode = LOSMode::TARGET;
+	m_LOSMode = LOSMode::PLAYER;
 	m_pathNodeLOSDistance = 1000; // 1000px distance
 	m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
 
 	// Add Game Objects
 	m_pBackground = new Background();
 	AddChild(m_pBackground, 0);
-
-	m_pTarget = new Target();
-	m_pTarget->GetTransform()->position = glm::vec2(550.0f, 300.0f);
-	AddChild(m_pTarget, 2);
+	
 
 	m_pEnemyPool = new EnemyPool();
 	AddChild(m_pEnemyPool);
@@ -243,8 +240,8 @@ void PlayScene::GUI_Function()
 
 	static int LOS_mode = static_cast<int>(m_LOSMode);
 	ImGui::Text("Path Node LOS");
-	ImGui::RadioButton("Player", &LOS_mode, static_cast<int>(LOSMode::TARGET)); ImGui::SameLine();
-	ImGui::RadioButton("Enemy", &LOS_mode, static_cast<int>(LOSMode::SHIP)); ImGui::SameLine();
+	ImGui::RadioButton("Player", &LOS_mode, static_cast<int>(LOSMode::PLAYER)); ImGui::SameLine();
+	ImGui::RadioButton("Enemy", &LOS_mode, static_cast<int>(LOSMode::ENEMY)); ImGui::SameLine();
 	ImGui::RadioButton("Both Player & Enemy", &LOS_mode, static_cast<int>(LOSMode::BOTH));
 
 	m_LOSMode = static_cast<LOSMode>(LOS_mode);
@@ -409,7 +406,8 @@ bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object) cons
 			if (agent_to_object_distance > agent_to_range) { continue;  } // target is out of range
 			if((display_object->GetType() != GameObjectType::AGENT)
 				&& (display_object->GetType() != GameObjectType::PATH_NODE)
-				&& (display_object->GetType() != GameObjectType::TARGET))
+				&& (display_object->GetType() != GameObjectType::TARGET)
+				&& (display_object->GetType() != GameObjectType::PLAYER))
 			{
 				contact_list.push_back(display_object);
 			}
@@ -446,9 +444,9 @@ void PlayScene::m_checkAllNodesWithBoth() const
 	for (const auto path_node : m_pGrid)
 	{
 		for (const auto enemy : m_pEnemyPool->GetPool()) {
-			const bool LOSWithStarShip = m_checkPathNodeLOS(path_node, enemy);
-			const bool LOSWithTarget = m_checkPathNodeLOS(path_node, m_pTarget);
-			path_node->SetHasLOS(LOSWithStarShip && LOSWithTarget, glm::vec4(0, 1, 1, 1));
+			const bool LOSWithEnemy = m_checkPathNodeLOS(path_node, enemy);
+			const bool LOSWithPlayer = m_checkPathNodeLOS(path_node, m_pPlayer);
+			path_node->SetHasLOS(LOSWithEnemy && LOSWithPlayer, glm::vec4(0, 1, 1, 1));
 		}
 	}
 }
