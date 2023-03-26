@@ -55,7 +55,7 @@ void StarShip::Draw()
 
 	// Draw the Detection Radius Circle if in debug mode
 	if (Game::Instance().GetDebugMode()) {
-		if (m_detectedPlayer)
+		if (IsDetectingPlayer())
 		{
 			Util::DrawCircle(GetTransform()->position, GetDetectionRadius(), glm::vec4(0,1.0f,0,1.0f));
 		} else {
@@ -111,11 +111,6 @@ float StarShip::GetAccelerationRate() const
 glm::vec2 StarShip::GetDesiredVelocity() const
 {
 	return m_desiredVelocity;
-}
-
-bool StarShip::IsDetectingPlayer()
-{
-	return m_detectedPlayer;
 }
 
 
@@ -231,9 +226,4 @@ void StarShip::m_buildPatrolPath()
 
 	SetTargetPosition(m_patrolPath[m_wayPoint]);
 
-}
-
-void StarShip::SetDetectingPlayer(bool value)
-{
-	m_detectedPlayer = value;
 }

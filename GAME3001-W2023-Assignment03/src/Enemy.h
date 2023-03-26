@@ -23,6 +23,8 @@ public:
 	void SetAttackDamage(float damage);
 	void SetDetectionRadius(float radius);
 	virtual void TakeDamage(float damage);
+	void SetDetectingPlayer(bool value);
+
 
 	[[nodiscard]] float GetSpeed() const;
 	[[nodiscard]] float GetMaxSpeed() const;
@@ -33,7 +35,8 @@ public:
 	[[nodiscard]] float GetAttackDamage() const; 
 	[[nodiscard]] float GetDetectionRadius() const;
 	[[nodiscard]] float GetMaxHealth() const;
-	
+	[[nodiscard]] bool IsDetectingPlayer();
+
 	//void SetAnimationState()
 private:
 	float m_Health;
@@ -46,6 +49,7 @@ private:
 	glm::vec2 m_veloDamp;
 	GameObject* m_pTargetPlayer;
 	float m_attackDamage;
+	bool m_detectedPlayer;
 };
 
 // Holds all the enemies in the scene and deals with the deletion

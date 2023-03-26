@@ -23,13 +23,11 @@ public:
 	float GetTurnRate() const;
 	float GetAccelerationRate() const;
 	glm::vec2 GetDesiredVelocity() const;
-	[[nodiscard]] bool IsDetectingPlayer();
 
 	
 	void SetTurnRate(float angle);
 	void SetAccelerationRate(float rate);
 	void SetDesiredVelocity(glm::vec2 target_position);
-	void SetDetectingPlayer(bool value);
 
 	// public functions
 	void Seek();
@@ -52,7 +50,6 @@ private:
 	std::vector<glm::vec2> m_patrolPath;
 	int m_wayPoint;
 	void m_buildPatrolPath();
-	bool m_detectedPlayer;
 };
 
 #endif /* defined (__STARSHIP__)*/

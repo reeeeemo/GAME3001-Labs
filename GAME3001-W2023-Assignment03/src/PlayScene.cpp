@@ -37,6 +37,7 @@ void PlayScene::Draw()
 void PlayScene::Update()
 {
 	CheckCollision();
+	CheckEnemyDetectionRadius();
 	UpdateDisplayList();
 	for (auto enemy : m_pEnemyPool->GetPool()) {
 		m_checkAgentLOS(enemy, m_pPlayer);
@@ -481,5 +482,19 @@ void PlayScene::CheckCollision()
 	for (auto obstacle : m_pObstacles)
 	{
 		if(CollisionManager::AABBCheck(obstacle,m_pPlayer)){break;}
+	}
+}
+
+void PlayScene::CheckEnemyDetectionRadius()
+{
+	for (auto enemy : m_pEnemyPool->GetPool())
+	{
+		if (Util::Distance(enemy->GetTransform()->position, m_pPlayer->GetTransform()->position) <= enemy->GetDetectionRadius()) {
+			enemy->SetDetectingPlayer(true);
+			std::cout << "true\n";\
+		} else
+		{
+			enemy->SetDetectingPlayer(false);
+		}
 	}
 }

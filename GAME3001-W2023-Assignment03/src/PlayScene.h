@@ -78,6 +78,7 @@ private:
 
 	// Collision Checker
 	void CheckCollision();
+	void CheckEnemyDetectionRadius();
 };
 
 #endif /* defined (__PLAY_SCENE__) */

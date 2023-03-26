@@ -78,6 +78,16 @@ void Enemy::TakeDamage(float damage)
     std::cout << "Enemy took " << damage << " damage." << std::endl;
 }
 
+void Enemy::SetDetectingPlayer(bool value)
+{
+    m_detectedPlayer = value;
+}
+
+bool Enemy::IsDetectingPlayer()
+{
+    return m_detectedPlayer;
+}
+
 float Enemy::GetSpeed() const
 {
     return m_Speed;
