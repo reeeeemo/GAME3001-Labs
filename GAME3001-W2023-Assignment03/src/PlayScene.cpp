@@ -480,10 +480,20 @@ void PlayScene::CheckCollision()
 			}
 		}
 	}
-
+	m_pPlayer->GetRigidBody()->isColliding=false;
 	for (auto obstacle : m_pObstacles)
 	{
-		if(CollisionManager::AABBCheck(obstacle,m_pPlayer)){break;}
+		if(CollisionManager::AABBCheck(m_pPlayer,obstacle))
+		{
+			m_pPlayer->GetRigidBody()->isColliding = true;
+		}
+		for (auto proj : m_pTorpedoPool->GetPool())
+		{
+			if(CollisionManager::AABBCheck(proj,obstacle))
+			{
+				proj->GetRigidBody()->isColliding=true;
+			}
+		}
 	}
 }
 
