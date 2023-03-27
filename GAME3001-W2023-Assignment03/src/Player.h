@@ -28,8 +28,6 @@ public:
 	void TakeDamage(float dmg);
 	void SetRangeOfAttack(float value);
 
-	Sprite* m_head;
-
 	// Getters
 	float GetHealth() const;
 	[[nodiscard]] float GetRangeOfAttack();
@@ -37,7 +35,6 @@ public:
 
 private:
 	void BuildAnimations();
-	void BuildHeadAnimations();
 	PlayerAnimationState m_currentAnimationState;
 	SDL_RendererFlip m_flip;
 	void m_LookAtMouse();
