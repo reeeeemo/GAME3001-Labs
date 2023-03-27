@@ -156,6 +156,13 @@ void PlayScene::HandleEvents()
 			}
 			
 		}
+		if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K))
+		{
+			for (auto enemy : m_pEnemyPool->GetPool())
+			{
+				enemy->TakeDamage(30.0f);
+			}
+		}
 	}
 	
 }
