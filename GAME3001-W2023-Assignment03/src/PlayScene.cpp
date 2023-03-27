@@ -92,10 +92,13 @@ void PlayScene::HandleEvents()
 	}
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_W))
 	{
+		m_pPlayer->SetAnimationState(PlayerAnimationState::PLAYER_RUN_DOWN);
+
 		m_pPlayer->GetRigidBody()->velocity.y-=12.5f;
 	}
 	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_S))
 	{
+		m_pPlayer->SetAnimationState(PlayerAnimationState::PLAYER_RUN_UP);
 		m_pPlayer->GetRigidBody()->velocity.y+=12.5f;
 	}
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_A))

@@ -85,6 +85,14 @@ void Player::Draw()
 		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("run"),
 			GetTransform()->position, 0.15f, GetTransform()->rotation.r, 255, true);
 		break;
+	case PlayerAnimationState::PLAYER_RUN_DOWN:
+		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("run_back"),
+			GetTransform()->position, 0.15f, GetTransform()->rotation.r, 255, true);
+		break;
+	case PlayerAnimationState::PLAYER_RUN_UP:
+		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("run_front"),
+			GetTransform()->position, 0.15f, GetTransform()->rotation.r, 255, true);
+		break;
 	default:
 		break;
 	}
