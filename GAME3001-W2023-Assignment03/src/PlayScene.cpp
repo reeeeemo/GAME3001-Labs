@@ -95,27 +95,32 @@ void PlayScene::HandleEvents()
 		m_pPlayer->SetAnimationState(PlayerAnimationState::PLAYER_RUN_DOWN);
 
 		m_pPlayer->GetRigidBody()->velocity.y-=12.5f;
+		SoundManager::Instance().Play_Sound("footsteps");
 	}
 	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_S))
 	{
 		m_pPlayer->SetAnimationState(PlayerAnimationState::PLAYER_RUN_UP);
 		m_pPlayer->GetRigidBody()->velocity.y+=12.5f;
+		SoundManager::Instance().Play_Sound("footsteps");
 	}
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_A))
 	{
 		m_pPlayer->SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
 		m_pPlayer->GetRigidBody()->velocity.x-=12.5f;
+		SoundManager::Instance().Play_Sound("footsteps");
 	}
 	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_D))
 	{
 		m_pPlayer->SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
 		m_pPlayer->GetRigidBody()->velocity.x+=12.5f;
+		SoundManager::Instance().Play_Sound("footsteps");
 	}
 	if (EventManager::Instance().MousePressed(1))
 	{
 		std::cout<< "Mouse 1 Pressed" << std::endl;
 		// Will make an enemy pool for the current enemies on screen so iterating through this is not a problem
 		// If player attack radius is touching the enemy in any way, melee attack!
+		SoundManager::Instance().Play_Sound("swipe");
 		for (auto enemy : m_pEnemyPool->GetPool()) {
 			if (Util::GetClosestEdge(m_pPlayer->GetTransform()->position, enemy) <= m_pPlayer->GetRangeOfAttack()) {
 				m_pPlayer->MeleeAttack();
@@ -210,13 +215,15 @@ void PlayScene::Start()
 
 	SoundManager::Instance().Load("../Assets/Audio/yay.ogg", "yay", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/thunder.ogg", "thunder", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/swipe.mp3", "swipe", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/audio/footsteps.mp3", "footsteps", SoundType::SOUND_SFX);
 
 	// Preload music
-	SoundManager::Instance().Load("../Assets/Audio/mutara.mp3", "mutara", SoundType::SOUND_MUSIC);
+	SoundManager::Instance().Load("../Assets/Audio/bgMusic.mp3", "bgMusic", SoundType::SOUND_MUSIC);
 	SoundManager::Instance().SetMusicVolume(16);
 
 	// Play Music
-	SoundManager::Instance().PlayMusic("mutara");
+	SoundManager::Instance().PlayMusic("bgMusic");
 
 	ImGuiWindowFrame::Instance().SetGuiFunction(std::bind(&PlayScene::GUI_Function, this));
 }

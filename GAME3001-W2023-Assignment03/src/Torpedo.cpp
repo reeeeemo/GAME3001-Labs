@@ -78,7 +78,7 @@ void Torpedo::Start()
     TextureManager::Instance().Load("../Assets/textures/Explosion.png", "explosion");
     SoundManager::Instance().Load("../Assets/audio/hitHurt.wav", "hitHurt", SoundType::SOUND_SFX);
     SoundManager::Instance().Load("../Assets/audio/submarineShoot.wav", "subShoot", SoundType::SOUND_SFX);
-    SoundManager::Instance().PlaySound("subShoot");
+    SoundManager::Instance().Play_Sound("subShoot");
     SetWidth(20);
     SetHeight(20);
     // Setting velocity and speed
@@ -127,7 +127,7 @@ void Torpedo::Update()
     {
         if(!m_isExploded)
         {
-            SoundManager::Instance().PlaySound("hitHurt");
+            SoundManager::Instance().Play_Sound("hitHurt");
             m_isExploded = true;
             SetWidth(GetWidth()*2);
             SetHeight(GetHeight()*2);
