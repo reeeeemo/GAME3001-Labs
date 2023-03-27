@@ -5,7 +5,7 @@
 #include "Obstacle.h"
 #include "PlayerAnimationState.h"
 #include "Sprite.h"
-#include "BunnyHead.h"
+#include "PlaceholderSprite.h"
 
 class Player final : public Sprite
 {

@@ -83,6 +83,16 @@ void Enemy::SetDetectingPlayer(bool value)
     m_detectedPlayer = value;
 }
 
+void Enemy::SetAnimationState(EnemyAnimationState state)
+{
+    m_anim_state = state;
+}
+
+EnemyAnimationState Enemy::GetAnimationState() const
+{
+    return m_anim_state;
+}
+
 bool Enemy::IsDetectingPlayer()
 {
     return m_detectedPlayer;

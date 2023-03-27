@@ -7,7 +7,7 @@
 
 Player::Player(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT)
 {
-	m_head = new BunnyHead;
+	m_head = new PlaceholderSprite;
 	TextureManager::Instance().LoadSpriteSheet(
 		"../Assets/sprites/Player/bunny_body.txt",
 		"../Assets/sprites/Player/bunny_body.png", 
