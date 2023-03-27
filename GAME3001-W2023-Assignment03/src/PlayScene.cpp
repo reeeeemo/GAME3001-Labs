@@ -100,10 +100,12 @@ void PlayScene::HandleEvents()
 	}
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_A))
 	{
+		m_pPlayer->SetAnimationState(PlayerAnimationState::PLAYER_RUN_LEFT);
 		m_pPlayer->GetRigidBody()->velocity.x-=12.5f;
 	}
 	else if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_D))
 	{
+		m_pPlayer->SetAnimationState(PlayerAnimationState::PLAYER_RUN_RIGHT);
 		m_pPlayer->GetRigidBody()->velocity.x+=12.5f;
 	}
 	if (EventManager::Instance().MousePressed(1))
