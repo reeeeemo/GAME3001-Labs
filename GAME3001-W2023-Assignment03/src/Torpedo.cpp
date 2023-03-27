@@ -67,14 +67,14 @@ void Torpedo::Draw()
     }
     else
     {
-        TextureManager::Instance().Draw("torpedo", GetTransform()->position, GetTransform()->rotation.r, 255, true);
+        TextureManager::Instance().Draw("carrot", GetTransform()->position, GetTransform()->rotation.r, 255, true, SDL_FLIP_HORIZONTAL);
     }
     
 }
 void Torpedo::Start()
 {
     // Getting sprite + setting transform.
-    TextureManager::Instance().Load("../Assets/textures/Small_Torpedo.png", "torpedo");
+    TextureManager::Instance().Load("../Assets/sprites/Player/carrot.png", "carrot");
     TextureManager::Instance().Load("../Assets/textures/Explosion.png", "explosion");
     SoundManager::Instance().Load("../Assets/audio/hitHurt.wav", "hitHurt", SoundType::SOUND_SFX);
     SoundManager::Instance().Load("../Assets/audio/submarineShoot.wav", "subShoot", SoundType::SOUND_SFX);
