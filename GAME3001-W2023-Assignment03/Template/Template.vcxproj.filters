@@ -199,6 +199,9 @@
     <ClCompile Include="..\src\TextureManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\BunnyHead.cpp">
+      <Filter>Decision\Agents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -424,6 +427,9 @@
       <Filter>Decision\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Enemy.h" />
+    <ClInclude Include="..\src\BunnyHead.h">
+      <Filter>Decision\Agents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md">
