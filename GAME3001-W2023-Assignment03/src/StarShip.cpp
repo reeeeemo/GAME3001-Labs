@@ -253,20 +253,23 @@ void StarShip::m_move()
 	// clamp our velocity at max speed
 	GetRigidBody()->velocity = Util::Clamp(GetRigidBody()->velocity, GetMaxSpeed());
 
+	float xDir = abs(GetCurrentDirection().x);
+	float yDir = abs(GetCurrentDirection().y);
 
 
-	if (GetRigidBody()->velocity.x > GetRigidBody()->velocity.y && final_position.x > initial_position.x)
+
+	if (xDir > yDir && GetCurrentDirection().x > 0)
 	{
 		SetAnimationState(EnemyAnimationState::ENEMY_RUN_RIGHT);
-	} else if (GetRigidBody()->velocity.x > GetRigidBody()->velocity.y && final_position.x < initial_position.x)
+	} else if (xDir > yDir && GetCurrentDirection().x < 0)
 	{
 		SetAnimationState(EnemyAnimationState::ENEMY_RUN_LEFT);
 	}
 
-	if (GetRigidBody()->velocity.y > GetRigidBody()->velocity.x && final_position.y > initial_position.y)
+	if (yDir > xDir && GetCurrentDirection().y > 0)
 	{
 		SetAnimationState(EnemyAnimationState::ENEMY_RUN_UP);
-	} else if (GetRigidBody()->velocity.y > GetRigidBody()->velocity.x && final_position.y < initial_position.y)
+	} else if (yDir > xDir && GetCurrentDirection().y < 0)
 	{
 		SetAnimationState(EnemyAnimationState::ENEMY_RUN_DOWN);
 	}
