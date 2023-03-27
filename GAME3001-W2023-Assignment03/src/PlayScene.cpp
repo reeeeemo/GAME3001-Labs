@@ -157,6 +157,23 @@ void PlayScene::HandleEvents()
 			}
 			
 		}
+		if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K))
+		{
+			for (auto enemy : m_pEnemyPool->GetPool())
+			{
+				enemy->TakeDamage(30.0f);
+			}
+		}
+
+		if (EventManager::Instance().KeyPressed(SDL_SCANCODE_R))
+		{
+			Enemy* new_enemy = new StarShip;
+			m_pEnemyPool->Spawn(new_enemy);
+
+			m_decisionTrees.emplace(std::pair{ new_enemy, new DecisionTree(new_enemy) }); // Using our overloaded constructor
+			m_decisionTrees[new_enemy]->Display(); // Optional
+			m_decisionTrees[new_enemy]->MakeDecision(); // Patrol
+		}
 	}
 	
 }
