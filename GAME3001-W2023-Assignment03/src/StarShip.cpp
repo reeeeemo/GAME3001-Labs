@@ -252,6 +252,38 @@ void StarShip::m_move()
 
 	// clamp our velocity at max speed
 	GetRigidBody()->velocity = Util::Clamp(GetRigidBody()->velocity, GetMaxSpeed());
+
+
+
+	if (GetRigidBody()->velocity.x > GetRigidBody()->velocity.y && final_position.x > initial_position.x)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_RUN_RIGHT);
+	} else if (GetRigidBody()->velocity.x > GetRigidBody()->velocity.y && final_position.x < initial_position.x)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_RUN_LEFT);
+	}
+
+	if (GetRigidBody()->velocity.y > GetRigidBody()->velocity.x && final_position.y > initial_position.y)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_RUN_UP);
+	} else if (GetRigidBody()->velocity.y > GetRigidBody()->velocity.x && final_position.y < initial_position.y)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_RUN_DOWN);
+	}
+
+	if (Util::Magnitude(GetRigidBody()->velocity) <= 5)
+	{
+		if (GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_LEFT || GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_RIGHT)
+		{
+			if (GetAnimationState() == EnemyAnimationState::ENEMY_RUN_LEFT)
+			{
+				SetAnimationState(EnemyAnimationState::ENEMY_IDLE_LEFT);
+			} else
+			{
+				SetAnimationState(EnemyAnimationState::ENEMY_IDLE_RIGHT);
+			}
+		}
+	}
 }
 
 void StarShip::m_buildPatrolPath()
