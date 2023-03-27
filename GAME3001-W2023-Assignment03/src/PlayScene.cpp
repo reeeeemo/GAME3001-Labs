@@ -59,6 +59,7 @@ void PlayScene::Update()
 	for (std::pair<Enemy*, DecisionTree*> mapPair : m_decisionTrees) {
 		mapPair.second->MakeDecision();
 	}
+	m_RemainingEnemiesLabel->SetText(std::to_string(m_pEnemyPool->GetPool().size()));
 }
 
 void PlayScene::Clean()
@@ -186,6 +187,11 @@ void PlayScene::Start()
 	m_pPlayer->GetTransform()->position = glm::vec2(100.0f,300.0f);
 	AddChild(m_pPlayer,2);
 	Game::Instance().SetPlayer(m_pPlayer);
+
+	m_RemainingEnemiesLabel = new Label();
+	m_RemainingEnemiesLabel->GetTransform()->position = glm::vec2(50.0f,50.0f);
+	m_RemainingEnemiesLabel->SetColour({255,0,0,255});
+	AddChild(m_RemainingEnemiesLabel);
 
 	m_pTorpedoPool = new TorpedoPool();
 	AddChild(m_pTorpedoPool);

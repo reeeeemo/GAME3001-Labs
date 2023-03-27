@@ -59,27 +59,27 @@ void Player::Draw()
 	{
 	case PlayerAnimationState::PLAYER_IDLE_RIGHT:
 		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("idle"),
-			GetTransform()->position, 0.12f, GetTransform()->rotation.r, 255, true, SDL_FLIP_HORIZONTAL);
+			GetTransform()->position, 0.12f, 0, 255, true, SDL_FLIP_HORIZONTAL);
 		break;
 	case PlayerAnimationState::PLAYER_IDLE_LEFT:
 		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("idle"),
-			GetTransform()->position, 0.12f,GetTransform()->rotation.r, 255, true);
+			GetTransform()->position, 0.12f,0, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_RIGHT:
 		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("run"),
-			GetTransform()->position, 0.15f, GetTransform()->rotation.r, 255, true, SDL_FLIP_HORIZONTAL);
+			GetTransform()->position, 0.15f, 0, 255, true, SDL_FLIP_HORIZONTAL);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_LEFT:
 		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("run"),
-			GetTransform()->position, 0.15f, GetTransform()->rotation.r, 255, true);
+			GetTransform()->position, 0.15f, 0, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_DOWN:
 		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("run_back"),
-			GetTransform()->position, 0.15f, GetTransform()->rotation.r, 255, true);
+			GetTransform()->position, 0.15f, 0, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_UP:
 		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("run_front"),
-			GetTransform()->position, 0.15f, GetTransform()->rotation.r, 255, true);
+			GetTransform()->position, 0.15f, 0, 255, true);
 		break;
 	default:
 		break;

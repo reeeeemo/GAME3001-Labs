@@ -46,8 +46,6 @@ private:
 	Player* m_pPlayer;
 	TorpedoPool* m_pTorpedoPool;
 	std::vector<Obstacle*> m_pObstacles;
-	Label* m_ProgressionBar;
-	Label* m_ScoreLabel;
 	Label* m_RemainingEnemiesLabel;
 	// New for Lab 7.1
 	Background* m_pBackground;
