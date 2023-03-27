@@ -1,0 +1,14 @@
+idle1 0 0 80 80
+idle2 80 0 80 80
+idle3 160 0 80 80
+idle4 240 0 80 80
+idle5 320 0 80 80
+run_back1 0 80 80 80
+run_back2 80 80 80 80
+run_back3 160 80 80 80
+run 0 160 80 80
+run 80 160 80 80
+run 160 160 80 80
+run_front1 0 320 80 80
+run_front2 80 320 80 80
+run_front 160 320 80 80
