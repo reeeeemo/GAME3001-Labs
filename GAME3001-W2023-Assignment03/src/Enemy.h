@@ -2,6 +2,8 @@
 #ifndef __ENEMY__
 #define __ENEMY__
 #include "Agent.h"
+#include "EnemyAnimationState.h"	
+
 class Enemy : public Agent
 {
 public:
@@ -24,7 +26,7 @@ public:
 	void SetDetectionRadius(float radius);
 	virtual void TakeDamage(float damage);
 	void SetDetectingPlayer(bool value);
-
+	void SetAnimationState(EnemyAnimationState state);
 
 	[[nodiscard]] float GetSpeed() const;
 	[[nodiscard]] float GetMaxSpeed() const;
@@ -36,6 +38,7 @@ public:
 	[[nodiscard]] float GetDetectionRadius() const;
 	[[nodiscard]] float GetMaxHealth() const;
 	[[nodiscard]] bool IsDetectingPlayer();
+	[[nodiscard]] EnemyAnimationState GetAnimationState() const;
 
 	//void SetAnimationState()
 private:
@@ -50,6 +53,7 @@ private:
 	GameObject* m_pTargetPlayer;
 	float m_attackDamage;
 	bool m_detectedPlayer;
+	EnemyAnimationState m_anim_state;
 };
 
 // Holds all the enemies in the scene and deals with the deletion

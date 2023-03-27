@@ -4,6 +4,7 @@
 
 #include "Agent.h"
 #include "Enemy.h"
+#include "Sprite.h"
 
 class StarShip : public Enemy
 {
@@ -50,6 +51,9 @@ private:
 	std::vector<glm::vec2> m_patrolPath;
 	int m_wayPoint;
 	void m_buildPatrolPath();
+
+	void BuildAnimations();
+	Sprite* m_sprite;
 };
 
 #endif /* defined (__STARSHIP__)*/

@@ -165,7 +165,7 @@
     <ClCompile Include="..\src\Agent.cpp" />
     <ClCompile Include="..\src\AttackAction.cpp" />
     <ClCompile Include="..\src\Background.cpp" />
-    <ClCompile Include="..\src\BunnyHead.cpp" />
+    <ClCompile Include="..\src\PlaceholderSprite.cpp" />
     <ClCompile Include="..\src\Button.cpp" />
     <ClCompile Include="..\src\CloseCombatCondition.cpp" />
     <ClCompile Include="..\src\CollisionManager.cpp" />
@@ -222,7 +222,7 @@
     <ClInclude Include="..\src\Animation.h" />
     <ClInclude Include="..\src\AttackAction.h" />
     <ClInclude Include="..\src\Background.h" />
-    <ClInclude Include="..\src\BunnyHead.h" />
+    <ClInclude Include="..\src\PlaceholderSprite.h" />
     <ClInclude Include="..\src\Button.h" />
     <ClInclude Include="..\src\CloseCombatCondition.h" />
     <ClInclude Include="..\src\CollisionManager.h" />
@@ -231,6 +231,7 @@
     <ClInclude Include="..\src\Config.h" />
     <ClInclude Include="..\src\DecisionTree.h" />
     <ClInclude Include="..\src\Enemy.h" />
+    <ClInclude Include="..\src\EnemyAnimationState.h" />
     <ClInclude Include="..\src\Heuristic.h" />
     <ClInclude Include="..\src\ImGuiWindowFrame.h" />
     <ClInclude Include="..\src\InputType.h" />

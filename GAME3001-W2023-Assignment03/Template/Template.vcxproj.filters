@@ -199,7 +199,7 @@
     <ClCompile Include="..\src\TextureManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\BunnyHead.cpp">
+    <ClCompile Include="..\src\PlaceholderSprite.cpp">
       <Filter>Decision\Agents</Filter>
     </ClCompile>
   </ItemGroup>
@@ -427,8 +427,11 @@
       <Filter>Decision\Core</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Enemy.h" />
-    <ClInclude Include="..\src\BunnyHead.h">
+    <ClInclude Include="..\src\PlaceholderSprite.h">
       <Filter>Decision\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\EnemyAnimationState.h">
+      <Filter>Enums</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

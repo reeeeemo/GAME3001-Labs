@@ -7,21 +7,12 @@
 
 Player::Player(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT)
 {
-	m_head = new BunnyHead;
 	TextureManager::Instance().LoadSpriteSheet(
 		"../Assets/sprites/Player/bunny_body.txt",
 		"../Assets/sprites/Player/bunny_body.png", 
 		"bunny_body");
 
-	TextureManager::Instance().LoadSpriteSheet(
-		"../Assets/sprites/Player/bunny_head.txt",
-		"../Assets/sprites/Player/bunny_head.png",
-		"bunny_head"
-	);
-
 	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("bunny_body"));
-	m_head->SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("bunny_head"));
-
 
 	SetRangeOfAttack(50.0f);
 
@@ -42,7 +33,6 @@ Player::Player(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGH
 	m_damage = 10.0f;
 
 	BuildAnimations();
-	BuildHeadAnimations();
 }
 
 Player::~Player()
@@ -63,8 +53,6 @@ void Player::Draw()
 
 	// Drawing the health bar for the player based on the health count.
 	Util::DrawFilledRect(GetTransform()->position - glm::vec2((m_Health / m_maxHealth * 100) / 2, 60.0f), m_Health / m_maxHealth * 100, 10.0f, glm::vec4(0, 1.0f, 0, 1.0f));
-
-	TextureManager::Instance().PlayAnimation("bunny_head", m_head->GetAnimation("idle"), m_head->GetTransform()->position, 0.12f, m_head->GetTransform()->rotation.r, 255, true, m_flip);
 
 	// draw the player according to animation state
 	switch(m_currentAnimationState)
@@ -137,9 +125,6 @@ void Player::Move()
 	GetTransform()->position = final_position;
 	GetRigidBody()->velocity += GetRigidBody()->acceleration;
 	GetRigidBody()->velocity*=GetRigidBody()->velocityDampening;
-
-	m_head->GetTransform()->position = final_position - glm::vec2(0, m_head->GetHeight());
-
 }
 
 void Player::MeleeAttack()
@@ -230,29 +215,14 @@ void Player::BuildAnimations()
 	SetAnimation(run_front_animation);
 }
 
-void Player::BuildHeadAnimations()
-{
-	auto idle_animation = Animation();
-
-	idle_animation.name = "idle";
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("idle1"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("idle2"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("idle3"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("idle4"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("idle5"));
-
-	m_head->SetAnimation(idle_animation);
-
-}
-
 void Player::m_LookAtMouse()
 {
 	glm::vec2 mousePos = EventManager::Instance().GetMousePosition();
 	float angleToMouse = atan2(mousePos.y-GetTransform()->position.y,mousePos.x-GetTransform()->position.x);
-	m_head->GetTransform()->rotation.r = angleToMouse*Util::Rad2Deg;
-	while (m_head->GetTransform()->rotation.r < 0) m_head->GetTransform()->rotation.r += 360;
-	while (m_head->GetTransform()->rotation.r > 360) m_head->GetTransform()->rotation.r -= 360;
-	if (m_head->GetTransform()->rotation.r > 90 && m_head->GetTransform()->rotation.r < 270)
+	GetTransform()->rotation.r = angleToMouse*Util::Rad2Deg;
+	while (GetTransform()->rotation.r < 0) GetTransform()->rotation.r += 360;
+	while (GetTransform()->rotation.r > 360) GetTransform()->rotation.r -= 360;
+	if (GetTransform()->rotation.r > 90 && GetTransform()->rotation.r < 270)
 	{
 		m_flip = SDL_FLIP_NONE;
 	}
