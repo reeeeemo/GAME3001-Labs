@@ -8,11 +8,17 @@
 Player::Player(): m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT)
 {
 	TextureManager::Instance().LoadSpriteSheet(
-		"../Assets/sprites/atlas.txt",
-		"../Assets/sprites/atlas.png", 
-		"spritesheet");
+		"../Assets/sprites/Player/bunny_body.txt",
+		"../Assets/sprites/Player/bunny_body.png", 
+		"bunny_body");
 
-	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("spritesheet"));
+	TextureManager::Instance().LoadSpriteSheet(
+		"../Assets/sprites/Player/bunny_head.txt",
+		"../Assets/sprites/Player/bunny_head.png",
+		"bunny_head"
+	);
+
+	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("bunny_body"));
 	
 	SetRangeOfAttack(50.0f);
 
@@ -58,20 +64,20 @@ void Player::Draw()
 	switch(m_currentAnimationState)
 	{
 	case PlayerAnimationState::PLAYER_IDLE_RIGHT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idle"),
-			GetTransform()->position, 0.12f, GetTransform()->rotation.r, 255, true);
+		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("idle"),
+			GetTransform()->position, 0.12f, GetTransform()->rotation.r, 255, true, SDL_FLIP_HORIZONTAL);
 		break;
 	case PlayerAnimationState::PLAYER_IDLE_LEFT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("idle"),
-			GetTransform()->position, 0.12f,GetTransform()->rotation.r, 255, true, SDL_FLIP_VERTICAL);
+		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("idle"),
+			GetTransform()->position, 0.12f,GetTransform()->rotation.r, 255, true);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_RIGHT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("run"),
-			GetTransform()->position, 0.25f, GetTransform()->rotation.r, 255, true);
+		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("run"),
+			GetTransform()->position, 0.15f, GetTransform()->rotation.r, 255, true, SDL_FLIP_HORIZONTAL);
 		break;
 	case PlayerAnimationState::PLAYER_RUN_LEFT:
-		TextureManager::Instance().PlayAnimation("spritesheet", GetAnimation("run"),
-			GetTransform()->position, 0.25f, GetTransform()->rotation.r, 255, true, SDL_FLIP_VERTICAL);
+		TextureManager::Instance().PlayAnimation("bunny_body", GetAnimation("run"),
+			GetTransform()->position, 0.15f, GetTransform()->rotation.r, 255, true);
 		break;
 	default:
 		break;
@@ -82,6 +88,21 @@ void Player::Update()
 {
 	Move();
 	m_LookAtMouse();
+	if (Util::Magnitude(GetRigidBody()->velocity) <= 10)
+	{
+		if (m_currentAnimationState != PlayerAnimationState::PLAYER_IDLE_LEFT && m_currentAnimationState != PlayerAnimationState::PLAYER_IDLE_RIGHT)
+		{
+			if (m_currentAnimationState == PlayerAnimationState::PLAYER_RUN_LEFT)
+			{
+				SetAnimationState(PlayerAnimationState::PLAYER_IDLE_LEFT);
+			}
+			else
+			{
+				SetAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT);
+			}
+		}
+		
+	}
 }
 
 void Player::Clean()
@@ -90,7 +111,6 @@ void Player::Clean()
 
 void Player::Move()
 {
-
 	if (GetRigidBody()->isColliding)
 	{
 		GetRigidBody()->velocity = -GetRigidBody()->velocity*2.0f;
@@ -156,22 +176,41 @@ void Player::BuildAnimations()
 	auto idle_animation = Animation();
 
 	idle_animation.name = "idle";
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-idle-0"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-idle-1"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-idle-2"));
-	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-idle-3"));
+	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("idle1"));
+	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("idle2"));
+	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("idle3"));
+	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("idle4"));
+	idle_animation.frames.push_back(GetSpriteSheet()->GetFrame("idle5"));
+
 
 	SetAnimation(idle_animation);
+
+	auto run_back_animation = Animation();
+
+	run_back_animation.name = "run_back";
+	run_back_animation.frames.push_back(GetSpriteSheet()->GetFrame("run_back1"));
+	run_back_animation.frames.push_back(GetSpriteSheet()->GetFrame("run_back2"));
+	run_back_animation.frames.push_back(GetSpriteSheet()->GetFrame("run_back3"));
+
+	SetAnimation(run_back_animation);
 
 	auto run_animation = Animation();
 
 	run_animation.name = "run";
-	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-run-0"));
-	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-run-1"));
-	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-run-2"));
-	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("megaman-run-3"));
+	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("run1"));
+	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("run2"));
+	run_animation.frames.push_back(GetSpriteSheet()->GetFrame("run3"));
 
 	SetAnimation(run_animation);
+
+	auto run_front_animation = Animation();
+
+	run_front_animation.name = "run_front";
+	run_front_animation.frames.push_back(GetSpriteSheet()->GetFrame("run_front1"));
+	run_front_animation.frames.push_back(GetSpriteSheet()->GetFrame("run_front2"));
+	run_front_animation.frames.push_back(GetSpriteSheet()->GetFrame("run_front3"));
+
+	SetAnimation(run_front_animation);
 }
 
 void Player::m_LookAtMouse()
@@ -183,11 +222,11 @@ void Player::m_LookAtMouse()
 	while (GetTransform()->rotation.r > 360) GetTransform()->rotation.r -= 360;
 	if (GetTransform()->rotation.r > 90 && GetTransform()->rotation.r < 270)
 	{
-		SetAnimationState(PlayerAnimationState::PLAYER_IDLE_LEFT);
+		//SetAnimationState(PlayerAnimationState::PLAYER_IDLE_LEFT);
 	}
 	else
 	{
-		SetAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT);
+		//SetAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT);
 	}
 }
 

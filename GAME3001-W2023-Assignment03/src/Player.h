@@ -22,6 +22,7 @@ public:
 
 	// setters
 	void SetAnimationState(PlayerAnimationState new_state);
+	void SetFlip(SDL_RendererFlip flip);
 	void SetHealth(float health);
 	void TakeDamage(float dmg);
 	void SetRangeOfAttack(float value);
@@ -36,6 +37,7 @@ public:
 private:
 	void BuildAnimations();
 	PlayerAnimationState m_currentAnimationState;
+	SDL_RendererFlip m_flip;
 	void m_LookAtMouse();
 	float m_Health;
 	float m_maxHealth;
