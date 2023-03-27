@@ -6,7 +6,7 @@
 
 Obstacle::Obstacle()
 {
-	TextureManager::Instance().Load("../Assets/textures/nebula_cloud.png", "obstacle");
+	TextureManager::Instance().Load("../Assets/sprites/Player/rock.png", "obstacle");
 
 	const auto size = TextureManager::Instance().GetTextureSize("obstacle");
 	SetWidth(static_cast<int>(size.x));
