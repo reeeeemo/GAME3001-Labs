@@ -167,6 +167,7 @@
     <ClCompile Include="..\src\Background.cpp" />
     <ClCompile Include="..\src\Button.cpp" />
     <ClCompile Include="..\src\CloseCombatCondition.cpp" />
+    <ClCompile Include="..\src\CloseCombatEnemy.cpp" />
     <ClCompile Include="..\src\CollisionManager.cpp" />
     <ClCompile Include="..\src\DecisionTree.cpp" />
     <ClCompile Include="..\src\ImGuiWindowFrame.cpp" />
@@ -220,6 +221,7 @@
     <ClInclude Include="..\src\Background.h" />
     <ClInclude Include="..\src\Button.h" />
     <ClInclude Include="..\src\CloseCombatCondition.h" />
+    <ClInclude Include="..\src\CloseCombatEnemy.h" />
     <ClInclude Include="..\src\CollisionManager.h" />
     <ClInclude Include="..\src\CollisionShape.h" />
     <ClInclude Include="..\src\ConditionNode.h" />

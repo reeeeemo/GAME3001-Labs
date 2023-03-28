@@ -11,13 +11,13 @@
 
 DecisionTree::DecisionTree()
 {
-	m_buildTree();
+	//m_buildTree();
 }
 
 DecisionTree::DecisionTree(Agent* agent)
 {
 	m_agent = agent;
-	m_buildTree();
+	//m_buildTree();
 }
 
 DecisionTree::~DecisionTree()
@@ -46,6 +46,26 @@ RadiusCondition* DecisionTree::GetRadiusNode() const
 CloseCombatCondition* DecisionTree::GetCloseCombatNode() const
 {
 	return m_closeCombatNode;
+}
+
+std::vector<TreeNode*>& DecisionTree::GetTree()
+{
+	return m_treeNodeList;
+}
+
+void DecisionTree::SetLOSNode(LOSCondition* node)
+{
+	m_LOSNode = node;
+}
+
+void DecisionTree::SetRadiusNode(RadiusCondition* node)
+{
+	m_radiusNode = node;
+}
+
+void DecisionTree::SetCloseCombatNode(CloseCombatCondition* node)
+{
+	m_closeCombatNode = node;
 }
 
 TreeNode* DecisionTree::AddNode(TreeNode* parent, TreeNode* child_node, const TreeNodeType type)
@@ -107,6 +127,7 @@ void DecisionTree::MakeDecision() const
 	// Take Action
 	dynamic_cast<ActionNode*>(current_node)->Action();
 }
+
 
 //void DecisionTree::m_buildTree()
 //{
