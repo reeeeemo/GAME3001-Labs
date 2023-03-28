@@ -138,7 +138,7 @@ void PlayScene::GUI_Function()
 	// See examples by uncommenting the following - also look at imgui_demo.cpp in the IMGUI filter
 	//ImGui::ShowDemoWindow();
 	
-	ImGui::Begin("GAME3001 - W2023 - Lab 6.2", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar );
+	ImGui::Begin("GAME3001 - W2023 - Lab 7.1", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_MenuBar );
 
 	ImGui::Separator();
 
@@ -314,13 +314,14 @@ bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object) cons
 		std::vector<DisplayObject*> contact_list;
 		for (auto display_object : GetDisplayList())
 		{
-			const auto agent_to_object_distance = Util::GetClosestEdge(agent->GetTransform()->position, display_object);
-			if (agent_to_object_distance > agent_to_range) { continue;  } // target is out of range
 			if((display_object->GetType() != GameObjectType::AGENT)
 				&& (display_object->GetType() != GameObjectType::PATH_NODE)
 				&& (display_object->GetType() != GameObjectType::TARGET))
 			{
-				contact_list.push_back(display_object);
+				const auto agent_to_object_distance = Util::GetClosestEdge(agent->GetTransform()->position, display_object);
+
+				if (agent_to_object_distance > agent_to_range) { contact_list.push_back(display_object); } // target is out of range
+
 			}
 		}
 
