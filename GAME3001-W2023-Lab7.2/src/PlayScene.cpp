@@ -51,8 +51,6 @@ void PlayScene::Update()
 		break;
 	}
 
-	// Make a decision
-	m_decisionTree->MakeDecision();
 }
 
 void PlayScene::Clean()
@@ -110,10 +108,6 @@ void PlayScene::Start()
 	m_buildGrid();
 	m_toggleGrid(m_isGridEnabled);
 
-	// Create Decision Tree
-	m_decisionTree = new DecisionTree(m_pStarShip); // Using our overloaded constructor
-	m_decisionTree->Display(); // Optional
-	m_decisionTree->MakeDecision(); // Patrol
 
 	// Preload Sounds
 
