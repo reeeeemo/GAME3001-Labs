@@ -7,6 +7,7 @@
 #include "MoveToPlayerAction.h"
 #include "PatrolAction.h"
 #include "EventManager.h"
+#include "MoveToRange.h"
 
 RangedCombatEnemy::RangedCombatEnemy() : m_maxSpeed(20.0f),
 m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 500.0f))
@@ -256,10 +257,15 @@ void RangedCombatEnemy::m_buildTree()
 	m_tree->AddNode(m_tree->GetLOSNode(), m_tree->GetRadiusNode(), TreeNodeType::LEFT_TREE_NODE);
 	m_tree->GetTree().push_back(m_tree->GetRadiusNode());
 
+	
 
 	m_tree->SetCloseCombatNode(new CloseCombatCondition());
 	m_tree->AddNode(m_tree->GetLOSNode(), m_tree->GetCloseCombatNode(), TreeNodeType::RIGHT_TREE_NODE);
 	m_tree->GetTree().push_back(m_tree->GetCloseCombatNode());
+
+	m_tree->SetRangedCombatNode(new RangedCombatCondition());
+	m_tree->AddNode(m_tree->GetLOSNode(), m_tree->GetRangedCombatNode(), TreeNodeType::RIGHT_TREE_NODE);
+	m_tree->GetTree().push_back(m_tree->GetRangedCombatNode());
 
 	// Actions
 
@@ -273,11 +279,11 @@ void RangedCombatEnemy::m_buildTree()
 	m_tree->GetTree().push_back(moveToLOSNode);
 
 	// Right sub-tree
-	TreeNode* moveToPlayerNode = m_tree->AddNode(m_tree->GetCloseCombatNode(), new MoveToPlayerAction(), TreeNodeType::LEFT_TREE_NODE);
-	dynamic_cast<ActionNode*>(moveToPlayerNode)->SetAgent(this);
-	m_tree->GetTree().push_back(moveToPlayerNode);
+	TreeNode* moveToRangeNode = m_tree->AddNode(m_tree->GetRangedCombatNode(), new MoveToRangeAction, TreeNodeType::LEFT_TREE_NODE);
+	dynamic_cast<ActionNode*>(moveToRangeNode)->SetAgent(this);
+	m_tree->GetTree().push_back(moveToRangeNode);
 
-	TreeNode* attackNode = m_tree->AddNode(m_tree->GetCloseCombatNode(), new AttackAction(), TreeNodeType::RIGHT_TREE_NODE);
+	TreeNode* attackNode = m_tree->AddNode(m_tree->GetRangedCombatNode(), new AttackAction(), TreeNodeType::RIGHT_TREE_NODE);
 	dynamic_cast<ActionNode*>(attackNode)->SetAgent(this);
 	m_tree->GetTree().push_back(attackNode);
 }
