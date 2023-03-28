@@ -1,6 +1,7 @@
 #include "Agent.h"
 
 #include "Util.h"
+#include "CollisionManager.h"
 
 Agent::Agent()
 {
@@ -165,6 +166,44 @@ void Agent::UpdateWhiskers(const float angle)
 	x = sin((GetCurrentHeading() + 75.0f + 90.0f) * Util::Deg2Rad);
 	y = cos((GetCurrentHeading() + 75.0f + 90.0f) * Util::Deg2Rad);
 	SetRightRightLOSEndPoint(GetTransform()->position + glm::vec2(x, -y) * GetLOSDistance() * 0.75f);
+}
+
+bool Agent::CheckAgentLOSToTarget(Agent* agent, DisplayObject* target_object, const std::vector<Obstacle*>& obstacles)
+{
+	bool has_LOS = false; // default - No LOS
+	SetHasLOS(has_LOS);
+
+	const auto target_direction = target_object->GetTransform()->position - GetTransform()->position;
+	const auto normalized_direction = Util::Normalize(target_direction); // Points to the target (Unit Vector)
+	SetMiddleLOSEndPoint(GetTransform()->position + normalized_direction * GetLOSDistance());
+
+	// if ship to target distance is less than or equal to the LOS Distance (Range)
+	const auto agent_to_range = Util::GetClosestEdge(GetTransform()->position, target_object);
+	if (agent_to_range <= GetLOSDistance())
+	{
+		// we are in within LOS Distance 
+		std::vector<DisplayObject*> contact_list;
+		for (const auto obstacle : obstacles)
+		{
+			if ((obstacle->GetType() != GameObjectType::AGENT)
+				&& (obstacle->GetType() != GameObjectType::PATH_NODE)
+				&& (obstacle->GetType() != GameObjectType::TARGET))
+			{
+				const auto agent_to_object_distance = Util::GetClosestEdge(GetTransform()->position, obstacle);
+
+				if (agent_to_object_distance > agent_to_range) { contact_list.push_back(obstacle); } // target is out of range
+
+			}
+		}
+
+		has_LOS = CollisionManager::LOSCheck(this, GetMiddleLOSEndPoint(), contact_list, target_object);
+
+		/*const auto LOSColour = (target_object->GetType() == GameObjectType::AGENT) ? glm::vec4(0, 0, 1, 1) : glm::vec4(0, 1, 0, 1);
+		agent->SetHasLOS(has_LOS, LOSColour);*/
+	}
+
+	SetHasLOS(has_LOS);
+	return has_LOS;
 }
 
 

@@ -5,6 +5,7 @@
 #include <glm/vec4.hpp>
 #include "NavigationObject.h"
 #include "ActionState.h"
+#include "Obstacle.h"
 
 class Agent : public NavigationObject
 {
@@ -35,6 +36,7 @@ public:
 	glm::vec4 GetLineColour(int index) const;
 	float GetWhiskerAngle() const;
 
+
 	ActionState GetActionState() const;
 
 	// setters
@@ -59,6 +61,18 @@ public:
 
 	// utility function
 	void UpdateWhiskers(float angle);
+
+	// New for Lab 7.2
+	// Utility Function
+	bool CheckAgentLOSToTarget(Agent* agent, DisplayObject* target_object, const std::vector<Obstacle*>& obstacles);
+	// Virtual Functions
+	virtual void Attack() {}
+	virtual void MoveToLOS() {}
+	virtual void MoveToPlayer() {}
+	virtual void MoveToRange() {}
+	virtual void Patrol() {}
+
+
 
 private:
 	void ChangeDirection();
