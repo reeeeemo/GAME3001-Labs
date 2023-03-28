@@ -10,10 +10,10 @@ class RangedCombatEnemy : public Agent
 {
 public:
 	// Constructor Function
-	CloseCombatEnemy();
+	RangedCombatEnemy();
 
 	// Destructor Function
-	~CloseCombatEnemy();
+	~RangedCombatEnemy();
 
 	// LifeCycle Functions
 	void Draw() override;
@@ -38,7 +38,7 @@ public:
 
 	// New for Lab 7.2
 	void Patrol() override;
-	void MoveToPlayer() override;
+	void MoveToRange() override;
 	DecisionTree* GetTree() const;
 
 private:
@@ -65,5 +65,5 @@ private:
 	void m_buildTree();
 };
 
-#endif /* defined (__CLOSE_COMBAT_ENEMY_H__)*/
+#endif /* defined (__RANGED_COMBAT_ENEMY_H__)*/
 

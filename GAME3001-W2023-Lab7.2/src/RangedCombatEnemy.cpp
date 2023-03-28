@@ -1,4 +1,4 @@
-#include "CloseCombatEnemy.h"
+#include "RangedCombatEnemy.h"
 
 #include "Game.h"
 #include "TextureManager.h"
@@ -8,12 +8,12 @@
 #include "PatrolAction.h"
 #include "EventManager.h"
 
-CloseCombatEnemy::CloseCombatEnemy() : m_maxSpeed(20.0f),
+RangedCombatEnemy::RangedCombatEnemy() : m_maxSpeed(20.0f),
 m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 500.0f))
 {
-	TextureManager::Instance().Load("../Assets/textures/d7_small.png", "close_combat_enemy");
+	TextureManager::Instance().Load("../Assets/textures/reliant_small.png", "ranged_combat_enemy");
 
-	const auto size = TextureManager::Instance().GetTextureSize("close_combat_enemy");
+	const auto size = TextureManager::Instance().GetTextureSize("ranged_combat_enemy");
 	SetWidth(static_cast<int>(size.x));
 	SetHeight(static_cast<int>(size.y));
 	GetTransform()->position = glm::vec2(0.0f, 0.0f);
@@ -40,13 +40,13 @@ m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 50
 	m_tree->Display();
 }
 
-CloseCombatEnemy::~CloseCombatEnemy()
+RangedCombatEnemy::~RangedCombatEnemy()
 = default;
 
-void CloseCombatEnemy::Draw()
+void RangedCombatEnemy::Draw()
 {
 	// draw the StarShip
-	TextureManager::Instance().Draw("close_combat_enemy", 
+	TextureManager::Instance().Draw("ranged_combat_enemy", 
 		GetTransform()->position, static_cast<double>(GetCurrentHeading()), 255, true);
 
 	if (EventManager::Instance().IsIMGUIActive()) 
@@ -59,59 +59,59 @@ void CloseCombatEnemy::Draw()
 	
 }
 
-void CloseCombatEnemy::Update()
+void RangedCombatEnemy::Update()
 {
 	// Determine which action to perform
 	m_tree->MakeDecision();
 }
 
-void CloseCombatEnemy::Clean()
+void RangedCombatEnemy::Clean()
 {
 }
 
-float CloseCombatEnemy::GetMaxSpeed() const
+float RangedCombatEnemy::GetMaxSpeed() const
 {
 	return m_maxSpeed;
 }
 
-float CloseCombatEnemy::GetTurnRate() const
+float RangedCombatEnemy::GetTurnRate() const
 {
 	return m_turnRate;
 }
 
-float CloseCombatEnemy::GetAccelerationRate() const
+float RangedCombatEnemy::GetAccelerationRate() const
 {
 	return m_accelerationRate;
 }
 
-glm::vec2 CloseCombatEnemy::GetDesiredVelocity() const
+glm::vec2 RangedCombatEnemy::GetDesiredVelocity() const
 {
 	return m_desiredVelocity;
 }
 
-void CloseCombatEnemy::SetMaxSpeed(const float speed)
+void RangedCombatEnemy::SetMaxSpeed(const float speed)
 {
 	m_maxSpeed = speed;
 }
 
-void CloseCombatEnemy::SetTurnRate(const float angle)
+void RangedCombatEnemy::SetTurnRate(const float angle)
 {
 	m_turnRate = angle;
 }
 
-void CloseCombatEnemy::SetAccelerationRate(const float rate)
+void RangedCombatEnemy::SetAccelerationRate(const float rate)
 {
 	m_accelerationRate = rate;
 }
 
-void CloseCombatEnemy::SetDesiredVelocity(const glm::vec2 target_position)
+void RangedCombatEnemy::SetDesiredVelocity(const glm::vec2 target_position)
 {
 	//SetTargetPosition(target_position);
 	m_desiredVelocity = Util::Normalize(target_position - GetTransform()->position);
 	//GetRigidBody()->velocity = m_desiredVelocity - GetRigidBody()->velocity;
 }
 
-void CloseCombatEnemy::Seek()
+void RangedCombatEnemy::Seek()
 {
 	// New for Lab 7.1
 	// Find next waypoint if within 10px of the current waypoint
@@ -137,7 +137,7 @@ void CloseCombatEnemy::Seek()
 		GetRigidBody()->acceleration = GetCurrentDirection() * GetAccelerationRate();
 }
 
-void CloseCombatEnemy::LookWhereYoureGoing(const glm::vec2 target_direction)
+void RangedCombatEnemy::LookWhereYoureGoing(const glm::vec2 target_direction)
 {
 	float target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction) -90.0f;
 
@@ -169,12 +169,12 @@ void CloseCombatEnemy::LookWhereYoureGoing(const glm::vec2 target_direction)
 	UpdateWhiskers(GetWhiskerAngle());
 }
 
-void CloseCombatEnemy::Reset()
+void RangedCombatEnemy::Reset()
 {
 	GetTransform()->position = m_startPosition;
 }
 
-void CloseCombatEnemy::Patrol()
+void RangedCombatEnemy::Patrol()
 {
 	if (GetActionState() != ActionState::PATROL) {
 		// Initialize
@@ -183,21 +183,21 @@ void CloseCombatEnemy::Patrol()
 	m_move();
 }
 
-void CloseCombatEnemy::MoveToPlayer()
+void RangedCombatEnemy::MoveToRange()
 {
-	if (GetActionState() != ActionState::MOVE_TO_PLAYER) {
+	if (GetActionState() != ActionState::MOVE_TO_RANGE) {
 		// Initialize
-		SetActionState(ActionState::MOVE_TO_PLAYER);
+		SetActionState(ActionState::MOVE_TO_RANGE);
 	}
 	// TODO: setup another action to take when moving to the player.
 }
 
-DecisionTree* CloseCombatEnemy::GetTree() const
+DecisionTree* RangedCombatEnemy::GetTree() const
 {
 	return m_tree;
 }
 
-void CloseCombatEnemy::m_move()
+void RangedCombatEnemy::m_move()
 {
 	Seek(); // Get our target for this frame
 
@@ -228,7 +228,7 @@ void CloseCombatEnemy::m_move()
 	GetRigidBody()->velocity = Util::Clamp(GetRigidBody()->velocity, GetMaxSpeed());
 }
 
-void CloseCombatEnemy::m_buildPatrolPath()
+void RangedCombatEnemy::m_buildPatrolPath()
 {
 	m_patrolPath.push_back(glm::vec2(760, 40)); // Top Right Corner node
 
@@ -242,7 +242,7 @@ void CloseCombatEnemy::m_buildPatrolPath()
 
 }
 
-void CloseCombatEnemy::m_buildTree()
+void RangedCombatEnemy::m_buildTree()
 {
 	//Conditions
 
