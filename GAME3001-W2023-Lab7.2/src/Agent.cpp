@@ -168,7 +168,7 @@ void Agent::UpdateWhiskers(const float angle)
 	SetRightRightLOSEndPoint(GetTransform()->position + glm::vec2(x, -y) * GetLOSDistance() * 0.75f);
 }
 
-bool Agent::CheckAgentLOSToTarget(Agent* agent, DisplayObject* target_object, const std::vector<Obstacle*>& obstacles)
+bool Agent::CheckAgentLOSToTarget(DisplayObject* target_object, const std::vector<Obstacle*>& obstacles)
 {
 	bool has_LOS = false; // default - No LOS
 	SetHasLOS(has_LOS);
@@ -185,13 +185,13 @@ bool Agent::CheckAgentLOSToTarget(Agent* agent, DisplayObject* target_object, co
 		std::vector<DisplayObject*> contact_list;
 		for (const auto obstacle : obstacles)
 		{
+			const auto agent_to_object_distance = Util::GetClosestEdge(GetTransform()->position, obstacle);
+			if (agent_to_object_distance > agent_to_range) { continue; }
 			if ((obstacle->GetType() != GameObjectType::AGENT)
 				&& (obstacle->GetType() != GameObjectType::PATH_NODE)
 				&& (obstacle->GetType() != GameObjectType::TARGET))
 			{
-				const auto agent_to_object_distance = Util::GetClosestEdge(GetTransform()->position, obstacle);
-
-				if (agent_to_object_distance > agent_to_range) { contact_list.push_back(obstacle); } // target is out of range
+				 contact_list.push_back(obstacle); // target is out of range
 
 			}
 		}

@@ -124,6 +124,7 @@ void DecisionTree::Clean()
 	m_closeCombatNode = nullptr;
 }
 
+// Traverse the tree in order
 void DecisionTree::MakeDecision() const
 {
 	TreeNode* current_node = m_treeNodeList[0]; // Root node.
@@ -138,38 +139,3 @@ void DecisionTree::MakeDecision() const
 	dynamic_cast<ActionNode*>(current_node)->Action();
 }
 
-
-//void DecisionTree::m_buildTree()
-//{
-//	// Conditions
-//
-//	// Create and add the root node
-//	m_LOSNode = new LOSCondition;
-//	m_treeNodeList.push_back(m_LOSNode);
-//
-//	m_radiusNode = new RadiusCondition();
-//	AddNode(m_LOSNode, m_radiusNode, TreeNodeType::LEFT_TREE_NODE);
-//	m_closeCombatNode = new CloseCombatCondition();
-//	AddNode(m_LOSNode, m_closeCombatNode, TreeNodeType::RIGHT_TREE_NODE);
-//	m_treeNodeList.push_back(m_closeCombatNode);
-//
-//	// Actions
-//
-//	// Left Sub-tree
-//	TreeNode* patrolNode = AddNode(m_radiusNode, new PatrolAction(), TreeNodeType::LEFT_TREE_NODE);
-//	dynamic_cast<ActionNode*>(patrolNode)->SetAgent(m_agent);
-//	m_treeNodeList.push_back(patrolNode);
-//
-//	TreeNode* moveToLOSNode = AddNode(m_radiusNode, new MoveToLOSAction(), TreeNodeType::RIGHT_TREE_NODE);
-//	dynamic_cast<ActionNode*>(moveToLOSNode)->SetAgent(m_agent);
-//	m_treeNodeList.push_back(moveToLOSNode);
-//
-//	// Right sub-tree
-//	TreeNode* moveToPlayerNode = AddNode(m_closeCombatNode, new MoveToPlayerAction(), TreeNodeType::LEFT_TREE_NODE);
-//	dynamic_cast<ActionNode*>(moveToPlayerNode)->SetAgent(m_agent);
-//	m_treeNodeList.push_back(moveToPlayerNode);
-//
-//	TreeNode* attackNode = AddNode(m_closeCombatNode, new AttackAction(), TreeNodeType::RIGHT_TREE_NODE);
-//	dynamic_cast<ActionNode*>(attackNode)->SetAgent(m_agent);
-//	m_treeNodeList.push_back(attackNode);
-//}

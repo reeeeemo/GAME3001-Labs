@@ -52,11 +52,9 @@ void CloseCombatEnemy::Draw()
 	if (EventManager::Instance().IsIMGUIActive()) 
 	{
 		// draw the LOS Line
-		Util::DrawLine(GetTransform()->position +  GetCurrentDirection() + 0.5f * static_cast<float>(GetWidth()),
-			GetTransform()->position + GetCurrentDirection() * GetLOSDistance(), GetLOSColour());
+		Util::DrawLine(GetTransform()->position + GetCurrentDirection() * 0.5f * static_cast<float>(GetWidth()),
+			GetMiddleLOSEndPoint(), GetLOSColour());
 	}
-
-	
 }
 
 void CloseCombatEnemy::Update()

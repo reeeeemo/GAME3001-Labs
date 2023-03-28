@@ -64,8 +64,6 @@ private:
 	std::vector<TreeNode*> m_treeNodeList;
 
 	// Private methods
-	//void m_buildTree();
-
 };
 
 #endif //!__DECISION_TREE_H__

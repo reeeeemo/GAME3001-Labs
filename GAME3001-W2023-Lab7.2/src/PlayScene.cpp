@@ -37,7 +37,9 @@ void PlayScene::Draw()
 void PlayScene::Update()
 {
 	UpdateDisplayList();
-	m_checkAgentLOS(m_pStarShip, m_pTarget);
+	
+	m_pStarShip->GetTree()->GetLOSNode()->SetLOS(m_pStarShip->CheckAgentLOSToTarget(m_pTarget, m_pObstacles));
+
 	switch(m_LOSMode)
 	{
 	case LOSMode::TARGET:
@@ -96,7 +98,7 @@ void PlayScene::Start()
 	m_pTarget->GetTransform()->position = glm::vec2(550.0f, 300.0f);
 	AddChild(m_pTarget, 2);
 
-	m_pStarShip = new StarShip();
+	m_pStarShip = new RangedCombatEnemy();
 	m_pStarShip->GetTransform()->position = glm::vec2(150.0f, 300.0f);
 	AddChild(m_pStarShip, 2);
 
