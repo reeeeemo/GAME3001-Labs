@@ -245,37 +245,37 @@ void CloseCombatEnemy::m_buildTree()
 	//Conditions
 
 	// Create and add the root node
-	m_tree->SetLOSNode(new LOSCondition());
+	m_tree->SetLOSNode(new LOSCondition(this));
 
 	m_tree->GetTree().push_back(m_tree->GetLOSNode());
 
 
-	m_tree->SetRadiusNode(new RadiusCondition());
+	m_tree->SetRadiusNode(new RadiusCondition(this));
 	m_tree->AddNode(m_tree->GetLOSNode(), m_tree->GetRadiusNode(), TreeNodeType::LEFT_TREE_NODE);
 	m_tree->GetTree().push_back(m_tree->GetRadiusNode());
 
 
-	m_tree->SetCloseCombatNode(new CloseCombatCondition());
+	m_tree->SetCloseCombatNode(new CloseCombatCondition(this));
 	m_tree->AddNode(m_tree->GetLOSNode(), m_tree->GetCloseCombatNode(), TreeNodeType::RIGHT_TREE_NODE);
 	m_tree->GetTree().push_back(m_tree->GetCloseCombatNode());
 
 	// Actions
 
 	// Left Sub-tree
-	TreeNode* patrolNode = m_tree->AddNode(m_tree->GetRadiusNode(), new PatrolAction(), TreeNodeType::LEFT_TREE_NODE);
-	dynamic_cast<ActionNode*>(patrolNode)->SetAgent(this);
+	TreeNode* patrolNode = m_tree->AddNode(m_tree->GetRadiusNode(), new PatrolAction(this), TreeNodeType::LEFT_TREE_NODE);
+	//dynamic_cast<ActionNode*>(patrolNode)->SetAgent(this);
 	m_tree->GetTree().push_back(patrolNode);
 
-	TreeNode* moveToLOSNode = m_tree->AddNode(m_tree->GetRadiusNode(), new MoveToLOSAction(), TreeNodeType::RIGHT_TREE_NODE);
-	dynamic_cast<ActionNode*>(moveToLOSNode)->SetAgent(this);
+	TreeNode* moveToLOSNode = m_tree->AddNode(m_tree->GetRadiusNode(), new MoveToLOSAction(this), TreeNodeType::RIGHT_TREE_NODE);
+	//dynamic_cast<ActionNode*>(moveToLOSNode)->SetAgent(this);
 	m_tree->GetTree().push_back(moveToLOSNode);
 
 	// Right sub-tree
-	TreeNode* moveToPlayerNode = m_tree->AddNode(m_tree->GetCloseCombatNode(), new MoveToPlayerAction(), TreeNodeType::LEFT_TREE_NODE);
-	dynamic_cast<ActionNode*>(moveToPlayerNode)->SetAgent(this);
+	TreeNode* moveToPlayerNode = m_tree->AddNode(m_tree->GetCloseCombatNode(), new MoveToPlayerAction(this), TreeNodeType::LEFT_TREE_NODE);
+	//dynamic_cast<ActionNode*>(moveToPlayerNode)->SetAgent(this);
 	m_tree->GetTree().push_back(moveToPlayerNode);
 
-	TreeNode* attackNode = m_tree->AddNode(m_tree->GetCloseCombatNode(), new AttackAction(), TreeNodeType::RIGHT_TREE_NODE);
-	dynamic_cast<ActionNode*>(attackNode)->SetAgent(this);
+	TreeNode* attackNode = m_tree->AddNode(m_tree->GetCloseCombatNode(), new AttackAction(this), TreeNodeType::RIGHT_TREE_NODE);
+	//dynamic_cast<ActionNode*>(attackNode)->SetAgent(this);
 	m_tree->GetTree().push_back(attackNode);
 }
