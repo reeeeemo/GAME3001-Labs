@@ -298,16 +298,25 @@ void RangedCombatEnemy::m_buildTree()
 
 	m_tree->GetTree().push_back(m_tree->GetEnemyHealthNode());
 
+	m_buildLeftTree();
+	m_buildRightTree();
+}
+
+void RangedCombatEnemy::m_buildLeftTree()
+{
 	// Left Subtree Level 1 -> Flee Action
 	TreeNode* fleeNode = m_tree->AddNode(m_tree->GetEnemyHealthNode(), new FleeAction(this), TreeNodeType::LEFT_TREE_NODE);
 	m_tree->GetTree().push_back(fleeNode);
+}
 
+void RangedCombatEnemy::m_buildRightTree()
+{
 	// Right Subtree Level 1 -> Enemy Hit Condition
 	m_tree->SetEnemyHitNode(new EnemyHitCondition(this, false));
 	m_tree->AddNode(m_tree->GetEnemyHealthNode(), m_tree->GetEnemyHitNode(), TreeNodeType::RIGHT_TREE_NODE);
 	m_tree->GetTree().push_back(m_tree->GetEnemyHitNode());
 
-	// Left Subtree Level 2 -> Player Detected Condition
+	// Right Left Subtree Level 2 -> Player Detected Condition
 	m_tree->SetPlayerDetectedNode(new PlayerDetectedCondition(this));
 	m_tree->AddNode(m_tree->GetEnemyHitNode(), m_tree->GetPlayerDetectedNode(), TreeNodeType::LEFT_TREE_NODE);
 
@@ -339,7 +348,7 @@ void RangedCombatEnemy::m_buildTree()
 
 	// Left Right Subtree Level 4 -> Ranged Combat Condition
 	m_tree->SetRangedCombatNode(new RangedCombatCondition(this));
-	m_tree->AddNode(m_tree->GetLOSNode(), m_tree->GetRangedCombatNode(), TreeNodeType::RIGHT_TREE_NODE);
+	m_tree->AddNode(LOSNodeLeft, m_tree->GetRangedCombatNode(), TreeNodeType::RIGHT_TREE_NODE);
 	m_tree->GetTree().push_back(m_tree->GetRangedCombatNode());
 
 	// Left Left Subtree Level 5 -> Move to Range Action
@@ -351,13 +360,4 @@ void RangedCombatEnemy::m_buildTree()
 	TreeNode* attackNode = m_tree->AddNode(m_tree->GetRangedCombatNode(), new AttackAction(this), TreeNodeType::RIGHT_TREE_NODE);
 	//dynamic_cast<ActionNode*>(attackNode)->SetAgent(this);
 	m_tree->GetTree().push_back(attackNode);
-
-}
-
-void RangedCombatEnemy::m_buildLeftTree()
-{
-}
-
-void RangedCombatEnemy::m_buildRightTree()
-{
 }
