@@ -7,7 +7,7 @@
 class RangedCombatCondition : public ConditionNode
 {
 public:
-	RangedCombatCondition(bool within_combat_range = false);
+	RangedCombatCondition(Agent* agent = nullptr, bool within_combat_range = false);
 
 	virtual ~RangedCombatCondition();
 

@@ -219,6 +219,9 @@
     <ClCompile Include="..\src\PlayerDetectedCondition.cpp">
       <Filter>Decision\Conditions</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\MoveToCoverAction.cpp">
+      <Filter>Decision\Actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StartScene.h">
@@ -463,6 +466,9 @@
     </ClInclude>
     <ClInclude Include="..\src\PlayerDetectedCondition.h">
       <Filter>Decision\Conditions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MoveToCoverAction.h">
+      <Filter>Decision\Actions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

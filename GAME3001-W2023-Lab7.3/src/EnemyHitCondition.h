@@ -7,12 +7,13 @@
 class EnemyHitCondition : public ConditionNode
 {
 public:
-	EnemyHitCondition(bool hit = false);
+	EnemyHitCondition(Agent* agent = nullptr, bool hit = false);
 
 	virtual ~EnemyHitCondition();
 
 	// Getters and Setters
 	void SetHit(bool state);
+	bool GetHit() const;
 
 	virtual bool Condition() override;
 private:

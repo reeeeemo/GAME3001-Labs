@@ -175,6 +175,7 @@
     <ClCompile Include="..\src\FleeAction.cpp" />
     <ClCompile Include="..\src\ImGuiWindowFrame.cpp" />
     <ClCompile Include="..\src\LOSCondition.cpp" />
+    <ClCompile Include="..\src\MoveToCoverAction.cpp" />
     <ClCompile Include="..\src\MoveToLOSAction.cpp" />
     <ClCompile Include="..\src\MoveToPlayerAction.cpp" />
     <ClCompile Include="..\src\MoveToRange.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="..\src\InputType.h" />
     <ClInclude Include="..\src\LOSCondition.h" />
     <ClInclude Include="..\src\LOSMode.h" />
+    <ClInclude Include="..\src\MoveToCoverAction.h" />
     <ClInclude Include="..\src\MoveToLOSAction.h" />
     <ClInclude Include="..\src\MoveToPlayerAction.h" />
     <ClInclude Include="..\src\MoveToRange.h" />

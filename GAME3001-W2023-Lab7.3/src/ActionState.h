@@ -11,5 +11,6 @@ enum class ActionState
 	MOVE_TO_RANGE,
 	FLEE,
 	WAIT_BEHIND_COVER,
+	MOVE_TO_COVER,
 };
 #endif /* defined (__ACTION_STATE__)*/

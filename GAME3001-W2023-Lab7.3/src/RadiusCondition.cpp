@@ -1,9 +1,9 @@
 #include "RadiusCondition.h"
 
-RadiusCondition::RadiusCondition(const bool within_radiu)
+RadiusCondition::RadiusCondition(Agent* agent, const bool within_radius) : ConditionNode(agent)
 {
 	m_name = "Close Combat Condition";
-	SetIsWithinRadius(within_radiu);
+	SetIsWithinRadius(within_radius);
 }
 
 RadiusCondition::~RadiusCondition()

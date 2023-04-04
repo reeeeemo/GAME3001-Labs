@@ -7,16 +7,17 @@
 class PlayerDetectedCondition : public ConditionNode
 {
 public:
-	PlayerDetectedCondition(bool playerDetected = false);
+	PlayerDetectedCondition(Agent* agent = nullptr, bool playerDetected = false);
 
 	virtual ~PlayerDetectedCondition();
 
 	// Getters and Setters
 	void SetPlayerDetected(bool state);
+	bool GetDetected() const;
 
 	virtual bool Condition() override;
 private:
-	bool isDetected;
+	bool m_detected;
 };
 
 #endif // !__PLAYER_DETECTED_CONDITION_H__
