@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-MoveToRangeAction::MoveToRangeAction()
+MoveToRangeAction::MoveToRangeAction(Agent* agent) : ActionNode(agent)
 {
 	m_name = "Move to Range Action";
 }
@@ -17,4 +17,5 @@ void MoveToRangeAction::Action()
 		std::cout << "Performing " << m_name << std::endl;
 		GetAgent()->SetActionState(ActionState::MOVE_TO_RANGE);
 	}
+	GetAgent()->MoveToRange();
 }

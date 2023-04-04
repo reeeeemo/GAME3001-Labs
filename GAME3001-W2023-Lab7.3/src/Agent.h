@@ -32,6 +32,13 @@ public:
 	[[nodiscard]] glm::vec2 GetRightLOSEndPoint() const;
 	[[nodiscard]] glm::vec2 GetRightRightLOSEndPoint() const;
 
+
+	// New for Lab 7.3
+	[[nodiscard]] int GetHealth() const;
+	void SetHealth(int value);
+	void TakeDamage(int value);
+
+
 	bool* GetCollisionWhiskers(); // Returns the entire array
 	glm::vec4 GetLineColour(int index) const;
 	float GetWhiskerAngle() const;
@@ -71,7 +78,10 @@ public:
 	virtual void MoveToPlayer() {}
 	virtual void MoveToRange() {}
 	virtual void Patrol() {}
-
+	// New for Lab 7.3
+	virtual void Flee() {}
+	virtual void MoveToCover() {}
+	virtual void WaitBehindCover() {}
 
 
 private:
@@ -98,6 +108,8 @@ private:
 	// Action state
 	ActionState m_state;
 
+	// New for lab 7.3
+	int m_health = 100;
 };
 
 

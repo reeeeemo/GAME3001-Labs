@@ -7,7 +7,7 @@
 class WaitBehindCoverAction : public ActionNode
 {
 public:
-	WaitBehindCoverAction();
+	WaitBehindCoverAction(Agent* agent = nullptr);
 	virtual ~WaitBehindCoverAction();
 
 	virtual void Action() override;

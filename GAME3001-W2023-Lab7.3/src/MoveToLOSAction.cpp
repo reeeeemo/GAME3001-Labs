@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-MoveToLOSAction::MoveToLOSAction()
+MoveToLOSAction::MoveToLOSAction(Agent* agent) : ActionNode(agent)
 {
 	m_name = "MoveToLOS Action";
 }
@@ -17,4 +17,5 @@ void MoveToLOSAction::Action()
 		std::cout << "Performing " << m_name << std::endl;
 		GetAgent()->SetActionState(ActionState::MOVE_TO_LOS);
 	}
+	GetAgent()->MoveToLOS();
 }

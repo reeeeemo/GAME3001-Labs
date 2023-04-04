@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-FleeAction::FleeAction()
+FleeAction::FleeAction(Agent* agent) : ActionNode(agent)
 {
 	m_name = "Flee Action";
 }
@@ -17,4 +17,5 @@ void FleeAction::Action()
 		std::cout << "Performing " << m_name << std::endl;
 		GetAgent()->SetActionState(ActionState::FLEE);
 	}
+	//GetAgent()->Flee();
 }

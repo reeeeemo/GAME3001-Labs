@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-WaitBehindCoverAction::WaitBehindCoverAction()
+WaitBehindCoverAction::WaitBehindCoverAction(Agent* agent) : ActionNode(agent)
 {
 	m_name = "Wait Behind Cover Action";
 }
@@ -17,4 +17,5 @@ void WaitBehindCoverAction::Action()
 		std::cout << "Performing " << m_name << std::endl;
 		GetAgent()->SetActionState(ActionState::WAIT_BEHIND_COVER);
 	}
+	GetAgent()->WaitBehindCover();
 }

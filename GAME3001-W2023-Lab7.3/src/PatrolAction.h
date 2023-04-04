@@ -7,7 +7,7 @@
 class PatrolAction : public ActionNode
 {
 public:
-	PatrolAction();
+	PatrolAction(Agent* agent = nullptr);
 	virtual ~PatrolAction();
 
 	virtual void Action() override;

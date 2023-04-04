@@ -7,7 +7,7 @@
 class AttackAction : public ActionNode
 {
 public:
-	AttackAction();
+	AttackAction(Agent* agent = nullptr);
 	virtual ~AttackAction();
 
 	virtual void Action() override;

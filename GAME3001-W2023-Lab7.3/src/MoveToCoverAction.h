@@ -7,7 +7,7 @@
 class MoveToCoverAction : public ActionNode
 {
 public:
-	MoveToCoverAction();
+	MoveToCoverAction(Agent* agent = nullptr);
 	virtual ~MoveToCoverAction();
 
 	virtual void Action() override;

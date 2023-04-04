@@ -38,7 +38,7 @@ void PlayScene::Update()
 {
 	UpdateDisplayList();
 	
-	m_pStarShip->GetTree()->GetLOSNode()->SetLOS(m_pStarShip->CheckAgentLOSToTarget(m_pTarget, m_pObstacles));
+	m_pStarShip->SetHasLOS(m_pStarShip->CheckAgentLOSToTarget(m_pTarget, m_pObstacles));
 
 	switch(m_LOSMode)
 	{

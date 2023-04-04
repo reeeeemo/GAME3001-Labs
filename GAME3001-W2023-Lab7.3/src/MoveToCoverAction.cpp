@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-MoveToCoverAction::MoveToCoverAction()
+MoveToCoverAction::MoveToCoverAction(Agent* agent) : ActionNode(agent)
 {
 	m_name = "Move To Cover Action";
 }
@@ -17,4 +17,5 @@ void MoveToCoverAction::Action()
 		std::cout << "Performing " << m_name << std::endl;
 		GetAgent()->SetActionState(ActionState::MOVE_TO_COVER);
 	}
+	GetAgent()->MoveToCover();
 }

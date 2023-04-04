@@ -65,6 +65,21 @@ glm::vec2 Agent::GetRightRightLOSEndPoint() const
 	return m_rightRightLOSEndPoint;
 }
 
+int Agent::GetHealth() const
+{
+	return m_health;
+}
+
+void Agent::SetHealth(int value)
+{
+	m_health = value;
+}
+
+void Agent::TakeDamage(int value)
+{
+	m_health -= value;
+}
+
 void Agent::SetLeftLeftLOSEndPoint(const glm::vec2 point)
 {
 	m_leftLeftLOSEndPoint = point;
