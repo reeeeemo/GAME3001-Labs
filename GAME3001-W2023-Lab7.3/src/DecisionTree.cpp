@@ -53,6 +53,36 @@ RangedCombatCondition* DecisionTree::GetRangedCombatNode() const
 	return m_rangedCombatNode;
 }
 
+EnemyHealthCondition* DecisionTree::GetEnemyHealthNode() const
+{
+	return m_enemyHealthConditionNode;
+}
+
+EnemyHitCondition* DecisionTree::GetEnemyHitNode() const
+{
+	return m_enemyHitConditionNode;
+}
+
+PlayerDetectedCondition* DecisionTree::GetPlayerDetectedNode() const
+{
+	return m_playerDetectedConditionNode;
+}
+
+void DecisionTree::SetEnemyHealthNode(EnemyHealthCondition* node)
+{
+	m_enemyHealthConditionNode = node;
+}
+
+void DecisionTree::SetEnemyHitNode(EnemyHitCondition* node)
+{
+	m_enemyHitConditionNode = node;
+}
+
+void DecisionTree::SetPlayerDetectedNode(PlayerDetectedCondition* node)
+{
+	m_playerDetectedConditionNode = node;
+}
+
 std::vector<TreeNode*>& DecisionTree::GetTree()
 {
 	return m_treeNodeList;

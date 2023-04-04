@@ -41,6 +41,13 @@ public:
 	void MoveToRange() override;
 	DecisionTree* GetTree() const;
 
+	// New for Lab 7.3
+	void Flee() override;
+	void MoveToLOS() override;
+	void MoveToCover() override;
+	void WaitBehindCover() override;
+	void Attack() override;
+
 private:
 	// private movement variables
 	float m_maxSpeed;
@@ -63,6 +70,8 @@ private:
 	// New for Lab 7.2
 	DecisionTree* m_tree;
 	void m_buildTree();
+	void m_buildLeftTree();
+	void m_buildRightTree();
 };
 
 #endif /* defined (__RANGED_COMBAT_ENEMY_H__)*/
