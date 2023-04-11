@@ -27,7 +27,7 @@ bool CollisionManager::SquaredRadiusCheck(GameObject* object1, GameObject* objec
 			switch (object2->GetType()) {
 			case GameObjectType::TARGET:
 				std::cout << "Collision with Target!" << std::endl;
-				SoundManager::Instance().PlaySound("yay", 0);
+				SoundManager::Instance().PlaySoundFX("yay", 0);
 
 				break;
 			default:
@@ -236,7 +236,7 @@ bool CollisionManager::LineAABBCheck(Ship* object1, GameObject* object2)
 		{
 		case GameObjectType::TARGET:
 			std::cout << "Collision with Obstacle!" << std::endl;
-			SoundManager::Instance().PlaySound("yay", 0);
+			SoundManager::Instance().PlaySoundFX("yay", 0);
 
 			break;
 		default:
@@ -289,11 +289,11 @@ bool CollisionManager::CircleAABBCheck(GameObject* object1, GameObject* object2)
 			{
 			case GameObjectType::TARGET:
 				std::cout << "Collision with Planet!" << std::endl;
-				SoundManager::Instance().PlaySound("yay", 0);
+				SoundManager::Instance().PlaySoundFX("yay", 0);
 				break;
 			case GameObjectType::SHIP:
 			{
-				SoundManager::Instance().PlaySound("thunder", 0);
+				SoundManager::Instance().PlaySoundFX("thunder", 0);
 				const auto velocity_x = object1->GetRigidBody()->velocity.x;
 				const auto velocity_y = object1->GetRigidBody()->velocity.y;
 
@@ -325,7 +325,7 @@ bool CollisionManager::CircleAABBCheck(GameObject* object1, GameObject* object2)
 			}
 			case GameObjectType::AGENT:
 			{
-				SoundManager::Instance().PlaySound("yay", 0);
+				SoundManager::Instance().PlaySoundFX("yay", 0);
 			}
 			break;
 			default:

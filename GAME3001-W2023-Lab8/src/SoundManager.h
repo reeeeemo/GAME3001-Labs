@@ -27,7 +27,7 @@ public:
 	void StopMusic(int fade_out = 0) const;
 	void PauseMusic() const;
 	void ResumeMusic() const;
-	void PlaySound(const std::string& id, int loop = 0, int channel = -1);
+	void PlaySoundFX(const std::string& id, int loop = 0, int channel = -1);
 	void SetMusicVolume(const int vol) const;
 	void SetSoundVolume(const int vol) const;
 	void SetAllVolume(const int vol) const;

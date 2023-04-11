@@ -10,7 +10,7 @@ class RangedCombatEnemy : public Agent
 {
 public:
 	// Constructor Function
-	RangedCombatEnemy();
+	RangedCombatEnemy(Scene* scene);
 
 	// Destructor Function
 	~RangedCombatEnemy();
@@ -72,6 +72,11 @@ private:
 	void m_buildTree();
 	void m_buildLeftTree();
 	void m_buildRightTree();
+
+	// New for Lab 8.
+	int m_fireCounter; // Number of frames that have elapsed
+	int m_fireCounterMax; // Frame delay
+	Scene* m_pScene; // PlayScene
 };
 
 #endif /* defined (__RANGED_COMBAT_ENEMY_H__)*/

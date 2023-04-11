@@ -1,7 +1,7 @@
 #include "TorpedoK.h"
 #include "TextureManager.h"
 
-TorpedoK::TorpedoK(float speed): m_currentAnimationState(TorpedoAnimationState::FIRED), m_speed(speed)
+TorpedoK::TorpedoK(float speed, glm::vec2 direction): m_currentAnimationState(TorpedoAnimationState::FIRED), m_speed(speed)
 {
 	TextureManager::Instance().LoadSpriteSheet(
 		"../Assets/sprites/torpedo.txt",
@@ -22,7 +22,7 @@ TorpedoK::TorpedoK(float speed): m_currentAnimationState(TorpedoAnimationState::
 	GetRigidBody()->isColliding = false;
 	SetType(GameObjectType::PROJECTILE);
 
-	m_direction = { m_direction.x * speed, m_direction.y * speed };
+	m_direction = { direction.x * speed, direction.y * speed };
 	
 	BuildAnimations();
 }
