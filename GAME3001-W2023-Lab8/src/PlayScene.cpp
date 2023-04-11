@@ -66,6 +66,12 @@ void PlayScene::Update()
 		break;
 	}
 
+	// Collision check
+	for (auto torpedo : m_pTorepdoesK)
+	{
+		CollisionManager::CircleAABBCheck(torpedo, m_pTarget);
+	}
+
 }
 
 void PlayScene::Clean()
@@ -137,7 +143,7 @@ void PlayScene::Start()
 	SoundManager::Instance().SetMusicVolume(16);
 
 	// Play Music
-	SoundManager::Instance().PlayMusic("mutara");
+	SoundManager::Instance().PlayMusic("klingon");
 
 	ImGuiWindowFrame::Instance().SetGuiFunction(std::bind(&PlayScene::GUI_Function, this));
 }

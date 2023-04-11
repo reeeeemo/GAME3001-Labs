@@ -141,9 +141,10 @@ void RangedCombatEnemy::Seek()
 		GetRigidBody()->acceleration = GetCurrentDirection() * GetAccelerationRate();
 }
 
-void RangedCombatEnemy::LookWhereYoureGoing(const glm::vec2 target_direction)
+void RangedCombatEnemy::LookWhereYoureGoing(const glm::vec2 target_direction, bool direction_hack)
 {
-	float target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction) -90.0f;
+	const float direction_axis = direction_hack ? 90.0f : 0.0f;
+	float target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction) - direction_axis;
 
 	last_rotation = target_rotation;
 
@@ -248,7 +249,7 @@ void RangedCombatEnemy::Attack()
 	// New for lab 8
 	// Need to get the target object from Play Scene
 	glm::vec2 target_direction = Util::Normalize(scene->GetTarget()->GetTransform()->position - GetTransform()->position);
-	LookWhereYoureGoing(target_direction);
+	LookWhereYoureGoing(target_direction, false);
 
 	// Wait for a number of frames before firing = frame delay
 	if (m_fireCounter++ % m_fireCounterMax == 0)

@@ -1,7 +1,7 @@
 #include "TorpedoK.h"
 #include "TextureManager.h"
 
-TorpedoK::TorpedoK(float speed, glm::vec2 direction): m_currentAnimationState(TorpedoAnimationState::FIRED), m_speed(speed)
+TorpedoK::TorpedoK(float speed = 0.0f, glm::vec2 direction = { 0.0, 0.0 }): m_currentAnimationState(TorpedoAnimationState::FIRED), m_speed(speed)
 {
 	TextureManager::Instance().LoadSpriteSheet(
 		"../Assets/sprites/torpedo.txt",

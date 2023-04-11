@@ -8,7 +8,7 @@
 class Torpedo final : public Sprite
 {
 public:
-	Torpedo(float speed = 0.0f, glm::vec2 direction);
+	Torpedo(float speed, glm::vec2 direction);
 	~Torpedo() override;
 
 	// Life Cycle Methods
