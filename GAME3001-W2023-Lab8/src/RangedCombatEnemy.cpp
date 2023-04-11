@@ -30,7 +30,7 @@ m_pScene(scene), m_fireCounter(0), m_fireCounterMax(60)
 
 	
 	SetCurrentHeading(0.0f); // Current facing angle
-	SetLOSDistance(400.0f);
+	SetLOSDistance(1000.0f);
 	SetWhiskerAngle(45.0f);
 	SetLOSColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)); // Default LOS Colour = Red
 

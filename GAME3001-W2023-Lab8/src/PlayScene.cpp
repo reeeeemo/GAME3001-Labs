@@ -97,6 +97,27 @@ void PlayScene::HandleEvents()
 	{
 		Game::Instance().ChangeSceneState(SceneState::END);
 	}
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_F))
+	{
+		// Torpedo will fire
+		m_pTorpedoes.push_back(new Torpedo(0.0f, {})); // Instantiate a torpedo
+		m_pTorpedoes.back()->GetTransform()->position = m_pTarget->GetTransform()->position; // Set the spawn point
+		SoundManager::Instance().SetSoundVolume(50);
+		SoundManager::Instance().PlaySoundFX("torpedo");
+		AddChild(m_pTorpedoes.back(), 2);
+	}
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K))
+	{
+		m_pStarShip->TakeDamage(10); // StarShip takes fixed dmg.
+		m_pStarShip->GetTree()->GetEnemyHitNode()->SetHit(true);
+		std::cout << "Starship at" << m_pStarShip->GetHealth() << "%. " << std::endl;
+	}
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_R))
+	{
+		m_pStarShip->SetHealth(100); // StarShip takes fixed dmg.
+		m_pStarShip->GetTree()->GetEnemyHitNode()->SetHit(false);
+		m_pStarShip->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
+	}
 }
 
 void PlayScene::Start()
