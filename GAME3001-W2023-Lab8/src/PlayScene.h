@@ -19,7 +19,7 @@
 #include "TorpedoKlingon.h"
 #include "TorpedoFederation.h"
 
-#define CLOSE_COMBAT
+//#define CLOSE_COMBAT
 
 class PlayScene : public Scene
 {

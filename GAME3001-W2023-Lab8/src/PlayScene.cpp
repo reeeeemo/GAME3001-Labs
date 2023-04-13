@@ -54,7 +54,7 @@ void PlayScene::Update()
 	m_pStarShip->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < starShipRadius);
 
 	// Within LOS Distance.. but not too close (optimum firing range)
-	m_pStarShip->GetTree()->GetRangedCombatNode()->SetIsWithinCombatRange(distance >= starShipRadius && distance <= 350);
+	m_pStarShip->GetTree()->GetRangedCombatNode()->SetIsWithinCombatRange(distance <= starShipRadius && distance <= 350);
 #endif
 	
 
@@ -102,6 +102,7 @@ void PlayScene::HandleEvents()
 	{
 		Game::Instance().ChangeSceneState(SceneState::END);
 	}
+#if !defined(CLOSE_COMBAT)
 	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_F))
 	{
 		// Torpedo will fire
@@ -110,6 +111,8 @@ void PlayScene::HandleEvents()
 		SoundManager::Instance().SetSoundVolume(50);
 		SoundManager::Instance().PlaySoundFX("torpedo");
 	}
+#endif
+	
 	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K))
 	{
 		m_pStarShip->TakeDamage(10); // StarShip takes fixed dmg.
