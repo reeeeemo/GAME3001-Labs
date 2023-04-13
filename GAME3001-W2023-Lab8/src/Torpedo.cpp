@@ -1,42 +1,70 @@
 #include "Torpedo.h"
 #include "TextureManager.h"
 
-Torpedo::Torpedo(float speed = 0.0f, glm::vec2 direction = { 0.0, 0.0 }): m_currentAnimationState(TorpedoAnimationState::FIRED), m_speed(speed)
+TorpedoPool::TorpedoPool()
 {
-	TextureManager::Instance().LoadSpriteSheet(
-		"../Assets/sprites/torpedo.txt",
-		"../Assets/sprites/torpedo.png", 
-		"torpedo");
 
-	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("torpedo"));
-	
-	// set frame width
-	SetWidth(64);
+}
 
-	// set frame height
-	SetHeight(64);
+TorpedoPool::~TorpedoPool()
+= default;
 
-	GetTransform()->position = glm::vec2(400.0f, 300.0f);
-	GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
-	GetRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
-	GetRigidBody()->isColliding = false;
-	SetType(GameObjectType::PROJECTILE);
+void TorpedoPool::Draw()
+{
+	for (const auto torpedo : m_pTorpedos)
+	{
+		torpedo->Draw();
+	}
+}
 
-	m_direction = { direction.x * speed, direction.y * speed };
+void TorpedoPool::Update()
+{
+	for (const auto torpedo : m_pTorpedos)
+	{
+		torpedo->Update();
+	}
+}
 
-	BuildAnimations();
+void TorpedoPool::Clean()
+{
+	for (auto torpedo : m_pTorpedos)
+	{
+		delete torpedo;
+		torpedo = nullptr;
+	}
+	m_pTorpedos.clear();
+	m_pTorpedos.shrink_to_fit();
+}
+
+void TorpedoPool::FireTorpedo(Torpedo* torpedoToFire)
+{
+	m_pTorpedos.push_back(torpedoToFire);
+}
+
+std::vector<Torpedo*> TorpedoPool::GetPool()
+{
+	return m_pTorpedos;
+}
+
+
+
+Torpedo::Torpedo()
+{
+	m_currentAnimationState = TorpedoAnimationState::FIRED;
+	m_speed = 0.0f;
 }
 
 Torpedo::~Torpedo()
 = default;
 
+// Renders the torpedo based on their position.
 void Torpedo::Draw()
 {
 	// draw the Torpedo according to animation state
 	switch (m_currentAnimationState)
 	{
 	case TorpedoAnimationState::FIRED:
-		TextureManager::Instance().PlayAnimation("torpedo", GetAnimation("fire"),
+		TextureManager::Instance().PlayAnimation(m_textureKey, GetAnimation("fire"),
 			GetTransform()->position, 0.25f, 0, 255, true);
 		break;
 	default:
@@ -44,11 +72,13 @@ void Torpedo::Draw()
 	}
 }
 
+// Updates the torpedo's position
 void Torpedo::Update()
 {
-	GetTransform()->position.x += m_speed;
+	GetTransform()->position += m_direction;
 }
 
+// Cleanup!
 void Torpedo::Clean()
 {
 }
@@ -58,6 +88,7 @@ void Torpedo::SetAnimationState(const TorpedoAnimationState new_state)
 	m_currentAnimationState = new_state;
 }
 
+// Builds base class animations!
 void Torpedo::BuildAnimations()
 {
 	auto fire_animation = Animation();
@@ -74,3 +105,5 @@ void Torpedo::BuildAnimations()
 
 	SetAnimation(fire_animation);
 }
+
+

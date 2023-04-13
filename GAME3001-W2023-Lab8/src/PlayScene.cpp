@@ -39,7 +39,6 @@ void PlayScene::Draw()
 void PlayScene::Update()
 {
 	UpdateDisplayList();
-
 	m_pStarShip->GetTree()->GetEnemyHealthNode()->SetHealthy(m_pStarShip->GetHealth() > 25);
 	m_pStarShip->GetTree()->GetEnemyHitNode()->SetHit(false);
 	m_pStarShip->CheckAgentLOSToTarget(m_pTarget, m_pObstacles);
@@ -67,7 +66,7 @@ void PlayScene::Update()
 	}
 
 	// Collision check
-	for (auto torpedo : m_pTorepdoesK)
+	for (const auto torpedo : m_pTorpedoPool->GetPool())
 	{
 		CollisionManager::CircleAABBCheck(torpedo, m_pTarget);
 	}
@@ -100,11 +99,10 @@ void PlayScene::HandleEvents()
 	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_F))
 	{
 		// Torpedo will fire
-		m_pTorpedoes.push_back(new Torpedo(0.0f, {})); // Instantiate a torpedo
-		m_pTorpedoes.back()->GetTransform()->position = m_pTarget->GetTransform()->position; // Set the spawn point
+		m_pTorpedoPool->FireTorpedo(new TorpedoFederation(0.0f, {}));
+		m_pTorpedoPool->GetPool().back()->GetTransform()->position = m_pTarget->GetTransform()->position; // Set the spawn point
 		SoundManager::Instance().SetSoundVolume(50);
 		SoundManager::Instance().PlaySoundFX("torpedo");
-		AddChild(m_pTorpedoes.back(), 2);
 	}
 	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K))
 	{
@@ -142,6 +140,9 @@ void PlayScene::Start()
 	m_pStarShip->GetTransform()->position = glm::vec2(150.0f, 300.0f);
 	AddChild(m_pStarShip, 2);
 
+	m_pTorpedoPool = new TorpedoPool();
+	AddChild(m_pTorpedoPool, 2);
+
 	// Add Obstacles
 	BuildObstaclePool();
 
@@ -178,10 +179,9 @@ void PlayScene::SpawnEnemyTorpedo()
 	glm::vec2 torpedo_direction = Util::Normalize(m_pTarget->GetTransform()->position - spawn_point);
 
 	// Spawn the torpedo
-	m_pTorepdoesK.push_back(new TorpedoK(5.0f, torpedo_direction)); // Instantiates a torpedo and adds to vector.
-	m_pTorepdoesK.back()->GetTransform()->position = spawn_point; // Set the initial position of the torpedo to the spawn point
+	m_pTorpedoPool->FireTorpedo(new TorpedoKlingon(5.0f, torpedo_direction));
+	m_pTorpedoPool->GetPool().back()->GetTransform()->position = spawn_point; // Set the initial position of the torpedo to the spawn point
 	SoundManager::Instance().PlaySoundFX("torpedo_k");
-	AddChild(m_pTorepdoesK.back(), 2); // Adds the torpedo to the scene.
 }
 
 Target* PlayScene::GetTarget() const

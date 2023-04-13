@@ -16,7 +16,8 @@
 #include "CloseCombatEnemy.h"
 #include "RangedCombatEnemy.h"
 #include "Torpedo.h"
-#include "TorpedoK.h"
+#include "TorpedoKlingon.h"
+#include "TorpedoFederation.h"
 
 
 class PlayScene : public Scene
@@ -79,8 +80,7 @@ private:
 	bool m_bDebugView;
 
 	// New for lab 8
-	std::vector<Torpedo*> m_pTorpedoes;
-	std::vector<TorpedoK*> m_pTorepdoesK;
+	TorpedoPool* m_pTorpedoPool;
 };
 
 #endif /* defined (__PLAY_SCENE__) */

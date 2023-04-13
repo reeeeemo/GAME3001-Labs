@@ -4,12 +4,14 @@
 
 #include "TorpedoAnimationState.h"
 #include "Sprite.h"
+#include "GameObject.h"
+#include <vector>
 
-class Torpedo final : public Sprite
+class Torpedo : public Sprite
 {
 public:
-	Torpedo(float speed, glm::vec2 direction);
-	~Torpedo() override;
+	Torpedo();
+	virtual ~Torpedo() override;
 
 	// Life Cycle Methods
 	virtual void Draw() override;
@@ -17,15 +19,32 @@ public:
 	virtual void Clean() override;
 
 	// setters
-	void SetAnimationState(TorpedoAnimationState new_state);
+	virtual void SetAnimationState(TorpedoAnimationState new_state);
 
-private:
-	void BuildAnimations();
+protected:
+	virtual void BuildAnimations();
 
 	TorpedoAnimationState m_currentAnimationState;
 
+	std::string m_textureKey;
 	float m_speed;
 	glm::vec2 m_direction;
+};
+
+class TorpedoPool final : public DisplayObject
+{
+public:
+	TorpedoPool();
+	~TorpedoPool();
+
+	void Draw() override;
+	void Update() override;
+	void Clean() override;
+
+	void FireTorpedo(Torpedo* torpedoToFire);
+	std::vector<Torpedo*> GetPool();
+private:
+	std::vector<Torpedo*> m_pTorpedos;
 };
 
 #endif /* defined (__TORPEDO_H__) */
