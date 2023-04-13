@@ -186,9 +186,10 @@ void CloseCombatEnemy::MoveToLOS()
 {
 	auto scene = dynamic_cast<PlayScene*>(m_pScene);
 
-	glm::vec2 target_direction = Util::Normalize(scene->GetTarget()->GetTransform()->position - GetTransform()->position);
-	SetTargetPosition(scene->GetTarget()->GetTransform()->position);
-	LookWhereYoureGoing(target_direction);
+	//glm::vec2 target_direction = Util::Normalize(scene->GetTarget()->GetLOSDistance() - GetTransform()->position);
+	SetTargetPosition({ scene->GetTarget()->GetTransform()->position.x, scene->GetTarget()->GetTransform()->position.y - GetLOSDistance()});
+	//LookWhereYoureGoing(target_direction);
+	m_move();
 }
 
 void CloseCombatEnemy::MoveToPlayer()
@@ -202,7 +203,7 @@ void CloseCombatEnemy::MoveToPlayer()
 	}
 	// TODO: setup another action to take when moving to the player.
 	//glm::vec2 target_direction = Util::Normalize(scene->GetTarget()->GetTransform()->position - GetTransform()->position);
-	//SetTargetPosition(scene->GetTarget()->GetTransform()->position);
+	SetTargetPosition(scene->GetTarget()->GetTransform()->position);
 	//LookWhereYoureGoing(target_direction);
 	m_move();
 }
