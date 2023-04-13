@@ -30,7 +30,7 @@ void PlayScene::Draw()
 				obstacle->GetHeight() * 0.5f), obstacle->GetWidth(), obstacle->GetHeight());
 		}
 		auto detected = m_pStarShip->GetTree()->GetPlayerDetectedNode()->GetDetected();
-		Util::DrawCircle(m_pStarShip->GetTransform()->position, 300.0f, detected ? glm::vec4(0, 1, 0, 1) : glm::vec4(1, 0, 0, 1));
+		Util::DrawCircle(m_pStarShip->GetTransform()->position, starShipRadius, detected ? glm::vec4(0, 1, 0, 1) : glm::vec4(1, 0, 0, 1));
 	}
 
 	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
@@ -46,11 +46,17 @@ void PlayScene::Update()
 	// Distance check between starship and target for detection radius
 	float distance = Util::Distance(m_pStarShip->GetTransform()->position, m_pTarget->GetTransform()->position);
 
+#if defined(CLOSE_COMBAT)
+	m_pStarShip->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < starShipRadius);
+	m_pStarShip->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance <= starShipRadius);
+#else 
 	// Radius detection.. Just outside of LOS Range (around 300px)
-	m_pStarShip->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < 300);
+	m_pStarShip->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < starShipRadius);
 
 	// Within LOS Distance.. but not too close (optimum firing range)
-	m_pStarShip->GetTree()->GetRangedCombatNode()->SetIsWithinCombatRange(distance >= 200 && distance <= 350);
+	m_pStarShip->GetTree()->GetRangedCombatNode()->SetIsWithinCombatRange(distance >= starShipRadius && distance <= 350);
+#endif
+	
 
 	switch(m_LOSMode)
 	{
@@ -136,7 +142,11 @@ void PlayScene::Start()
 	m_pTarget->GetTransform()->position = glm::vec2(550.0f, 300.0f);
 	AddChild(m_pTarget, 2);
 
+#if defined(CLOSE_COMBAT)
+	m_pStarShip = new CloseCombatEnemy(this);
+#else
 	m_pStarShip = new RangedCombatEnemy(this);
+#endif
 	m_pStarShip->GetTransform()->position = glm::vec2(150.0f, 300.0f);
 	AddChild(m_pStarShip, 2);
 

@@ -19,6 +19,7 @@
 #include "TorpedoKlingon.h"
 #include "TorpedoFederation.h"
 
+#define CLOSE_COMBAT
 
 class PlayScene : public Scene
 {
@@ -52,11 +53,14 @@ private:
 	std::vector<Obstacle*> m_pObstacles;
 	// New for Lab 7.1
 	Background* m_pBackground;
-
-	// New for Lab 7.2
-	//CloseCombatEnemy* m_pStarShip;
+	
+#if defined(CLOSE_COMBAT)
+	CloseCombatEnemy* m_pStarShip;
+	float starShipRadius = 200.0f;
+#else
+	float starShipRadius = 300.0f;
 	RangedCombatEnemy* m_pStarShip;
-
+#endif
 	void BuildObstaclePool();
 
 	// Create our Division Scheme (Grid of PathNodes)

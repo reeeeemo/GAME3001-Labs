@@ -213,6 +213,8 @@ void RangedCombatEnemy::Flee()
 
 void RangedCombatEnemy::MoveToLOS()
 {
+	auto scene = dynamic_cast<PlayScene*>(m_pScene);
+
 	if (GetActionState() != ActionState::MOVE_TO_LOS) {
 		// Initialize
 		SetActionState(ActionState::MOVE_TO_LOS);

@@ -5,12 +5,15 @@
 #include "Agent.h"
 #include "DecisionTree.h"
 #include "AttackAction.h"
+#include "WaitBehindCoverAction.h"
+#include "MoveToCoverAction.h"
+#include "FleeAction.h"
 
 class CloseCombatEnemy : public Agent
 {
 public:
 	// Constructor Function
-	CloseCombatEnemy();
+	CloseCombatEnemy(Scene* scene);
 
 	// Destructor Function
 	~CloseCombatEnemy();
@@ -33,12 +36,14 @@ public:
 
 	// public functions
 	void Seek();
-	void LookWhereYoureGoing(glm::vec2 target_direction);
+	void LookWhereYoureGoing(glm::vec2 target_direction, bool direction_hack);
 	void Reset();
 
 	// New for Lab 7.2
 	void Patrol() override;
+	void MoveToLOS() override;
 	void MoveToPlayer() override;
+	void Attack() override;
 	DecisionTree* GetTree() const;
 
 private:
@@ -63,6 +68,10 @@ private:
 	// New for Lab 7.2
 	DecisionTree* m_tree;
 	void m_buildTree();
+
+	// New for Lab 8
+	Scene* m_pScene; // PlayScene
+	bool m_movingTowardsPlayer = false;
 };
 
 #endif /* defined (__CLOSE_COMBAT_ENEMY_H__)*/
