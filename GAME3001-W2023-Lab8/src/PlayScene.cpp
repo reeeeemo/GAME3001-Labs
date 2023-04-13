@@ -48,7 +48,7 @@ void PlayScene::Update()
 
 #if defined(CLOSE_COMBAT)
 	m_pStarShip->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < starShipRadius);
-	m_pStarShip->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance <= starShipRadius);
+	m_pStarShip->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance <= 30.0f);
 #else 
 	// Radius detection.. Just outside of LOS Range (around 300px)
 	m_pStarShip->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < starShipRadius);
