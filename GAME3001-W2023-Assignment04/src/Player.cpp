@@ -17,10 +17,10 @@ Player::Player() : m_currentAnimationState(PlayerAnimationState::PLAYER_IDLE_RIG
 	SetRangeOfAttack(50.0f);
 
 	// set frame width
-	SetWidth(64);
+	SetWidth(56);
 
 	// set frame height
-	SetHeight(64);
+	SetHeight(52);
 
 	GetTransform()->position = glm::vec2(400.0f, 300.0f);
 	GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
@@ -103,7 +103,6 @@ void Player::Update()
 				SetAnimationState(PlayerAnimationState::PLAYER_IDLE_RIGHT);
 			}
 		}
-
 	}
 }
 
