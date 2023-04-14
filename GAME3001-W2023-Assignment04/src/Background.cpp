@@ -4,7 +4,7 @@
 
 Background::Background()
 {
-	TextureManager::Instance().Load("../Assets/textures/nebula.png", "background");
+	TextureManager::Instance().Load("../Assets/sprites/Player/grass.png", "background");
 
 	const auto size = TextureManager::Instance().GetTextureSize("background");
 	SetWidth(size.x);

@@ -9,6 +9,7 @@ struct RigidBody
 	glm::vec2 bounds;
 
 	glm::vec2 velocity;
+	glm::vec2 velocityDampening;
 	glm::vec2 acceleration;
 	bool isColliding = false;
 };

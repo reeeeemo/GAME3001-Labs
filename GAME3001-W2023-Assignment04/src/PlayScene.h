@@ -9,6 +9,7 @@
 #include "StarShip.h"
 #include "PathNode.h"
 #include "Label.h"
+#include "Player.h"
 
 // New for Lab 7.1
 #include "Background.h"
@@ -41,7 +42,7 @@ public:
 
 	// New for Lab 8.
 	void SpawnEnemyTorpedo(Agent* enemyShooting);
-	[[nodiscard]] Target* GetTarget() const;
+	[[nodiscard]] Player* GetTarget() const;
 private:
 	// IMGUI Function
 	void GUI_Function();
@@ -53,7 +54,7 @@ private:
 	int m_angle;
 
 	// Game Objects for the Scene
-	Target* m_pTarget;
+	Player* m_pPlayer;
 	//StarShip* m_pStarShip;
 	std::vector<Obstacle*> m_pObstacles;
 	// New for Lab 7.1
