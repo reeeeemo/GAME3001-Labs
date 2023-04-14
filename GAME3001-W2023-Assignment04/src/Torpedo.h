@@ -23,6 +23,9 @@ public:
 	void SetDamage(float damage){m_damage=damage;}
 	float GetDamage(){return m_damage;}
 
+	bool GetDeleteMe();
+	void SetDeleteMe(bool temp);
+
 protected:
 	virtual void BuildAnimations();
 
@@ -32,6 +35,7 @@ protected:
 	float m_speed;
 	float m_damage;
 	glm::vec2 m_direction;
+	bool m_deleteMe;
 };
 
 class TorpedoPool final : public DisplayObject

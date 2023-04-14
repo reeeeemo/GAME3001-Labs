@@ -423,6 +423,7 @@ void PlayScene::CheckCollision()
 
 			if (CollisionManager::AABBCheck(enemy, projectile)) {
 				if (canTorpedoHitEnemy) {
+					projectile->SetDeleteMe(true);
 					enemy->TakeDamage(projectile->GetDamage());
 				}
 			}

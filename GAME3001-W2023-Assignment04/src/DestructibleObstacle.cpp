@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "TextureManager.h"
+#include "Util.h"
 
 DestructibleObstacle::DestructibleObstacle()
 {

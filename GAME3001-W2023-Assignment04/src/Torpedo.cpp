@@ -19,25 +19,19 @@ void TorpedoPool::Draw()
 
 void TorpedoPool::Update()
 {
-	for (const auto torpedo : m_pTorpedos)
+	for (size_t i = 0; i < m_pTorpedos.size(); i++)
 	{
-		torpedo->Update();
+		if (m_pTorpedos[i]->GetDeleteMe())
+		{
+			delete m_pTorpedos[i];
+			m_pTorpedos[i] = nullptr;
+			m_pTorpedos.erase(i + m_pTorpedos.begin());
+			m_pTorpedos.shrink_to_fit();
+		} else
+		{
+			m_pTorpedos[i]->Update();
+		}
 	}
-
-	//for (unsigned i = 0; i < m_pTorpedos.size(); i++)
-	//{
-	//	if (m_pTorpedos[i]->GetDeleteMe()) // If we need to delete the torpedoes
-	//	{
-	//		delete m_pTorpedos[i];
-	//		m_pTorpedos[i] = nullptr;
-	//		m_pTorpedos.erase(i + m_pTorpedos.begin());
-	//		m_pTorpedos.shrink_to_fit();
-	//	}
-	//	else
-	//	{
-	//		m_torpedoes[i]->Update();
-	//	}
-	//}
 }
 
 void TorpedoPool::Clean()
@@ -90,12 +84,15 @@ void Torpedo::Draw()
 // Updates the torpedo's position
 void Torpedo::Update()
 {
-	GetTransform()->position += m_direction;
-	if(GetRigidBody()->isColliding ||
-		GetTransform()->position.x < 0 || GetTransform()->position.x > Config::SCREEN_WIDTH ||
-		GetTransform()->position.y < 0 || GetTransform()->position.y > Config::SCREEN_HEIGHT)
+	if (!m_deleteMe)
 	{
-		Clean();
+		GetTransform()->position += m_direction;
+		if (GetRigidBody()->isColliding ||
+			GetTransform()->position.x < 0 || GetTransform()->position.x > Config::SCREEN_WIDTH ||
+			GetTransform()->position.y < 0 || GetTransform()->position.y > Config::SCREEN_HEIGHT)
+		{
+			m_deleteMe = true;
+		}
 	}
 }
 
@@ -107,6 +104,16 @@ void Torpedo::Clean()
 void Torpedo::SetAnimationState(const TorpedoAnimationState new_state)
 {
 	m_currentAnimationState = new_state;
+}
+
+bool Torpedo::GetDeleteMe()
+{
+	return m_deleteMe;
+}
+
+void Torpedo::SetDeleteMe(bool temp)
+{
+	m_deleteMe = temp;
 }
 
 // Builds base class animations!
