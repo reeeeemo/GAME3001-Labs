@@ -72,6 +72,7 @@ public:
 	void SetAnimationState(EnemyAnimationState state);
 
 	void SetMaxHealth(int max_health);
+	void SetDeleteMe(bool delete);
 
 	// utility function
 	void UpdateWhiskers(float angle);
@@ -119,6 +120,7 @@ private:
 	int m_maxHealth = 100;
 	EnemyType m_type;
 	EnemyAnimationState m_animState;
+	bool m_deleteMe;
 };
 
 

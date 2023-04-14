@@ -85,6 +85,11 @@ int Agent::GetHealth() const
 	return m_health;
 }
 
+bool Agent::GetDeleteMe() const
+{
+	return m_deleteMe;
+}
+
 void Agent::SetHealth(int value)
 {
 	m_health = value;
@@ -154,6 +159,11 @@ void Agent::SetAnimationState(EnemyAnimationState state)
 void Agent::SetMaxHealth(int max_health)
 {
 	m_maxHealth = max_health;
+}
+
+void Agent::SetDeleteMe(bool deleteMe)
+{
+	m_deleteMe = deleteMe;
 }
 
 void Agent::SetLeftLOSEndPoint(const glm::vec2 point)
