@@ -46,6 +46,7 @@ public:
 	void Attack() override;
 	DecisionTree* GetTree() const;
 
+
 private:
 	// private movement variables
 	float m_maxSpeed;
@@ -66,12 +67,13 @@ private:
 	void m_buildPatrolPath();
 
 	// New for Lab 7.2
-	DecisionTree* m_tree;
 	void m_buildTree();
+	DecisionTree* m_tree;
 
 	// New for Lab 8
 	Scene* m_pScene; // PlayScene
 	bool m_movingTowardsPlayer = false;
+
 };
 
 #endif /* defined (__CLOSE_COMBAT_ENEMY_H__)*/

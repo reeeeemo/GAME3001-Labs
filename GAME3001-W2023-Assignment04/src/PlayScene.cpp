@@ -29,8 +29,19 @@ void PlayScene::Draw()
 			Util::DrawRect(obstacle->GetTransform()->position - glm::vec2(obstacle->GetWidth() * 0.5f,
 				obstacle->GetHeight() * 0.5f), obstacle->GetWidth(), obstacle->GetHeight());
 		}
-		auto detected = m_pStarShip->GetTree()->GetPlayerDetectedNode()->GetDetected();
-		Util::DrawCircle(m_pStarShip->GetTransform()->position, starShipRadius, detected ? glm::vec4(0, 1, 0, 1) : glm::vec4(1, 0, 0, 1));
+		for (const auto enemy : m_pEnemyPool->GetPool())
+		{
+			bool detected;
+			if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
+			{
+				detected = static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->GetDetected();
+			}
+			else { // If ranged combat enemy
+				detected = static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->GetDetected();
+			}
+
+			Util::DrawCircle(enemy->GetTransform()->position, starShipRadius, detected ? glm::vec4(0, 1, 0, 1) : glm::vec4(1, 0, 0, 1));
+		}
 	}
 
 	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
@@ -39,24 +50,36 @@ void PlayScene::Draw()
 void PlayScene::Update()
 {
 	UpdateDisplayList();
-	m_pStarShip->GetTree()->GetEnemyHealthNode()->SetHealthy(m_pStarShip->GetHealth() > 25);
-	m_pStarShip->GetTree()->GetEnemyHitNode()->SetHit(false);
-	m_pStarShip->CheckAgentLOSToTarget(m_pTarget, m_pObstacles);
+	for (const auto enemy : m_pEnemyPool->GetPool())
+	{
+		// Distance check between starship and target for detection radius
+		float distance = Util::Distance(enemy->GetTransform()->position, m_pTarget->GetTransform()->position);
 
-	// Distance check between starship and target for detection radius
-	float distance = Util::Distance(m_pStarShip->GetTransform()->position, m_pTarget->GetTransform()->position);
+		if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
+		{
+			CloseCombatEnemy* tempEnemy = static_cast<CloseCombatEnemy*>(enemy);
+			tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
+			tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false);
+			tempEnemy->CheckAgentLOSToTarget(m_pTarget, m_pObstacles);
 
-#if defined(CLOSE_COMBAT)
-	m_pStarShip->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < starShipRadius);
-	m_pStarShip->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance <= 30.0f);
-#else 
-	// Radius detection.. Just outside of LOS Range (around 300px)
-	m_pStarShip->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < starShipRadius);
+			tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < starShipRadius);
+			tempEnemy->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance <= 30.0f);
+		}
+		else { // If ranged combat enemy
+			RangedCombatEnemy* tempEnemy = static_cast<RangedCombatEnemy*>(enemy);
+			tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
+			tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false);
+			tempEnemy->CheckAgentLOSToTarget(m_pTarget, m_pObstacles);
 
-	// Within LOS Distance.. but not too close (optimum firing range)
-	m_pStarShip->GetTree()->GetRangedCombatNode()->SetIsWithinCombatRange(distance <= starShipRadius && distance <= 350);
-#endif
-	
+			// Radius detection.. Just outside of LOS Range (around 300px)
+			tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < starShipRadius);
+
+			// Within LOS Distance.. but not too close (optimum firing range)
+			tempEnemy->GetTree()->GetRangedCombatNode()->SetIsWithinCombatRange(distance <= starShipRadius && distance <= 350);
+
+		}
+	}
+
 
 	switch(m_LOSMode)
 	{
@@ -64,7 +87,10 @@ void PlayScene::Update()
 		m_checkAllNodesWithTarget(m_pTarget);
 		break;
 	case LOSMode::SHIP:
-		m_checkAllNodesWithTarget(m_pStarShip);
+		for (const auto enemy : m_pEnemyPool->GetPool())
+		{
+			m_checkAllNodesWithTarget(enemy);
+		}
 		break;
 	case LOSMode::BOTH:
 		m_checkAllNodesWithBoth();
@@ -112,25 +138,52 @@ void PlayScene::HandleEvents()
 		SoundManager::Instance().PlaySoundFX("torpedo");
 	}
 #endif
-	
+
+	if (Game::Instance().GetDebugMode()) {
+
+	}
 	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K))
 	{
-		m_pStarShip->TakeDamage(10); // StarShip takes fixed dmg.
-		m_pStarShip->GetTree()->GetEnemyHitNode()->SetHit(true);
-		std::cout << "Starship at" << m_pStarShip->GetHealth() << "%. " << std::endl;
+		for (const auto enemy : m_pEnemyPool->GetPool())
+		{
+			enemy->TakeDamage(10); // StarShip takes fixed dmg.
+			if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
+			{
+				static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(true);
+			}
+			else {
+				static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(true);
+			}
+			std::cout << "Starship at" << enemy->GetHealth() << "%. " << std::endl;
+		}
 	}
 	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_R))
 	{
-		m_pStarShip->SetHealth(100); // StarShip takes fixed dmg.
-		m_pStarShip->GetTree()->GetEnemyHitNode()->SetHit(false);
-		m_pStarShip->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
+		for (const auto enemy : m_pEnemyPool->GetPool())
+		{
+			enemy->SetHealth(100); // Enemy Sets health
+
+			if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
+			{
+				static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(false);
+				static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
+			}
+			else { // if (enemy->GetType() == EnemyType::RANGED)
+				static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(false);
+				static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
+			}
+			
+		}
+	
 	}
 }
 
 void PlayScene::Start()
 {
 	// Set GUI Title
-	m_guiTitle = "Lab 7.1";
+	m_guiTitle = "Assignment 4";
+
+	Game::Instance().SetDebugMode(true);
 
 	// Setup a few more fields
 	m_LOSMode = LOSMode::TARGET;
@@ -145,13 +198,19 @@ void PlayScene::Start()
 	m_pTarget->GetTransform()->position = glm::vec2(550.0f, 300.0f);
 	AddChild(m_pTarget, 2);
 
-#if defined(CLOSE_COMBAT)
-	m_pStarShip = new CloseCombatEnemy(this);
-#else
-	m_pStarShip = new RangedCombatEnemy(this);
-#endif
-	m_pStarShip->GetTransform()->position = glm::vec2(150.0f, 300.0f);
-	AddChild(m_pStarShip, 2);
+	// Initializing the enemy pool + spawning in stuff!.
+	m_pEnemyPool = new EnemyPool();
+	AddChild(m_pEnemyPool, 2);
+	m_pEnemyPool->SpawnEnemy(new CloseCombatEnemy(this), EnemyType::CLOSE_COMBAT);
+	m_pEnemyPool->SpawnEnemy(new RangedCombatEnemy(this), EnemyType::RANGED);
+
+	// Set the random enemy position!
+	for (const auto enemy : m_pEnemyPool->GetPool())
+	{
+		std::cout << "redsg\n";
+		enemy->GetTransform()->position = glm::vec2(rand() % 200 + 150, rand() % 300 + 200);
+	}
+
 
 	m_pTorpedoPool = new TorpedoPool();
 	AddChild(m_pTorpedoPool, 2);
@@ -183,10 +242,10 @@ void PlayScene::Start()
 	ImGuiWindowFrame::Instance().SetGuiFunction(std::bind(&PlayScene::GUI_Function, this));
 }
 
-void PlayScene::SpawnEnemyTorpedo()
+void PlayScene::SpawnEnemyTorpedo(Agent* enemyShooting)
 {
 	// Set Spawn Point (ront of our d7
-	glm::vec2 spawn_point = m_pStarShip->GetTransform()->position + m_pStarShip->GetCurrentDirection() * 30.0f;
+	glm::vec2 spawn_point = enemyShooting->GetTransform()->position + enemyShooting->GetCurrentDirection() * 30.0f;
 
 	// Set the direction of the Torpedo (normalized)
 	glm::vec2 torpedo_direction = Util::Normalize(m_pTarget->GetTransform()->position - spawn_point);
@@ -240,20 +299,20 @@ void PlayScene::GUI_Function()
 	ImGui::Separator();
 
 	// StarShip Properties
-	static int shipPosition[] = { static_cast<int>(m_pStarShip->GetTransform()->position.x),
-		static_cast<int>(m_pStarShip->GetTransform()->position.y) };
-	if(ImGui::SliderInt2("Ship Position", shipPosition, 0, 800))
-	{
-		m_pStarShip->GetTransform()->position.x = static_cast<float>(shipPosition[0]);
-		m_pStarShip->GetTransform()->position.y = static_cast<float>(shipPosition[1]);
-	}
+	//static int shipPosition[] = { static_cast<int>(m_pStarShip->GetTransform()->position.x),
+	//	static_cast<int>(m_pStarShip->GetTransform()->position.y) };
+	//if(ImGui::SliderInt2("Ship Position", shipPosition, 0, 800))
+	//{
+	//	m_pStarShip->GetTransform()->position.x = static_cast<float>(shipPosition[0]);
+	//	m_pStarShip->GetTransform()->position.y = static_cast<float>(shipPosition[1]);
+	//}
 
 	// allow the ship to rotate
-	static int angle;
-	if(ImGui::SliderInt("Ship Direction", &angle, -360, 360))
-	{
-		m_pStarShip->SetCurrentHeading(static_cast<float>(angle));
-	}
+	//static int angle;
+	//if(ImGui::SliderInt("Ship Direction", &angle, -360, 360))
+	//{
+	//	m_pStarShip->SetCurrentHeading(static_cast<float>(angle));
+	//}
 
 	ImGui::Separator();
 
@@ -427,9 +486,13 @@ void PlayScene::m_checkAllNodesWithBoth() const
 {
 	for (const auto path_node : m_pGrid)
 	{
-		const bool LOSWithStarShip = m_checkPathNodeLOS(path_node, m_pStarShip);
-		const bool LOSWithTarget = m_checkPathNodeLOS(path_node, m_pTarget);
-		path_node->SetHasLOS(LOSWithStarShip && LOSWithTarget, glm::vec4(0, 1, 1, 1));
+		for (const auto enemy : m_pEnemyPool->GetPool())
+		{
+			const bool LOSWithStarShip = m_checkPathNodeLOS(path_node, enemy);
+			const bool LOSWithTarget = m_checkPathNodeLOS(path_node, m_pTarget);
+			path_node->SetHasLOS(LOSWithStarShip && LOSWithTarget, glm::vec4(0, 1, 1, 1));
+		}
+		
 	}
 }
 

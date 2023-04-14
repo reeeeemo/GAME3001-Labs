@@ -6,6 +6,7 @@
 #include "NavigationObject.h"
 #include "ActionState.h"
 #include "Obstacle.h"
+#include "EnemyTypes.h"
 
 class Agent : public NavigationObject
 {
@@ -31,7 +32,7 @@ public:
 	[[nodiscard]] glm::vec2 GetMiddleLOSEndPoint() const;
 	[[nodiscard]] glm::vec2 GetRightLOSEndPoint() const;
 	[[nodiscard]] glm::vec2 GetRightRightLOSEndPoint() const;
-
+	[[nodiscard]] EnemyType GetEnemyType() const;
 
 	// New for Lab 7.3
 	[[nodiscard]] int GetHealth() const;
@@ -61,6 +62,7 @@ public:
 	void SetRightLOSEndPoint(glm::vec2 point);
 	void SetRightRightLOSEndPoint(glm::vec2 point);
 
+	void SetEnemyType(EnemyType type);
 	void SetLineColour(int index, glm::vec4 colour);
 	void SetWhiskerAngle(float angle);
 
@@ -82,7 +84,6 @@ public:
 	virtual void Flee() {}
 	virtual void MoveToCover() {}
 	virtual void WaitBehindCover() {}
-
 
 private:
 	void ChangeDirection();
@@ -110,6 +111,7 @@ private:
 
 	// New for lab 7.3
 	int m_health = 100;
+	EnemyType m_type;
 };
 
 

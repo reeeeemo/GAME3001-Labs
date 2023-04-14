@@ -65,6 +65,11 @@ glm::vec2 Agent::GetRightRightLOSEndPoint() const
 	return m_rightRightLOSEndPoint;
 }
 
+EnemyType Agent::GetEnemyType() const
+{
+	return m_type;
+}
+
 int Agent::GetHealth() const
 {
 	return m_health;
@@ -143,6 +148,11 @@ void Agent::SetMiddleLOSEndPoint(const glm::vec2 point)
 void Agent::SetRightLOSEndPoint(const glm::vec2 point)
 {
 	m_rightLOSEndPoint = point;
+}
+
+void Agent::SetEnemyType(EnemyType type)
+{
+	m_type = type;
 }
 
 void Agent::SetLineColour(const int index, const glm::vec4 colour)
@@ -259,6 +269,8 @@ void Agent::SetLOSColour(const glm::vec4 colour)
 {
 	m_LOSColour = colour;
 }
+
+
 
 void Agent::ChangeDirection()
 {

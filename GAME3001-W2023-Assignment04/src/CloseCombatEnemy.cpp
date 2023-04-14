@@ -213,10 +213,6 @@ void CloseCombatEnemy::Attack()
 
 }
 
-DecisionTree* CloseCombatEnemy::GetTree() const
-{
-	return m_tree;
-}
 
 void CloseCombatEnemy::m_move()
 {
@@ -327,60 +323,9 @@ void CloseCombatEnemy::m_buildTree()
 	TreeNode* attackNode = m_tree->AddNode(m_tree->GetCloseCombatNode(), new AttackAction(this), TreeNodeType::RIGHT_TREE_NODE);
 	//dynamic_cast<ActionNode*>(attackNode)->SetAgent(this);
 	m_tree->GetTree().push_back(attackNode);
+}
 
-
-	/* BLEH
-
-	 Right Subtree Level 1 -> Enemy Hit Condition
-	m_tree->SetEnemyHitNode(new EnemyHitCondition(this, false));
-	m_tree->AddNode(m_tree->GetEnemyHealthNode(), m_tree->GetEnemyHitNode(), TreeNodeType::RIGHT_TREE_NODE);
-	m_tree->GetTree().push_back(m_tree->GetEnemyHitNode());
-
-	 Right Left Subtree Level 2 -> Player Detected Condition
-	m_tree->SetPlayerDetectedNode(new PlayerDetectedCondition(this));
-	m_tree->AddNode(m_tree->GetEnemyHitNode(), m_tree->GetPlayerDetectedNode(), TreeNodeType::LEFT_TREE_NODE);
-
-	 Right Subtree Level 2 -> LOS Condition
-	const auto LOSNodeRight = new LOSCondition(this);
-	m_tree->AddNode(m_tree->GetEnemyHitNode(), LOSNodeRight, TreeNodeType::RIGHT_TREE_NODE);
-	m_tree->GetTree().push_back(LOSNodeRight);
-
-	 Left Left Subtree Level 3 -> Patrol Action
-	TreeNode* patrolNode = m_tree->AddNode(m_tree->GetPlayerDetectedNode(), new PatrolAction(this), TreeNodeType::LEFT_TREE_NODE);
-	m_tree->GetTree().push_back(patrolNode);
-
-	 Left Right Subtree Level 3 -> LOS Condition
-	const auto LOSNodeLeft = new LOSCondition(this);
-	m_tree->AddNode(m_tree->GetPlayerDetectedNode(), LOSNodeLeft, TreeNodeType::RIGHT_TREE_NODE);
-	m_tree->GetTree().push_back(LOSNodeLeft);
-
-
-	m_tree->SetRadiusNode(new RadiusCondition(this));
-	m_tree->AddNode(m_tree->GetLOSNode(), m_tree->GetRadiusNode(), TreeNodeType::LEFT_TREE_NODE);
-	m_tree->GetTree().push_back(m_tree->GetRadiusNode());
-
-
-	m_tree->SetCloseCombatNode(new CloseCombatCondition(this));
-	m_tree->AddNode(m_tree->GetLOSNode(), m_tree->GetCloseCombatNode(), TreeNodeType::RIGHT_TREE_NODE);
-	m_tree->GetTree().push_back(m_tree->GetCloseCombatNode());
-
-	 Actions
-
-	 Left Sub-tree
-	TreeNode* patrolNode = m_tree->AddNode(m_tree->GetRadiusNode(), new PatrolAction(this), TreeNodeType::LEFT_TREE_NODE);
-	dynamic_cast<ActionNode*>(patrolNode)->SetAgent(this);
-	m_tree->GetTree().push_back(patrolNode);
-
-	TreeNode* moveToLOSNode = m_tree->AddNode(m_tree->GetRadiusNode(), new MoveToLOSAction(this), TreeNodeType::RIGHT_TREE_NODE);
-	dynamic_cast<ActionNode*>(moveToLOSNode)->SetAgent(this);
-	m_tree->GetTree().push_back(moveToLOSNode);
-
-	 Right sub-tree
-	TreeNode* moveToPlayerNode = m_tree->AddNode(m_tree->GetCloseCombatNode(), new MoveToPlayerAction(this), TreeNodeType::LEFT_TREE_NODE);
-	dynamic_cast<ActionNode*>(moveToPlayerNode)->SetAgent(this);
-	m_tree->GetTree().push_back(moveToPlayerNode);
-
-	TreeNode* attackNode = m_tree->AddNode(m_tree->GetCloseCombatNode(), new AttackAction(this), TreeNodeType::RIGHT_TREE_NODE);
-	dynamic_cast<ActionNode*>(attackNode)->SetAgent(this);
-	m_tree->GetTree().push_back(attackNode);*/
+DecisionTree* CloseCombatEnemy::GetTree() const
+{
+	return m_tree;
 }

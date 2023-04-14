@@ -197,11 +197,6 @@ void RangedCombatEnemy::MoveToRange()
 	// TODO: setup another action to take when moving to the player.
 }
 
-DecisionTree* RangedCombatEnemy::GetTree() const
-{
-	return m_tree;
-}
-
 void RangedCombatEnemy::Flee()
 {
 	if (GetActionState() != ActionState::FLEE) {
@@ -256,7 +251,7 @@ void RangedCombatEnemy::Attack()
 	// Wait for a number of frames before firing = frame delay
 	if (m_fireCounter++ % m_fireCounterMax == 0)
 	{
-		scene->SpawnEnemyTorpedo();
+		scene->SpawnEnemyTorpedo(this);
 	}
 }
 
@@ -374,4 +369,9 @@ void RangedCombatEnemy::m_buildRightTree()
 	TreeNode* attackNode = m_tree->AddNode(m_tree->GetRangedCombatNode(), new AttackAction(this), TreeNodeType::RIGHT_TREE_NODE);
 	//dynamic_cast<ActionNode*>(attackNode)->SetAgent(this);
 	m_tree->GetTree().push_back(attackNode);
+}
+
+DecisionTree* RangedCombatEnemy::GetTree() const
+{
+	return m_tree;
 }

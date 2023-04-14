@@ -19,6 +19,10 @@
 #include "TorpedoKlingon.h"
 #include "TorpedoFederation.h"
 
+
+// New for Assignment 4
+#include "EnemyPool.h"
+
 //#define CLOSE_COMBAT
 
 class PlayScene : public Scene
@@ -35,7 +39,7 @@ public:
 	virtual void Start() override;
 
 	// New for Lab 8.
-	void SpawnEnemyTorpedo();
+	void SpawnEnemyTorpedo(Agent* enemyShooting);
 	[[nodiscard]] Target* GetTarget() const;
 private:
 	// IMGUI Function
@@ -59,7 +63,7 @@ private:
 	float starShipRadius = 200.0f;
 #else
 	float starShipRadius = 300.0f;
-	RangedCombatEnemy* m_pStarShip;
+	//RangedCombatEnemy* m_pStarShip;
 #endif
 	void BuildObstaclePool();
 
@@ -83,7 +87,8 @@ private:
 	// Debugging Variables
 	bool m_bDebugView;
 
-	// New for lab 8
+	// New for Assignment 4
+	EnemyPool* m_pEnemyPool;
 	TorpedoPool* m_pTorpedoPool;
 };
 
