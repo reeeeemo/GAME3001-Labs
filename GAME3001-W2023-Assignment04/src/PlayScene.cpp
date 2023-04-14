@@ -178,7 +178,7 @@ void PlayScene::HandleEvents()
 	if (EventManager::Instance().MousePressed(3))
 	{
 		std::cout << "Mouse 2 Pressed" << std::endl;
-		m_pTorpedoPool->FireTorpedo(new TorpedoFederation(0.0f, {}));
+		m_pTorpedoPool->FireTorpedo(new TorpedoFederation(0.1f, EventManager::Instance().GetMousePosition()));
 		m_pTorpedoPool->GetPool().back()->GetTransform()->position = m_pPlayer->GetTransform()->position; // Set the spawn point
 		SoundManager::Instance().SetSoundVolume(50);
 		SoundManager::Instance().PlaySoundFX("torpedo");

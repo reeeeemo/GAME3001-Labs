@@ -23,6 +23,21 @@ void TorpedoPool::Update()
 	{
 		torpedo->Update();
 	}
+
+	//for (unsigned i = 0; i < m_pTorpedos.size(); i++)
+	//{
+	//	if (m_pTorpedos[i]->GetDeleteMe()) // If we need to delete the torpedoes
+	//	{
+	//		delete m_pTorpedos[i];
+	//		m_pTorpedos[i] = nullptr;
+	//		m_pTorpedos.erase(i + m_pTorpedos.begin());
+	//		m_pTorpedos.shrink_to_fit();
+	//	}
+	//	else
+	//	{
+	//		m_torpedoes[i]->Update();
+	//	}
+	//}
 }
 
 void TorpedoPool::Clean()
