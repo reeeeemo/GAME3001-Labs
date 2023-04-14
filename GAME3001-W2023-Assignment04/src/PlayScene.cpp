@@ -188,10 +188,19 @@ void PlayScene::HandleEvents()
 	{
 		if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K))
 		{
-			for (auto enemy : m_pEnemyPool->GetPool())
-			{
-				enemy->TakeDamage(30.0f);
-			}
+				for (const auto enemy : m_pEnemyPool->GetPool())
+				{
+					enemy->TakeDamage(10); // enemy takes fixed dmg.
+					if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
+					{
+						static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(true);
+					}
+					else {
+						static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(true);
+					}
+					std::cout << "Starship at" << enemy->GetHealth() << "%. " << std::endl;
+				}
+
 		}
 
 		if (EventManager::Instance().KeyPressed(SDL_SCANCODE_R))
@@ -199,42 +208,30 @@ void PlayScene::HandleEvents()
 			m_pEnemyPool->SpawnEnemy(new CloseCombatEnemy(this), EnemyType::CLOSE_COMBAT);
 			m_pEnemyPool->SpawnEnemy(new RangedCombatEnemy(this), EnemyType::RANGED);
 		}
-	}
 
-	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K))
-	{
-		for (const auto enemy : m_pEnemyPool->GetPool())
+		if (EventManager::Instance().KeyPressed(SDL_SCANCODE_P))
 		{
-			enemy->TakeDamage(10); // enemy takes fixed dmg.
-			if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
+			for (const auto enemy : m_pEnemyPool->GetPool())
 			{
-				static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(true);
+				enemy->SetHealth(100); // Enemy Sets health
+
+				if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
+				{
+					static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(false);
+					static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
+				}
+				else { // if (enemy->GetType() == EnemyType::RANGED)
+					static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(false);
+					static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
+				}
+
 			}
-			else {
-				static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(true);
-			}
-			std::cout << "Starship at" << enemy->GetHealth() << "%. " << std::endl;
+
 		}
 	}
-	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_R))
-	{
-		for (const auto enemy : m_pEnemyPool->GetPool())
-		{
-			enemy->SetHealth(100); // Enemy Sets health
 
-			if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
-			{
-				static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(false);
-				static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
-			}
-			else { // if (enemy->GetType() == EnemyType::RANGED)
-				static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(false);
-				static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
-			}
-			
-		}
 	
-	}
+	
 }
 
 void PlayScene::Start()

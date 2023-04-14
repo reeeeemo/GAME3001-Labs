@@ -60,13 +60,7 @@ private:
 	// New for Lab 7.1
 	Background* m_pBackground;
 	
-#if defined(CLOSE_COMBAT)
-	CloseCombatEnemy* m_pStarShip;
-	float starShipRadius = 200.0f;
-#else
 	float starShipRadius = 300.0f;
-	//RangedCombatEnemy* m_pStarShip;
-#endif
 	void BuildObstaclePool();
 
 	// Create our Division Scheme (Grid of PathNodes)
