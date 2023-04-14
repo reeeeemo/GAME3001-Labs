@@ -92,6 +92,7 @@ void Agent::SetHealth(int value)
 
 void Agent::TakeDamage(int value)
 {
+	std::cout << "Took " << value << " damage.\n";
 	m_health -= value;
 }
 

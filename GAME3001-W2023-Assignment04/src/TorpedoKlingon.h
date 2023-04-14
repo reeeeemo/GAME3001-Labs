@@ -8,7 +8,7 @@
 class TorpedoKlingon final : public Torpedo
 {
 public:
-	TorpedoKlingon(float speed, glm::vec2 direction);
+	TorpedoKlingon(float speed, glm::vec2 direction, float damage = 30.0f);
 
 private:
 	void BuildAnimations() override;

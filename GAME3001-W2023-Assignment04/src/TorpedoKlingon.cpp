@@ -1,7 +1,7 @@
 #include "TorpedoKlingon.h"
 #include "TextureManager.h"
 
-TorpedoKlingon::TorpedoKlingon(float speed = 0.0f, glm::vec2 direction = { 0.0, 0.0 })
+TorpedoKlingon::TorpedoKlingon(float speed = 0.0f, glm::vec2 direction = { 0.0, 0.0 }, float damage)
 {
 	// Variable initialization.
 	m_currentAnimationState = TorpedoAnimationState::FIRED;
@@ -17,7 +17,7 @@ TorpedoKlingon::TorpedoKlingon(float speed = 0.0f, glm::vec2 direction = { 0.0, 
 
 
 	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet(m_textureKey));
-	
+	SetDamage(damage);
 	// set frame width
 	SetWidth(64);
 

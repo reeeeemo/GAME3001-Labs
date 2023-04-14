@@ -52,6 +52,7 @@ private:
 	// New for Lab 7.1
 	int m_shipPosition[2];
 	int m_angle;
+	void CheckCollision();
 
 	// Game Objects for the Scene
 	Player* m_pPlayer;

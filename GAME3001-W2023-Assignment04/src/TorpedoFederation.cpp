@@ -1,13 +1,13 @@
 #include "TorpedoFederation.h"
 
-TorpedoFederation::TorpedoFederation(float speed, glm::vec2 direction)
+TorpedoFederation::TorpedoFederation(float speed, glm::vec2 direction, float damage)
 {
 	TextureManager::Instance().Load("../Assets/sprites/Player/carrot.png", "carrot");
 	TextureManager::Instance().Load("../Assets/textures/Explosion.png", "explosion");
 
 	m_textureKey = "carrot";
 	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet(m_textureKey));
-
+	SetDamage(damage);
 	SetWidth(20);
 	SetHeight(20);
 

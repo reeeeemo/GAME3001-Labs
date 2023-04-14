@@ -20,6 +20,8 @@ public:
 
 	// setters
 	virtual void SetAnimationState(TorpedoAnimationState new_state);
+	void SetDamage(float damage){m_damage=damage;}
+	float GetDamage(){return m_damage;}
 
 protected:
 	virtual void BuildAnimations();
@@ -28,6 +30,7 @@ protected:
 
 	std::string m_textureKey;
 	float m_speed;
+	float m_damage;
 	glm::vec2 m_direction;
 };
 

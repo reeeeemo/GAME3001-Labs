@@ -91,6 +91,12 @@ void Torpedo::Draw()
 void Torpedo::Update()
 {
 	GetTransform()->position += m_direction;
+	if(GetRigidBody()->isColliding ||
+		GetTransform()->position.x < 0 || GetTransform()->position.x > Config::SCREEN_WIDTH ||
+		GetTransform()->position.y < 0 || GetTransform()->position.y > Config::SCREEN_HEIGHT)
+	{
+		Clean();
+	}
 }
 
 // Cleanup!

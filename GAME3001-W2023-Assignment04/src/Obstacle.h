@@ -3,7 +3,7 @@
 #define __OBSTACLE__
 #include "NavigationObject.h"
 
-class Obstacle final : public DisplayObject
+class Obstacle : public DisplayObject
 {
 public:
 	// constructors

@@ -10,7 +10,7 @@
 class TorpedoFederation final : public Torpedo
 {
 public:
-	TorpedoFederation(float speed, glm::vec2 direction);
+	TorpedoFederation(float speed, glm::vec2 direction, float damage = 25.0f);
 
 	void Draw() override;
 };

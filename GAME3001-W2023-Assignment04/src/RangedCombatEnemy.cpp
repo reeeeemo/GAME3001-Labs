@@ -131,6 +131,10 @@ void RangedCombatEnemy::Update()
 {
 	// Determine which action to perform
 	m_tree->MakeDecision();
+	if(GetHealth()<=0)
+	{
+		Clean();
+	}
 }
 
 void RangedCombatEnemy::Clean()

@@ -10,6 +10,8 @@
 #include "Util.h"
 #include <fstream>
 
+#include "DestructibleObstacle.h"
+
 PlayScene::PlayScene()
 {
 	PlayScene::Start();
@@ -49,6 +51,7 @@ void PlayScene::Draw()
 
 void PlayScene::Update()
 {
+	CheckCollision();
 	UpdateDisplayList();
 	for (const auto enemy : m_pEnemyPool->GetPool())
 	{
@@ -98,10 +101,10 @@ void PlayScene::Update()
 	}
 
 	// Collision check
-	for (const auto torpedo : m_pTorpedoPool->GetPool())
+	/*for (const auto torpedo : m_pTorpedoPool->GetPool())
 	{
 		CollisionManager::CircleAABBCheck(torpedo, m_pPlayer);
-	}
+	}*/
 	m_RemainingEnemiesLabel->SetText(std::to_string(m_pEnemyPool->GetPool().size()));
 }
 
@@ -178,7 +181,7 @@ void PlayScene::HandleEvents()
 	if (EventManager::Instance().MousePressed(3))
 	{
 		std::cout << "Mouse 2 Pressed" << std::endl;
-		m_pTorpedoPool->FireTorpedo(new TorpedoFederation(1.0f, Util::Normalize({EventManager::Instance().GetMousePosition()-m_pPlayer->GetTransform()->position})));
+		m_pTorpedoPool->FireTorpedo(new TorpedoFederation(5.0f, Util::Normalize({EventManager::Instance().GetMousePosition()-m_pPlayer->GetTransform()->position})));
 		m_pTorpedoPool->GetPool().back()->GetTransform()->position = m_pPlayer->GetTransform()->position; // Set the spawn point
 		SoundManager::Instance().SetSoundVolume(50);
 		SoundManager::Instance().PlaySoundFX("torpedo");
@@ -404,6 +407,46 @@ void PlayScene::GUI_Function()
 
 
 	ImGui::End();
+}
+
+void PlayScene::CheckCollision()
+{
+	bool canTorpedoHitEnemy = false;
+
+	for (auto enemy : m_pEnemyPool->GetPool()) {
+		for (auto projectile : m_pTorpedoPool->GetPool()) {
+
+			if (projectile->GetRigidBody()->isColliding) {
+				canTorpedoHitEnemy = false;
+			}
+			else { canTorpedoHitEnemy = true; }
+
+			if (CollisionManager::AABBCheck(enemy, projectile)) {
+				if (canTorpedoHitEnemy) {
+					enemy->TakeDamage(projectile->GetDamage());
+				}
+			}
+		}
+	}
+	m_pPlayer->GetRigidBody()->isColliding=false;
+	for (auto obstacle : m_pObstacles)
+	{
+		if(CollisionManager::AABBCheck(m_pPlayer,obstacle))
+		{
+			m_pPlayer->GetRigidBody()->isColliding = true;
+		}
+		for (auto proj : m_pTorpedoPool->GetPool())
+		{
+			if(CollisionManager::AABBCheck(proj,obstacle))
+			{
+				proj->GetRigidBody()->isColliding=true;
+				if(obstacle->GetType()==GameObjectType::DESTRUCT_OBSTACLE)
+				{
+					dynamic_cast<DestructibleObstacle*>(obstacle)->TakeDamage(proj->GetDamage());
+				}
+			}
+		}
+	}
 }
 
 void PlayScene::BuildObstaclePool()
