@@ -38,6 +38,7 @@ public:
 	[[nodiscard]] int GetMaxHealth() const;
 	// New for Lab 7.3
 	[[nodiscard]] int GetHealth() const;
+	[[nodiscard]] bool GetDeleteMe() const;
 	void SetHealth(int value);
 	void TakeDamage(int value);
 
@@ -72,7 +73,7 @@ public:
 	void SetAnimationState(EnemyAnimationState state);
 
 	void SetMaxHealth(int max_health);
-	void SetDeleteMe(bool delete);
+	void SetDeleteMe(bool deleteMe);
 
 	// utility function
 	void UpdateWhiskers(float angle);
