@@ -8,6 +8,7 @@
 #include "Target.h"
 #include "StarShip.h"
 #include "PathNode.h"
+#include "Label.h"
 
 // New for Lab 7.1
 #include "Background.h"
@@ -90,6 +91,7 @@ private:
 	// New for Assignment 4
 	EnemyPool* m_pEnemyPool;
 	TorpedoPool* m_pTorpedoPool;
+	Label* m_RemainingEnemiesLabel;
 };
 
 #endif /* defined (__PLAY_SCENE__) */

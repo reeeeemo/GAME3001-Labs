@@ -70,6 +70,16 @@ EnemyType Agent::GetEnemyType() const
 	return m_type;
 }
 
+EnemyAnimationState Agent::GetAnimationState() const
+{
+	return m_animState;
+}
+
+int Agent::GetMaxHealth() const
+{
+	return m_maxHealth;
+}
+
 int Agent::GetHealth() const
 {
 	return m_health;
@@ -133,6 +143,16 @@ ActionState Agent::GetActionState() const
 void Agent::SetActionState(const ActionState state)
 {
 	m_state = state;
+}
+
+void Agent::SetAnimationState(EnemyAnimationState state)
+{
+	m_animState = state;
+}
+
+void Agent::SetMaxHealth(int max_health)
+{
+	m_maxHealth = max_health;
 }
 
 void Agent::SetLeftLOSEndPoint(const glm::vec2 point)

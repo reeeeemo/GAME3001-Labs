@@ -500,6 +500,12 @@
     <ClInclude Include="..\src\EnemyTypes.h">
       <Filter>Enums</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\EnemyAnimationState.h">
+      <Filter>Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PlaceholderSprite.h">
+      <Filter>Game Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md">

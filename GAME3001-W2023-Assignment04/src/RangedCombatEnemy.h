@@ -5,6 +5,7 @@
 #include "Agent.h"
 #include "DecisionTree.h"
 #include "AttackAction.h"
+#include "Sprite.h"
 
 class RangedCombatEnemy : public Agent
 {
@@ -49,6 +50,7 @@ public:
 	void Attack() override;
 
 private:
+	void BuildAnimations();
 	// private movement variables
 	float m_maxSpeed;
 	float m_turnRate;
@@ -77,6 +79,7 @@ private:
 	int m_fireCounter; // Number of frames that have elapsed
 	int m_fireCounterMax; // Frame delay
 	Scene* m_pScene; // PlayScene
+	Sprite* m_sprite;
 };
 
 #endif /* defined (__RANGED_COMBAT_ENEMY_H__)*/

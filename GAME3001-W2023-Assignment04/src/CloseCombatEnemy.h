@@ -8,6 +8,8 @@
 #include "WaitBehindCoverAction.h"
 #include "MoveToCoverAction.h"
 #include "FleeAction.h"
+#include "Sprite.h"
+#include "PlaceholderSprite.h"
 
 class CloseCombatEnemy : public Agent
 {
@@ -48,6 +50,7 @@ public:
 
 
 private:
+	void BuildAnimations();
 	// private movement variables
 	float m_maxSpeed;
 	float m_turnRate;
@@ -73,6 +76,7 @@ private:
 	// New for Lab 8
 	Scene* m_pScene; // PlayScene
 	bool m_movingTowardsPlayer = false;
+	Sprite* m_sprite;
 
 };
 

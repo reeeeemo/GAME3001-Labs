@@ -7,6 +7,7 @@
 #include "ActionState.h"
 #include "Obstacle.h"
 #include "EnemyTypes.h"
+#include "EnemyAnimationState.h"
 
 class Agent : public NavigationObject
 {
@@ -33,7 +34,8 @@ public:
 	[[nodiscard]] glm::vec2 GetRightLOSEndPoint() const;
 	[[nodiscard]] glm::vec2 GetRightRightLOSEndPoint() const;
 	[[nodiscard]] EnemyType GetEnemyType() const;
-
+	[[nodiscard]] EnemyAnimationState GetAnimationState() const;
+	[[nodiscard]] int GetMaxHealth() const;
 	// New for Lab 7.3
 	[[nodiscard]] int GetHealth() const;
 	void SetHealth(int value);
@@ -67,6 +69,9 @@ public:
 	void SetWhiskerAngle(float angle);
 
 	void SetActionState(ActionState state);
+	void SetAnimationState(EnemyAnimationState state);
+
+	void SetMaxHealth(int max_health);
 
 	// utility function
 	void UpdateWhiskers(float angle);
@@ -111,7 +116,9 @@ private:
 
 	// New for lab 7.3
 	int m_health = 100;
+	int m_maxHealth = 100;
 	EnemyType m_type;
+	EnemyAnimationState m_animState;
 };
 
 

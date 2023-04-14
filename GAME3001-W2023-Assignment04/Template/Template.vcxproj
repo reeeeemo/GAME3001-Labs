@@ -240,6 +240,7 @@
     <ClInclude Include="..\src\ConditionNode.h" />
     <ClInclude Include="..\src\Config.h" />
     <ClInclude Include="..\src\DecisionTree.h" />
+    <ClInclude Include="..\src\EnemyAnimationState.h" />
     <ClInclude Include="..\src\EnemyHealthCondition.h" />
     <ClInclude Include="..\src\EnemyHitCondition.h" />
     <ClInclude Include="..\src\EnemyPool.h" />
@@ -259,6 +260,7 @@
     <ClInclude Include="..\src\Obstacle.h" />
     <ClInclude Include="..\src\PathNode.h" />
     <ClInclude Include="..\src\PatrolAction.h" />
+    <ClInclude Include="..\src\PlaceholderSprite.h" />
     <ClInclude Include="..\src\PlayerDetectedCondition.h" />
     <ClInclude Include="..\src\RadiusCondition.h" />
     <ClInclude Include="..\src\RangedCombatCondition.h" />

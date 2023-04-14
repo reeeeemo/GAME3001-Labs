@@ -102,7 +102,7 @@ void PlayScene::Update()
 	{
 		CollisionManager::CircleAABBCheck(torpedo, m_pTarget);
 	}
-
+	m_RemainingEnemiesLabel->SetText(std::to_string(m_pEnemyPool->GetPool().size()));
 }
 
 void PlayScene::Clean()
@@ -119,6 +119,13 @@ void PlayScene::HandleEvents()
 		Game::Instance().Quit();
 	}
 
+	// Toggles into Debug View
+	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_H)) {
+		Game::Instance().SetDebugMode(!m_isGridEnabled);
+		m_isGridEnabled = !m_isGridEnabled;
+		m_toggleGrid(m_isGridEnabled);
+	}
+
 	if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_1))
 	{
 		Game::Instance().ChangeSceneState(SceneState::START);
@@ -128,7 +135,6 @@ void PlayScene::HandleEvents()
 	{
 		Game::Instance().ChangeSceneState(SceneState::END);
 	}
-#if !defined(CLOSE_COMBAT)
 	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_F))
 	{
 		// Torpedo will fire
@@ -137,16 +143,29 @@ void PlayScene::HandleEvents()
 		SoundManager::Instance().SetSoundVolume(50);
 		SoundManager::Instance().PlaySoundFX("torpedo");
 	}
-#endif
 
-	if (Game::Instance().GetDebugMode()) {
+	if (Game::Instance().GetDebugMode())
+	{
+		if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K))
+		{
+			for (auto enemy : m_pEnemyPool->GetPool())
+			{
+				enemy->TakeDamage(30.0f);
+			}
+		}
 
+		if (EventManager::Instance().KeyPressed(SDL_SCANCODE_R))
+		{
+			m_pEnemyPool->SpawnEnemy(new CloseCombatEnemy(this), EnemyType::CLOSE_COMBAT);
+			m_pEnemyPool->SpawnEnemy(new RangedCombatEnemy(this), EnemyType::RANGED);
+		}
 	}
+
 	if (EventManager::Instance().KeyPressed(SDL_SCANCODE_K))
 	{
 		for (const auto enemy : m_pEnemyPool->GetPool())
 		{
-			enemy->TakeDamage(10); // StarShip takes fixed dmg.
+			enemy->TakeDamage(10); // enemy takes fixed dmg.
 			if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
 			{
 				static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(true);
@@ -186,7 +205,7 @@ void PlayScene::Start()
 	Game::Instance().SetDebugMode(true);
 
 	// Setup a few more fields
-	m_LOSMode = LOSMode::TARGET;
+	m_LOSMode = LOSMode::SHIP;
 	m_pathNodeLOSDistance = 1000; // 1000px distance
 	m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
 
@@ -210,6 +229,11 @@ void PlayScene::Start()
 		std::cout << "redsg\n";
 		enemy->GetTransform()->position = glm::vec2(rand() % 200 + 150, rand() % 300 + 200);
 	}
+	// Adding remaining Enemies label
+	m_RemainingEnemiesLabel = new Label();
+	m_RemainingEnemiesLabel->GetTransform()->position = glm::vec2(50.0f, 50.0f);
+	m_RemainingEnemiesLabel->SetColour({ 255,0,0,255 });
+	AddChild(m_RemainingEnemiesLabel);
 
 
 	m_pTorpedoPool = new TorpedoPool();

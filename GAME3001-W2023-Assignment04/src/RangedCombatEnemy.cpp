@@ -11,13 +11,21 @@
 #include "MoveToCoverAction.h"
 #include "MoveToRange.h"
 #include "WaitBehindCoverAction.h"
+#include "PlaceholderSprite.h"
 
 RangedCombatEnemy::RangedCombatEnemy(Scene* scene) : m_maxSpeed(20.0f), m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 500.0f)),
 m_pScene(scene), m_fireCounter(0), m_fireCounterMax(60)
-{								
-	TextureManager::Instance().Load("../Assets/textures/d7_small.png", "ranged_combat_enemy");
+{				
+	TextureManager::Instance().LoadSpriteSheet("../Assets/sprites/Player/turtle_sheet.txt",
+		"../Assets/sprites/Player/turtle_sheet.png", "turtle");
 
-	const auto size = TextureManager::Instance().GetTextureSize("ranged_combat_enemy");
+	m_sprite = new PlaceholderSprite;
+
+	m_sprite->SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("turtle"));
+
+	SetHealth(100);
+
+	const auto size = TextureManager::Instance().GetTextureSize("turtle");
 	SetWidth(static_cast<int>(size.x));
 	SetHeight(static_cast<int>(size.y));
 	GetTransform()->position = glm::vec2(0.0f, 0.0f);
@@ -42,6 +50,7 @@ m_pScene(scene), m_fireCounter(0), m_fireCounterMax(60)
 	m_tree = new DecisionTree(this); // Create a new Tree - AI Brain
 	m_buildTree();
 	m_tree->Display();
+	BuildAnimations();
 }
 
 RangedCombatEnemy::~RangedCombatEnemy()
@@ -49,9 +58,58 @@ RangedCombatEnemy::~RangedCombatEnemy()
 
 void RangedCombatEnemy::Draw()
 {
-	// draw the StarShip
-	TextureManager::Instance().Draw("ranged_combat_enemy", 
-		GetTransform()->position, static_cast<double>(GetCurrentHeading()), 255, true);
+	std::string current_anim = "";
+	// Draw the enemy based on the animation state.
+	switch (GetAnimationState())
+	{
+	case EnemyAnimationState::ENEMY_IDLE_LEFT:
+		current_anim = "idle";
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation(current_anim),
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
+		
+		break;
+	case EnemyAnimationState::ENEMY_IDLE_RIGHT:
+		current_anim = "idle";
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation(current_anim),
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_HORIZONTAL);
+		break;
+	case EnemyAnimationState::ENEMY_RUN_LEFT:
+		current_anim = "run";
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation(current_anim),
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
+		break;
+	case EnemyAnimationState::ENEMY_RUN_RIGHT:
+		current_anim = "run";
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation(current_anim),
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_HORIZONTAL);
+		break;
+	case EnemyAnimationState::ENEMY_RUN_DOWN:
+		current_anim = "run_back";
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation(current_anim),
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
+		break;
+	case EnemyAnimationState::ENEMY_RUN_UP:
+		current_anim = "run_front";
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation(current_anim),
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
+		break;
+	case EnemyAnimationState::ENEMY_DAMAGE:
+		current_anim = "damaged";
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation(current_anim),
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
+		break;
+	case EnemyAnimationState::ENEMY_DEAD:
+		current_anim = "dead";
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation(current_anim),
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
+		break;
+	}
+
+	SetWidth(m_sprite->GetAnimation(current_anim).frames[0].w);
+	SetHeight(m_sprite->GetAnimation(current_anim).frames[0].h);
+
+	// Draw the health based on the amount the enemy has
+	Util::DrawFilledRect(GetTransform()->position - glm::vec2((GetHealth() / GetMaxHealth() * 100) / 2, 60.0f), GetHealth() / GetMaxHealth() * 100, 10.0f, glm::vec4(0, 1.0f, 0, 1.0f));
 
 	if (EventManager::Instance().IsIMGUIActive()) 
 	{
@@ -60,7 +118,13 @@ void RangedCombatEnemy::Draw()
 			GetMiddleLOSEndPoint(), GetLOSColour());
 	}
 
-	
+	// If we are in debug mode, draw the collider rect.
+	if (Game::Instance().GetDebugMode())
+	{
+		Util::DrawRect(GetTransform()->position -
+			glm::vec2(this->GetWidth() * 0.5f, this->GetHeight() * 0.5f),
+			this->GetWidth(), this->GetHeight());
+	}
 }
 
 void RangedCombatEnemy::Update()
@@ -255,6 +319,54 @@ void RangedCombatEnemy::Attack()
 	}
 }
 
+void RangedCombatEnemy::BuildAnimations()
+{
+	Animation idle_animation = Animation();
+
+	idle_animation.name = "idle";
+	idle_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("idle"));
+
+	m_sprite->SetAnimation(idle_animation);
+
+	Animation run_animation = Animation();
+
+	run_animation.name = "run";
+	run_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("run1"));
+	run_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("run2"));
+
+	m_sprite->SetAnimation(run_animation);
+
+	Animation run_back_animation = Animation();
+
+	run_back_animation.name = "run_back";
+	run_back_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("run_back1"));
+	run_back_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("run_back2"));
+
+	m_sprite->SetAnimation(run_back_animation);
+
+	Animation run_front_animation = Animation();
+
+	run_front_animation.name = "run_front";
+	run_front_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("run_front1"));
+	run_front_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("run_front2"));
+
+	m_sprite->SetAnimation(run_front_animation);
+
+	Animation death_animation = Animation();
+
+	death_animation.name = "dead";
+	death_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("dead"));
+
+	m_sprite->SetAnimation(death_animation);
+
+	Animation damage_animation = Animation();
+
+	damage_animation.name = "damaged";
+	damage_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("damaged"));
+
+	m_sprite->SetAnimation(damage_animation);
+}
+
 void RangedCombatEnemy::m_move()
 {
 	Seek(); // Get our target for this frame
@@ -284,6 +396,42 @@ void RangedCombatEnemy::m_move()
 
 	// clamp our velocity at max speed
 	GetRigidBody()->velocity = Util::Clamp(GetRigidBody()->velocity, GetMaxSpeed());
+
+	float xDir = abs(GetCurrentDirection().x);
+	float yDir = abs(GetCurrentDirection().y);
+
+	if (xDir > yDir && GetCurrentDirection().x > 0)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_RUN_RIGHT);
+	}
+	else if (xDir > yDir && GetCurrentDirection().x < 0)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_RUN_LEFT);
+	}
+
+	if (yDir > xDir && GetCurrentDirection().y > 0)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_RUN_UP);
+	}
+	else if (yDir > xDir && GetCurrentDirection().y < 0)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_RUN_DOWN);
+	}
+
+	if (Util::Magnitude(GetRigidBody()->velocity) <= 5)
+	{
+		if (GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_LEFT || GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_RIGHT)
+		{
+			if (GetAnimationState() == EnemyAnimationState::ENEMY_RUN_LEFT)
+			{
+				SetAnimationState(EnemyAnimationState::ENEMY_IDLE_LEFT);
+			}
+			else
+			{
+				SetAnimationState(EnemyAnimationState::ENEMY_IDLE_RIGHT);
+			}
+		}
+	}
 }
 
 void RangedCombatEnemy::m_buildPatrolPath()
@@ -297,7 +445,6 @@ void RangedCombatEnemy::m_buildPatrolPath()
 	m_patrolPath.push_back(glm::vec2(40, 40)); // Top Left Corner node
 
 	SetTargetPosition(m_patrolPath[m_wayPoint]);
-
 }
 
 void RangedCombatEnemy::m_buildTree()

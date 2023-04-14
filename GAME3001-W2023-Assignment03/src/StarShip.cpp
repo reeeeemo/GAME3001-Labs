@@ -82,11 +82,6 @@ void StarShip::Draw()
 	}
 	// draw the StarShip
 	
-
-
-	// Draw the health based on the amount the enemy has
-	Util::DrawFilledRect(GetTransform()->position - glm::vec2((GetHealth() / GetMaxHealth() * 100) / 2, 60.0f), GetHealth() / GetMaxHealth() * 100, 10.0f, glm::vec4(0, 1.0f, 0, 1.0f));
-
 	// draw the LOS Line if in debug mode
 	if (Game::Instance().GetDebugMode()) {
 		Util::DrawLine(GetTransform()->position,
