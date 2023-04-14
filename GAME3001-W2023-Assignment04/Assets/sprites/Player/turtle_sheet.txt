@@ -1,9 +1,0 @@
-idle 0 0 64 64
-run1 0 64 64 64
-run2 64 64 64 64
-run_back1 0 128 64 64
-run_back2 64 128 64 64
-run_front1 0 192 64 64
-run_front2 64 192 64 64
-dead 0 256 64 64
-damaged 0 320 64 64
