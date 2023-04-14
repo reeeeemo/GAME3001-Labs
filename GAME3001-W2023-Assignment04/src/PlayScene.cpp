@@ -22,7 +22,16 @@ PlayScene::~PlayScene()
 
 void PlayScene::Draw()
 {
+	for (const auto node : m_pGrid)
+	{
+		TextureManager::Instance().Draw("grass", node->GetTransform()->position,
+			0, 255, true, SDL_FLIP_NONE);
+	}
+
+
 	DrawDisplayList();
+
+	
 
 	if(m_isGridEnabled)
 	{
@@ -45,6 +54,8 @@ void PlayScene::Draw()
 			Util::DrawCircle(enemy->GetTransform()->position, starShipRadius, detected ? glm::vec4(0, 1, 0, 1) : glm::vec4(1, 0, 0, 1));
 		}
 	}
+
+	
 
 	SDL_SetRenderDrawColor(Renderer::Instance().GetRenderer(), 255, 255, 255, 255);
 }
@@ -241,6 +252,7 @@ void PlayScene::Start()
 {
 	// Set GUI Title
 	m_guiTitle = "Assignment 4";
+	TextureManager::Instance().Load("../Assets/sprites/background/grass.png", "grass");
 
 	Game::Instance().SetDebugMode(true);
 
@@ -250,8 +262,8 @@ void PlayScene::Start()
 	m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
 
 	// Add Game Objects
-	m_pBackground = new Background();
-	AddChild(m_pBackground, 0);
+	//m_pBackground = new Background();
+	//AddChild(m_pBackground, 0);
 
 	m_pPlayer = new Player();
 	m_pPlayer->GetTransform()->position = glm::vec2(550.0f, 300.0f);
@@ -302,6 +314,9 @@ void PlayScene::Start()
 
 	// Play Music
 	SoundManager::Instance().PlayMusic("klingon");
+
+	
+
 
 	ImGuiWindowFrame::Instance().SetGuiFunction(std::bind(&PlayScene::GUI_Function, this));
 }
