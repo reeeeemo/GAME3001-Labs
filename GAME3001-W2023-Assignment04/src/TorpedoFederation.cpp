@@ -24,5 +24,5 @@ void TorpedoFederation::Draw()
 			glm::vec2(this->GetWidth() * 0.5f, this->GetHeight() * 0.5f),
 			this->GetWidth(), this->GetHeight());
 	}
-	TextureManager::Instance().Draw("carrot", GetTransform()->position, GetTransform()->rotation.r, 255, true, SDL_FLIP_HORIZONTAL);
+	TextureManager::Instance().Draw("carrot", GetTransform()->position, atan2(m_direction.y,m_direction.x)*Util::Rad2Deg, 255, true, SDL_FLIP_HORIZONTAL);
 }
