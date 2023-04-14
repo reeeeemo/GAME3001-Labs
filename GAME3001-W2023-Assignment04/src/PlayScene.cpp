@@ -36,10 +36,10 @@ void PlayScene::Draw()
 			bool detected;
 			if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
 			{
-				detected = static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->GetDetected();
+				detected = dynamic_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->GetDetected();
 			}
 			else { // If ranged combat enemy
-				detected = static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->GetDetected();
+				detected = dynamic_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->GetDetected();
 			}
 
 			Util::DrawCircle(enemy->GetTransform()->position, starShipRadius, detected ? glm::vec4(0, 1, 0, 1) : glm::vec4(1, 0, 0, 1));
@@ -60,7 +60,7 @@ void PlayScene::Update()
 
 		if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
 		{
-			CloseCombatEnemy* tempEnemy = static_cast<CloseCombatEnemy*>(enemy);
+			auto tempEnemy = static_cast<CloseCombatEnemy*>(enemy);
 			tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
 			tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false);
 			tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
@@ -69,7 +69,7 @@ void PlayScene::Update()
 			tempEnemy->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance <= 30.0f);
 		}
 		else { // If ranged combat enemy
-			RangedCombatEnemy* tempEnemy = static_cast<RangedCombatEnemy*>(enemy);
+			auto tempEnemy = static_cast<RangedCombatEnemy*>(enemy);
 			tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
 			tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false);
 			tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
@@ -196,10 +196,10 @@ void PlayScene::HandleEvents()
 					enemy->TakeDamage(10); // enemy takes fixed dmg.
 					if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
 					{
-						static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(true);
+						dynamic_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(true);
 					}
 					else {
-						static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(true);
+						dynamic_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(true);
 					}
 					std::cout << "Starship at" << enemy->GetHealth() << "%. " << std::endl;
 				}
@@ -220,12 +220,12 @@ void PlayScene::HandleEvents()
 
 				if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
 				{
-					static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(false);
-					static_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
+					dynamic_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(false);
+					dynamic_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
 				}
 				else { // if (enemy->GetType() == EnemyType::RANGED)
-					static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(false);
-					static_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
+					dynamic_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(false);
+					dynamic_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
 				}
 
 			}
