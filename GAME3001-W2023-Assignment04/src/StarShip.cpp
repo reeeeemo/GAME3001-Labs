@@ -4,22 +4,28 @@
 #include "TextureManager.h"
 #include "Util.h"
 
-StarShip::StarShip() : m_maxSpeed(20.0f),
+StarShip::StarShip():
 m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 500.0f))
 {
-	TextureManager::Instance().Load("../Assets/textures/d7_small.png", "starship");
+	TextureManager::Instance().LoadSpriteSheet("../Assets/sprites/Player/turtle_sheet.txt",
+"../Assets/sprites/Player/turtle_sheet.png", "turtle");
 
-	const auto size = TextureManager::Instance().GetTextureSize("starship");
+	m_sprite = new PlaceholderSprite;
+
+	m_sprite->SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("turtle"));
+
+	const auto size = TextureManager::Instance().GetTextureSize("turtle");
 	SetWidth(static_cast<int>(size.x));
 	SetHeight(static_cast<int>(size.y));
-	GetTransform()->position = glm::vec2(0.0f, 0.0f);
+	SetMaxSpeed(20.0f);
+	SetDetectionRadius(200.0f);
+	GetTransform()->position = glm::vec2(300.0f, 200.0f);
 	GetRigidBody()->bounds = glm::vec2(GetWidth(), GetHeight());
 	GetRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 	GetRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
 	GetRigidBody()->isColliding = false;
 	setIsCentered(true);
 	SetType(GameObjectType::AGENT);
-
 	
 	SetCurrentHeading(0.0f); // Current facing angle
 	SetLOSDistance(400.0f);
@@ -29,6 +35,9 @@ m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 50
 	// New for Lab 7.1
 	SetActionState(ActionState::NO_ACTION);
 	m_buildPatrolPath();
+	SetHealth(100.0f);
+	BuildAnimations();
+	SetAnimationState(EnemyAnimationState::ENEMY_IDLE_LEFT);
 }
 
 StarShip::~StarShip()
@@ -36,13 +45,71 @@ StarShip::~StarShip()
 
 void StarShip::Draw()
 {
+	switch(GetAnimationState())
+	{
+	case EnemyAnimationState::ENEMY_IDLE_LEFT:
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation("idle"),
+			GetTransform()->position, 0.12f, GetTransform()->rotation.r, 255, true);
+		break;
+	case EnemyAnimationState::ENEMY_IDLE_RIGHT:
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation("idle"),
+			GetTransform()->position, 0.12f, GetTransform()->rotation.r, 255, true, SDL_FLIP_HORIZONTAL);
+		break;
+	case EnemyAnimationState::ENEMY_RUN_LEFT:
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation("run"),
+			GetTransform()->position, 0.12f, GetTransform()->rotation.r, 255, true);
+		break;
+	case EnemyAnimationState::ENEMY_RUN_RIGHT:
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation("run"),
+			GetTransform()->position, 0.12f, GetTransform()->rotation.r, 255, true, SDL_FLIP_HORIZONTAL);
+		break;
+	case EnemyAnimationState::ENEMY_RUN_DOWN:
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation("run_back"),
+			GetTransform()->position, 0.12f, GetTransform()->rotation.r, 255, true);
+		break;
+	case EnemyAnimationState::ENEMY_RUN_UP:
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation("run_front"),
+			GetTransform()->position, 0.12f, GetTransform()->rotation.r, 255, true);
+		break;
+	case EnemyAnimationState::ENEMY_DAMAGE:
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation("damaged"),
+			GetTransform()->position, 0.12f, GetTransform()->rotation.r, 255, true);
+		break;
+	case EnemyAnimationState::ENEMY_DEAD:
+		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation("dead"),
+			GetTransform()->position, 0.12f, GetTransform()->rotation.r, 255, true);
+		break;
+	}
 	// draw the StarShip
-	TextureManager::Instance().Draw("starship", 
-		GetTransform()->position, static_cast<double>(GetCurrentHeading()), 255, true);
+	
 
-	// draw the LOS Line
-	Util::DrawLine(GetTransform()->position,
-		GetTransform()->position + GetCurrentDirection() * GetLOSDistance(), GetLOSColour());
+
+	// Draw the health based on the amount the enemy has
+	Util::DrawFilledRect(GetTransform()->position - glm::vec2((GetHealth() / GetMaxHealth() * 100) / 2, 60.0f), GetHealth() / GetMaxHealth() * 100, 10.0f, glm::vec4(0, 1.0f, 0, 1.0f));
+
+	// draw the LOS Line if in debug mode
+	if (Game::Instance().GetDebugMode()) {
+		Util::DrawLine(GetTransform()->position,
+			GetTransform()->position + GetCurrentDirection() * GetLOSDistance(), GetLOSColour());
+	}
+
+	// Draw the Detection Radius Circle if in debug mode
+	if (Game::Instance().GetDebugMode()) {
+		if (IsDetectingPlayer())
+		{
+			Util::DrawCircle(GetTransform()->position, GetDetectionRadius(), glm::vec4(0,1.0f,0,1.0f));
+		} else {
+			Util::DrawCircle(GetTransform()->position, GetDetectionRadius(), glm::vec4(1.0f,0,0,1.0f));
+		}
+	}
+	// If we are in debug mode, draw the collider rect.
+	if(Game::Instance().GetDebugMode())
+	{
+		Util::DrawRect(GetTransform()->position -
+				glm::vec2(this->GetWidth() * 0.5f, this->GetHeight() * 0.5f),
+				this->GetWidth(), this->GetHeight());
+	}
+
 }
 
 void StarShip::Update()
@@ -59,6 +126,10 @@ void StarShip::Update()
 		break;
 	case ActionState::ATTACK:
 		break;
+	case ActionState::IDLE:
+		break;
+	case ActionState::NO_ACTION:
+		break;
 	}
 }
 
@@ -66,10 +137,6 @@ void StarShip::Clean()
 {
 }
 
-float StarShip::GetMaxSpeed() const
-{
-	return m_maxSpeed;
-}
 
 float StarShip::GetTurnRate() const
 {
@@ -86,10 +153,6 @@ glm::vec2 StarShip::GetDesiredVelocity() const
 	return m_desiredVelocity;
 }
 
-void StarShip::SetMaxSpeed(const float speed)
-{
-	m_maxSpeed = speed;
-}
 
 void StarShip::SetTurnRate(const float angle)
 {
@@ -137,17 +200,6 @@ void StarShip::Seek()
 void StarShip::LookWhereYoureGoing(const glm::vec2 target_direction)
 {
 	float target_rotation = Util::SignedAngle(GetCurrentDirection(), target_direction) -90.0f;
-
-	last_rotation = target_rotation;
-
-	if (target_rotation < 0)
-	{
-		target_rotation += 180.0f;
-	}
-	if (target_rotation < 184 && target_rotation > 176)
-	{
-		target_rotation = last_rotation;
-	}
 
 	const float turn_sensitivity = 3.0f;
 
@@ -200,6 +252,41 @@ void StarShip::m_move()
 
 	// clamp our velocity at max speed
 	GetRigidBody()->velocity = Util::Clamp(GetRigidBody()->velocity, GetMaxSpeed());
+
+	float xDir = abs(GetCurrentDirection().x);
+	float yDir = abs(GetCurrentDirection().y);
+
+
+
+	if (xDir > yDir && GetCurrentDirection().x > 0)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_RUN_RIGHT);
+	} else if (xDir > yDir && GetCurrentDirection().x < 0)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_RUN_LEFT);
+	}
+
+	if (yDir > xDir && GetCurrentDirection().y > 0)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_RUN_UP);
+	} else if (yDir > xDir && GetCurrentDirection().y < 0)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_RUN_DOWN);
+	}
+
+	if (Util::Magnitude(GetRigidBody()->velocity) <= 5)
+	{
+		if (GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_LEFT || GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_RIGHT)
+		{
+			if (GetAnimationState() == EnemyAnimationState::ENEMY_RUN_LEFT)
+			{
+				SetAnimationState(EnemyAnimationState::ENEMY_IDLE_LEFT);
+			} else
+			{
+				SetAnimationState(EnemyAnimationState::ENEMY_IDLE_RIGHT);
+			}
+		}
+	}
 }
 
 void StarShip::m_buildPatrolPath()
@@ -214,4 +301,52 @@ void StarShip::m_buildPatrolPath()
 
 	SetTargetPosition(m_patrolPath[m_wayPoint]);
 
+}
+
+void StarShip::BuildAnimations()
+{
+	Animation idle_animation = Animation();
+
+	idle_animation.name = "idle";
+	idle_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("idle"));
+
+	m_sprite->SetAnimation(idle_animation);
+
+	Animation run_animation = Animation();
+
+	run_animation.name = "run";
+	run_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("run1"));
+	run_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("run2"));
+
+	m_sprite->SetAnimation(run_animation);
+
+	Animation run_back_animation = Animation();
+
+	run_back_animation.name = "run_back";
+	run_back_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("run_back1"));
+	run_back_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("run_back2"));
+
+	m_sprite->SetAnimation(run_back_animation);
+
+	Animation run_front_animation = Animation();
+
+	run_front_animation.name = "run_front";
+	run_front_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("run_front1"));
+	run_front_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("run_front2"));
+
+	m_sprite->SetAnimation(run_front_animation);
+
+	Animation death_animation = Animation();
+
+	death_animation.name = "dead";
+	death_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("dead"));
+
+	m_sprite->SetAnimation(death_animation);
+
+	Animation damage_animation = Animation();
+
+	damage_animation.name = "damaged";
+	damage_animation.frames.push_back(m_sprite->GetSpriteSheet()->GetFrame("damaged"));
+
+	m_sprite->SetAnimation(damage_animation);
 }

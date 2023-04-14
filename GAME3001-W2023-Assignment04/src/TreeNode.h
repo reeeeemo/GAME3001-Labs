@@ -3,15 +3,9 @@
 #define __TREE_NODE__
 #include <string>
 
-#include "Agent.h"
-
 struct TreeNode
 {
-	TreeNode(Agent* agent = nullptr)
-	{
-		m_agent = agent;
-	}
-
+	TreeNode() = default;
 	virtual ~TreeNode() = default;
 
 	std::string m_name = "";
@@ -20,12 +14,6 @@ struct TreeNode
 	TreeNode* m_pRight = nullptr;
 	TreeNode* m_pParent = nullptr;
 	bool m_isLeaf = false;
-
-	Agent* GetAgent() { return m_agent; }
-	void SetAgent(Agent* agent) { m_agent = agent; }
-
-protected:
-	Agent* m_agent;
 };
 
 #endif /* defined (__TREE_NODE__) */

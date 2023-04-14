@@ -93,13 +93,14 @@ void SoundManager::ResumeMusic() const
 	}
 }
 
-void SoundManager::PlaySoundFX(const std::string & id, const int loop/* = 0 */, const int channel/* = -1 */)
+void SoundManager::Play_Sound(const std::string & id, const int loop/* = 0 */, const int channel/* = -1 */)
 {
 	if (Mix_PlayChannel(channel, m_sfxs[id], loop) == -1)
 	{
 		std::cout << "Unable to play SFX: ERROR - " << Mix_GetError() << std::endl;
 	}
 }
+
 
 void SoundManager::SetMusicVolume(const int vol) const
 {

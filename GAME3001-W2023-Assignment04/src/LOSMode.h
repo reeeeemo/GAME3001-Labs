@@ -4,8 +4,8 @@
 
 enum class LOSMode
 {
-	TARGET,
-	SHIP,
+	PLAYER,
+	ENEMY,
 	BOTH
 };
 

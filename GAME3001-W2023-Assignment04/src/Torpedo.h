@@ -1,50 +1,42 @@
-#pragma once
-#ifndef __TORPEDO_H__
-#define __TORPEOD_H__
+﻿#pragma once
+#include "Projectile.h"
 
-#include "TorpedoAnimationState.h"
-#include "Sprite.h"
-#include "GameObject.h"
-#include <vector>
-
-class Torpedo : public Sprite
+class Torpedo final : public Projectile
 {
 public:
-	Torpedo();
-	virtual ~Torpedo() override;
+    Torpedo();
+    void Draw() override;
+    void Update() override;
+    void Clean() override;
+    void Start() override;
+    void SetExplodeAfter(float explodeAfter);
+    [[nodiscard]] float GetExplodeAfter() const;
+    [[nodiscard]] float GetDamage();
 
-	// Life Cycle Methods
-	virtual void Draw() override;
-	virtual void Update() override;
-	virtual void Clean() override;
-
-	// setters
-	virtual void SetAnimationState(TorpedoAnimationState new_state);
-
-protected:
-	virtual void BuildAnimations();
-
-	TorpedoAnimationState m_currentAnimationState;
-
-	std::string m_textureKey;
-	float m_speed;
-	glm::vec2 m_direction;
+private:
+    glm::vec2 m_mousePos;
+    float m_explodeAfter;
+    Uint32 m_explodeTime;
+    float m_deleteAfter;
+    bool m_isExploded;
+    float m_damage;
 };
 
 class TorpedoPool final : public DisplayObject
 {
 public:
-	TorpedoPool();
-	~TorpedoPool();
+    TorpedoPool();
+    std::vector<Torpedo*> GetPool();
 
-	void Draw() override;
-	void Update() override;
-	void Clean() override;
+    void Fire();
 
-	void FireTorpedo(Torpedo* torpedoToFire);
-	std::vector<Torpedo*> GetPool();
 private:
-	std::vector<Torpedo*> m_pTorpedos;
+    // Just overrides of the basic functions 
+    void Update() override;
+    void Clean() override;
+    void Draw();
+
+    std::vector<Torpedo*> m_torpedoes;
 };
 
-#endif /* defined (__TORPEDO_H__) */
+

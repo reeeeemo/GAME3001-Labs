@@ -7,7 +7,7 @@
 class RadiusCondition : public ConditionNode
 {
 public:
-	RadiusCondition(Agent* agent = nullptr, bool within_radius = false);
+	RadiusCondition(bool within_radius = false);
 
 	virtual ~RadiusCondition();
 

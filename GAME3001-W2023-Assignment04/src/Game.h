@@ -57,6 +57,13 @@ public:
 
 	[[nodiscard]] SDL_Window* GetWindow() const;
 
+	void SetPlayer(Player* player);
+	Player* GetPlayer() const;
+
+	// Static debug mode function
+	void SetDebugMode(bool debug_mode);
+	bool GetDebugMode();
+
 private:
 	Game();
 	~Game();
@@ -66,6 +73,7 @@ private:
 	Uint32 m_frames;
 	float m_deltaTime{};
 	glm::vec2 m_mousePosition;
+	Player* m_pPlayer;
 
 	// scene variables
 	Scene* m_pCurrentScene;
@@ -73,6 +81,10 @@ private:
 
 	// storage structures
 	std::shared_ptr<SDL_Window> m_pWindow;
+	
+
+	// Debug variables
+	bool m_isDebugMode;
 };
 
 

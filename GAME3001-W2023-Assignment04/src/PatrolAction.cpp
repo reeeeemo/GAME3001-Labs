@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-PatrolAction::PatrolAction(Agent* agent) : ActionNode(agent)
+PatrolAction::PatrolAction()
 {
 	m_name = "Patrol Action";
 }
@@ -12,10 +12,9 @@ PatrolAction::~PatrolAction()
 
 void PatrolAction::Action()
 {
-	if (GetAgent()->GetActionState() != ActionState::PATROL)
+	if (GetAgent()->GetActionState() != ActionState::PATROL && GetAgent()->GetActionState()!= ActionState::IDLE)
 	{
 		std::cout << "Performing " << m_name << std::endl;
 		GetAgent()->SetActionState(ActionState::PATROL);
 	}
-	GetAgent()->Patrol();
 }

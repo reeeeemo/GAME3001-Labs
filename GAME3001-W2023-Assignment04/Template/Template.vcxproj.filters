@@ -66,9 +66,6 @@
     <ClCompile Include="..\src\SoundManager.cpp">
       <Filter>Managers</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\TextureManager.cpp">
-      <Filter>Managers</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Player.cpp">
       <Filter>Game Objects</Filter>
     </ClCompile>
@@ -192,44 +189,18 @@
     <ClCompile Include="..\src\Background.cpp">
       <Filter>Game Objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\CloseCombatEnemy.cpp">
-      <Filter>Decision\Agents</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\RangedCombatEnemy.cpp">
-      <Filter>Decision\Agents</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\MoveToRange.cpp">
-      <Filter>Decision\Actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\RangedCombatCondition.cpp">
-      <Filter>Decision\Conditions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\FleeAction.cpp">
-      <Filter>Decision\Actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\WaitBehindCoverAction.cpp">
-      <Filter>Decision\Actions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\EnemyHealthCondition.cpp">
-      <Filter>Decision\Conditions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\EnemyHitCondition.cpp">
-      <Filter>Decision\Conditions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\PlayerDetectedCondition.cpp">
-      <Filter>Decision\Conditions</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\MoveToCoverAction.cpp">
-      <Filter>Decision\Actions</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Torpedo.cpp">
-      <Filter>Game Objects</Filter>
+      <Filter>Decision\Agents</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\TorpedoKlingon.cpp">
-      <Filter>Game Objects</Filter>
+    <ClCompile Include="..\src\Projectile.cpp">
+      <Filter>Decision\Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\TorpedoFederation.cpp">
-      <Filter>Game Objects</Filter>
+    <ClCompile Include="..\src\Enemy.cpp" />
+    <ClCompile Include="..\src\TextureManager.cpp">
+      <Filter>Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PlaceholderSprite.cpp">
+      <Filter>Decision\Agents</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -449,47 +420,18 @@
     <ClInclude Include="..\src\Background.h">
       <Filter>Game Objects</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CloseCombatEnemy.h">
-      <Filter>Decision\Agents</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\RangedCombatEnemy.h">
-      <Filter>Decision\Agents</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\MoveToRange.h">
-      <Filter>Decision\Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\RangedCombatCondition.h">
-      <Filter>Decision\Conditions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\FleeAction.h">
-      <Filter>Decision\Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\WaitBehindCoverAction.h">
-      <Filter>Decision\Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\EnemyHealthCondition.h">
-      <Filter>Decision\Conditions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\EnemyHitCondition.h">
-      <Filter>Decision\Conditions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\PlayerDetectedCondition.h">
-      <Filter>Decision\Conditions</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\MoveToCoverAction.h">
-      <Filter>Decision\Actions</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Torpedo.h">
-      <Filter>Game Objects</Filter>
+      <Filter>Decision\Agents</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\TorpedoAnimationState.h">
+    <ClInclude Include="..\src\Projectile.h">
+      <Filter>Decision\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Enemy.h" />
+    <ClInclude Include="..\src\PlaceholderSprite.h">
+      <Filter>Decision\Agents</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\EnemyAnimationState.h">
       <Filter>Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\TorpedoKlingon.h">
-      <Filter>Game Objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\TorpedoFederation.h">
-      <Filter>Game Objects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

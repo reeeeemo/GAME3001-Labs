@@ -46,18 +46,15 @@ void StartScene::HandleEvents()
 void StartScene::Start()
 {
 	const SDL_Color blue = { 0, 0, 255, 255 };
-	m_pStartLabel = new Label("START SCENE", "Consolas", 80, blue, glm::vec2(400.0f, 40.0f));
+	m_pStartLabel = new Label("Cameron Bryson + Robert Oxley + Jae Min Park", "Consolas", 32, blue, glm::vec2(400.0f, 40.0f));
 	m_pStartLabel->SetParent(this);
 	AddChild(m_pStartLabel);
 
-	m_pInstructionsLabel = new Label("Press 1 to Play", "Consolas", 40, blue, glm::vec2(400.0f, 120.0f));
+	m_pInstructionsLabel = new Label("101431086 + 101424472 + 101423227", "Consolas", 32, blue, glm::vec2(400.0f, 120.0f));
 	m_pInstructionsLabel->SetParent(this);
 	AddChild(m_pInstructionsLabel);
 
 
-	m_pShip = new Ship();
-	m_pShip->GetTransform()->position = glm::vec2(400.0f, 300.0f); 
-	AddChild(m_pShip); 
 
 	// Start Button
 	m_pStartButton = new Button();
@@ -82,4 +79,3 @@ void StartScene::Start()
 
 	ImGuiWindowFrame::Instance().SetDefaultGuiFunction();
 }
-

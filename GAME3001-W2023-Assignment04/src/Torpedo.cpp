@@ -1,109 +1,146 @@
-#include "Torpedo.h"
+﻿#include "Torpedo.h"
+#include "Projectile.h"
+#include "Game.h"
 #include "TextureManager.h"
+#include "Util.h"
 
 TorpedoPool::TorpedoPool()
-{
+{ }
 
+std::vector<Torpedo*> TorpedoPool::GetPool()
+{
+    return m_torpedoes;
 }
 
-TorpedoPool::~TorpedoPool()
-= default;
-
-void TorpedoPool::Draw()
+void TorpedoPool::Fire()
 {
-	for (const auto torpedo : m_pTorpedos)
-	{
-		torpedo->Draw();
-	}
+    m_torpedoes.push_back(new Torpedo());
 }
 
 void TorpedoPool::Update()
 {
-	for (const auto torpedo : m_pTorpedos)
-	{
-		torpedo->Update();
-	}
+    for(unsigned i = 0; i < m_torpedoes.size(); i++)
+    {
+        if (m_torpedoes[i]->GetDeleteMe()) // If we need to delete the torpedoes
+        {
+            delete m_torpedoes[i];
+            m_torpedoes[i] = nullptr;
+            m_torpedoes.erase(i + m_torpedoes.begin());
+            m_torpedoes.shrink_to_fit();
+        } else
+        {
+            m_torpedoes[i]->Update();
+        }
+    }
 }
 
 void TorpedoPool::Clean()
+{}
+
+void TorpedoPool::Draw()
 {
-	for (auto torpedo : m_pTorpedos)
-	{
-		delete torpedo;
-		torpedo = nullptr;
-	}
-	m_pTorpedos.clear();
-	m_pTorpedos.shrink_to_fit();
+    for (Torpedo* torpedo : m_torpedoes)
+    {
+        torpedo->Draw();
+    }
 }
-
-void TorpedoPool::FireTorpedo(Torpedo* torpedoToFire)
-{
-	m_pTorpedos.push_back(torpedoToFire);
-}
-
-std::vector<Torpedo*> TorpedoPool::GetPool()
-{
-	return m_pTorpedos;
-}
-
-
 
 Torpedo::Torpedo()
 {
-	m_currentAnimationState = TorpedoAnimationState::FIRED;
-	m_speed = 0.0f;
+    SetPlayer(Game::Instance().GetPlayer());
+    m_damage = 30.0f;
+    Start();
 }
-
-Torpedo::~Torpedo()
-= default;
-
-// Renders the torpedo based on their position.
 void Torpedo::Draw()
 {
-	// draw the Torpedo according to animation state
-	switch (m_currentAnimationState)
-	{
-	case TorpedoAnimationState::FIRED:
-		TextureManager::Instance().PlayAnimation(m_textureKey, GetAnimation("fire"),
-			GetTransform()->position, 0.25f, 0, 255, true);
-		break;
-	default:
-		break;
-	}
+    // If we are in debug mode, draw the collider rect.
+    if(Game::Instance().GetDebugMode())
+    {
+        Util::DrawRect(GetTransform()->position -
+                glm::vec2(this->GetWidth() * 0.5f, this->GetHeight() * 0.5f),
+                this->GetWidth(), this->GetHeight());
+    }
+    // draw the target
+    if(m_isExploded)
+    {
+        TextureManager::Instance().Draw("explosion", GetTransform()->position, GetTransform()->rotation.r, 255, true);
+    }
+    else
+    {
+        TextureManager::Instance().Draw("carrot", GetTransform()->position, GetTransform()->rotation.r, 255, true, SDL_FLIP_HORIZONTAL);
+    }
+    
+}
+void Torpedo::Start()
+{
+    // Getting sprite + setting transform.
+    TextureManager::Instance().Load("../Assets/sprites/Player/carrot.png", "carrot");
+    TextureManager::Instance().Load("../Assets/textures/Explosion.png", "explosion");
+    SoundManager::Instance().Load("../Assets/audio/hitHurt.wav", "hitHurt", SoundType::SOUND_SFX);
+    SoundManager::Instance().Load("../Assets/audio/submarineShoot.wav", "subShoot", SoundType::SOUND_SFX);
+    SoundManager::Instance().Play_Sound("subShoot");
+    SetWidth(20);
+    SetHeight(20);
+    // Setting velocity and speed
+    SetVeloDamp({0.9975,0.9975});
+    SetSpeed(200.0f);
+    SetMaxSpeed(300.0f);
+    // Setting specific stats (dmg, delete buffer, etc.) as well as getting mouse position
+    SetDeleteBuffer(100.0f);
+    SetDamage(50.0f);
+    SetExplodeAfter(1.35f);
+    m_deleteAfter = 0.1f;
+    // Setting source of projectile and the type, as well as setting the rotation, position, and velocity.
+    SetProjectileSource(GetPlayer());
+    SetType(GameObjectType::TORPEDO);
+    GetTransform()->rotation.r= GetPlayer()->GetTransform()->rotation.r;
+    GetRigidBody()->velocity+= glm::vec2{cos(GetPlayer()->GetTransform()->rotation.r*Util::Deg2Rad)*GetSpeed(),sin(GetPlayer()->GetTransform()->rotation.r*Util::Deg2Rad)*GetSpeed()};
+    GetTransform()->position = GetPlayer()->GetTransform()->position;
+    
+
+    //debug
+    //std::cout << "Spawned projectile at:" << GetTransform()->position.x << " , " << GetTransform()->position.y<<std::endl;
+    //std::cout << GetRigidBody()->velocity.x << " , " << GetRigidBody()->velocity.y<<std::endl;
 }
 
-// Updates the torpedo's position
+void Torpedo::SetExplodeAfter(float explodeAfter)
+{
+    m_explodeAfter = explodeAfter;
+}
+
+
+float Torpedo::GetExplodeAfter() const
+{
+    return m_explodeAfter;
+}
+
+float Torpedo::GetDamage()
+{
+    return m_damage;
+}
+
+
 void Torpedo::Update()
 {
-	GetTransform()->position += m_direction;
+    Move();
+    if(GetRigidBody()->isColliding||(SDL_GetTicks()-GetStartTime())/1000.0f > GetExplodeAfter())
+    {
+        if(!m_isExploded)
+        {
+            SoundManager::Instance().Play_Sound("hitHurt");
+            m_isExploded = true;
+            SetWidth(GetWidth()*2);
+            SetHeight(GetHeight()*2);
+            m_explodeTime = SDL_GetTicks();
+            GetRigidBody()->velocity={0.0f,0.0f};
+        }
+    }
+    if(m_isExploded&&(SDL_GetTicks()-m_explodeTime)/1000.0f > m_deleteAfter)
+    {
+        SetDeleteMe(true);
+    }
 }
-
-// Cleanup!
 void Torpedo::Clean()
-{
-}
-
-void Torpedo::SetAnimationState(const TorpedoAnimationState new_state)
-{
-	m_currentAnimationState = new_state;
-}
-
-// Builds base class animations!
-void Torpedo::BuildAnimations()
-{
-	auto fire_animation = Animation();
-
-	fire_animation.name = "fire";
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired1"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired2"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired3"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired4"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired5"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired6"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired7"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired8"));
-
-	SetAnimation(fire_animation);
-}
+{ }
 
 

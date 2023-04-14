@@ -1,6 +1,6 @@
 #include "CloseCombatCondition.h"
 
-CloseCombatCondition::CloseCombatCondition(Agent* agent, const bool within_combat_range) : ConditionNode(agent)
+CloseCombatCondition::CloseCombatCondition(const bool within_combat_range)
 {
 	m_name = "Close Combat Condition";
 	SetIsWithinCombatRange(within_combat_range);

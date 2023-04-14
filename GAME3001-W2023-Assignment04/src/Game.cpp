@@ -9,8 +9,18 @@
 
 // Game functions - DO NOT REMOVE ***********************************************
 
+void Game::SetDebugMode(bool debug_mode)
+{
+	m_isDebugMode = debug_mode;
+}
+
+bool Game::GetDebugMode()
+{
+	return m_isDebugMode;
+}
+
 Game::Game() :
-	m_bRunning(true), m_frames(0), m_pCurrentScene(nullptr), m_currentSceneState(SceneState::NO_SCENE), m_pWindow(nullptr)
+	m_bRunning(true), m_frames(0), m_pCurrentScene(nullptr), m_currentSceneState(SceneState::NO_SCENE), m_pWindow(nullptr), m_isDebugMode(false)
 {
 	srand(static_cast<unsigned>(time(nullptr)));  // random seed
 }
@@ -97,7 +107,7 @@ void Game::Start()
 {
 	m_currentSceneState = SceneState::NO_SCENE;
 
-	ChangeSceneState(SceneState::PLAY);
+	ChangeSceneState(SceneState::START);
 }
 
 bool Game::IsRunning() const
@@ -181,6 +191,16 @@ void Game::ChangeSceneState(const SceneState new_state)
 SDL_Window* Game::GetWindow() const
 {
 	return m_pWindow.get();
+}
+
+void Game::SetPlayer(Player* player)
+{
+	m_pPlayer = player;
+}
+
+Player* Game::GetPlayer() const
+{
+	return m_pPlayer;
 }
 
 void Game::Quit()

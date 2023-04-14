@@ -7,7 +7,7 @@
 class CloseCombatCondition : public ConditionNode
 {
 public:
-	CloseCombatCondition(Agent* agent = nullptr, bool within_combat_range = false);
+	CloseCombatCondition(bool within_combat_range = false);
 
 	virtual ~CloseCombatCondition();
 

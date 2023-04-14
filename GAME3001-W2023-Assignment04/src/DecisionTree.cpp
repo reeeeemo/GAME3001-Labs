@@ -11,13 +11,13 @@
 
 DecisionTree::DecisionTree()
 {
-	//m_buildTree();
+	m_buildTree();
 }
 
 DecisionTree::DecisionTree(Agent* agent)
 {
 	m_agent = agent;
-	//m_buildTree();
+	m_buildTree();
 }
 
 DecisionTree::~DecisionTree()
@@ -46,66 +46,6 @@ RadiusCondition* DecisionTree::GetRadiusNode() const
 CloseCombatCondition* DecisionTree::GetCloseCombatNode() const
 {
 	return m_closeCombatNode;
-}
-
-RangedCombatCondition* DecisionTree::GetRangedCombatNode() const
-{
-	return m_rangedCombatNode;
-}
-
-EnemyHealthCondition* DecisionTree::GetEnemyHealthNode() const
-{
-	return m_enemyHealthConditionNode;
-}
-
-EnemyHitCondition* DecisionTree::GetEnemyHitNode() const
-{
-	return m_enemyHitConditionNode;
-}
-
-PlayerDetectedCondition* DecisionTree::GetPlayerDetectedNode() const
-{
-	return m_playerDetectedConditionNode;
-}
-
-void DecisionTree::SetEnemyHealthNode(EnemyHealthCondition* node)
-{
-	m_enemyHealthConditionNode = node;
-}
-
-void DecisionTree::SetEnemyHitNode(EnemyHitCondition* node)
-{
-	m_enemyHitConditionNode = node;
-}
-
-void DecisionTree::SetPlayerDetectedNode(PlayerDetectedCondition* node)
-{
-	m_playerDetectedConditionNode = node;
-}
-
-std::vector<TreeNode*>& DecisionTree::GetTree()
-{
-	return m_treeNodeList;
-}
-
-void DecisionTree::SetLOSNode(LOSCondition* node)
-{
-	m_LOSNode = node;
-}
-
-void DecisionTree::SetRadiusNode(RadiusCondition* node)
-{
-	m_radiusNode = node;
-}
-
-void DecisionTree::SetCloseCombatNode(CloseCombatCondition* node)
-{
-	m_closeCombatNode = node;
-}
-
-void DecisionTree::SetRangedCombatNode(RangedCombatCondition* node)
-{
-	m_rangedCombatNode = node;
 }
 
 TreeNode* DecisionTree::AddNode(TreeNode* parent, TreeNode* child_node, const TreeNodeType type)
@@ -154,7 +94,6 @@ void DecisionTree::Clean()
 	m_closeCombatNode = nullptr;
 }
 
-// Traverse the tree in order
 void DecisionTree::MakeDecision() const
 {
 	TreeNode* current_node = m_treeNodeList[0]; // Root node.
@@ -169,3 +108,37 @@ void DecisionTree::MakeDecision() const
 	dynamic_cast<ActionNode*>(current_node)->Action();
 }
 
+void DecisionTree::m_buildTree()
+{
+	// Conditions
+
+	// Create and add the root node
+	m_LOSNode = new LOSCondition;
+	m_treeNodeList.push_back(m_LOSNode);
+
+	m_radiusNode = new RadiusCondition();
+	AddNode(m_LOSNode, m_radiusNode, TreeNodeType::LEFT_TREE_NODE);
+	m_closeCombatNode = new CloseCombatCondition();
+	AddNode(m_LOSNode, m_closeCombatNode, TreeNodeType::RIGHT_TREE_NODE);
+	m_treeNodeList.push_back(m_closeCombatNode);
+
+	// Actions
+
+	// Left Sub-tree
+	TreeNode* patrolNode = AddNode(m_radiusNode, new PatrolAction(), TreeNodeType::LEFT_TREE_NODE);
+	dynamic_cast<ActionNode*>(patrolNode)->SetAgent(m_agent);
+	m_treeNodeList.push_back(patrolNode);
+
+	TreeNode* moveToLOSNode = AddNode(m_radiusNode, new MoveToLOSAction(), TreeNodeType::RIGHT_TREE_NODE);
+	dynamic_cast<ActionNode*>(moveToLOSNode)->SetAgent(m_agent);
+	m_treeNodeList.push_back(moveToLOSNode);
+
+	// Right sub-tree
+	TreeNode* moveToPlayerNode = AddNode(m_closeCombatNode, new MoveToPlayerAction(), TreeNodeType::LEFT_TREE_NODE);
+	dynamic_cast<ActionNode*>(moveToPlayerNode)->SetAgent(m_agent);
+	m_treeNodeList.push_back(moveToPlayerNode);
+
+	TreeNode* attackNode = AddNode(m_closeCombatNode, new AttackAction(), TreeNodeType::RIGHT_TREE_NODE);
+	dynamic_cast<ActionNode*>(attackNode)->SetAgent(m_agent);
+	m_treeNodeList.push_back(attackNode);
+}

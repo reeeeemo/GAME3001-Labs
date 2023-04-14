@@ -10,16 +10,13 @@
 #include "PathNode.h"
 
 // New for Lab 7.1
+#include "DecisionTree.h"
 #include "Background.h"
-
-// New for Lab 7.2
-#include "CloseCombatEnemy.h"
-#include "RangedCombatEnemy.h"
+#include "Label.h"
+#include "Player.h"
 #include "Torpedo.h"
-#include "TorpedoKlingon.h"
-#include "TorpedoFederation.h"
 
-//#define CLOSE_COMBAT
+#include <map>
 
 class PlayScene : public Scene
 {
@@ -34,9 +31,6 @@ public:
 	virtual void HandleEvents() override;
 	virtual void Start() override;
 
-	// New for Lab 8.
-	void SpawnEnemyTorpedo();
-	[[nodiscard]] Target* GetTarget() const;
 private:
 	// IMGUI Function
 	void GUI_Function();
@@ -48,19 +42,14 @@ private:
 	int m_angle;
 
 	// Game Objects for the Scene
-	Target* m_pTarget;
-	//StarShip* m_pStarShip;
+	EnemyPool* m_pEnemyPool;
+	Player* m_pPlayer;
+	TorpedoPool* m_pTorpedoPool;
 	std::vector<Obstacle*> m_pObstacles;
+	Label* m_RemainingEnemiesLabel;
 	// New for Lab 7.1
 	Background* m_pBackground;
-	
-#if defined(CLOSE_COMBAT)
-	CloseCombatEnemy* m_pStarShip;
-	float starShipRadius = 200.0f;
-#else
-	float starShipRadius = 300.0f;
-	RangedCombatEnemy* m_pStarShip;
-#endif
+
 	void BuildObstaclePool();
 
 	// Create our Division Scheme (Grid of PathNodes)
@@ -80,11 +69,14 @@ private:
 	LOSMode m_LOSMode{};
 	int m_pathNodeLOSDistance;
 
-	// Debugging Variables
-	bool m_bDebugView;
+	// Decision Tree
 
-	// New for lab 8
-	TorpedoPool* m_pTorpedoPool;
+	std::map<Enemy*, DecisionTree*> m_decisionTrees;
+	//DecisionTree* m_decisionTree;
+
+	// Collision Checker
+	void CheckCollision();
+	void CheckEnemyDetectionRadius();
 };
 
 #endif /* defined (__PLAY_SCENE__) */
