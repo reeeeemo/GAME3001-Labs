@@ -171,6 +171,7 @@
     <ClCompile Include="..\src\CollisionManager.cpp" />
     <ClCompile Include="..\src\DecisionTree.cpp" />
     <ClCompile Include="..\src\DestructibleObstacle.cpp" />
+    <ClCompile Include="..\src\Enemy.cpp" />
     <ClCompile Include="..\src\EnemyHealthCondition.cpp" />
     <ClCompile Include="..\src\EnemyHitCondition.cpp" />
     <ClCompile Include="..\src\EnemyPool.cpp" />
@@ -242,6 +243,7 @@
     <ClInclude Include="..\src\Config.h" />
     <ClInclude Include="..\src\DecisionTree.h" />
     <ClInclude Include="..\src\DestructibleObstacle.h" />
+    <ClInclude Include="..\src\Enemy.h" />
     <ClInclude Include="..\src\EnemyAnimationState.h" />
     <ClInclude Include="..\src\EnemyHealthCondition.h" />
     <ClInclude Include="..\src\EnemyHitCondition.h" />
