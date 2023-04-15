@@ -46,12 +46,13 @@ void PlayScene::Draw()
 			if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
 			{
 				detected = dynamic_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->GetDetected();
+				Util::DrawCircle(enemy->GetTransform()->position, dynamic_cast<CloseCombatEnemy*>(enemy)->GetMaxRange(), detected ? glm::vec4(0, 1, 0, 1) : glm::vec4(1, 0, 0, 1));
 			}
 			else { // If ranged combat enemy
 				detected = dynamic_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->GetDetected();
+				Util::DrawCircle(enemy->GetTransform()->position, dynamic_cast<RangedCombatEnemy*>(enemy)->GetMaxRange(), detected ? glm::vec4(0, 1, 0, 1) : glm::vec4(1, 0, 0, 1));
 			}
 
-			Util::DrawCircle(enemy->GetTransform()->position, starShipRadius, detected ? glm::vec4(0, 1, 0, 1) : glm::vec4(1, 0, 0, 1));
 		}
 	}
 
@@ -80,8 +81,8 @@ void PlayScene::Update()
 			tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false);
 			tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
 
-			tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < starShipRadius);
-			tempEnemy->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance <= 30.0f);
+			tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange());
+			tempEnemy->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance <= tempEnemy->GetMinRange());
 		}
 		else { // If ranged combat enemy
 			const auto tempEnemy = dynamic_cast<RangedCombatEnemy*>(enemy);
@@ -90,10 +91,10 @@ void PlayScene::Update()
 			tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
 
 			// Radius detection.. Just outside of LOS Range (around 300px)
-			tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < starShipRadius);
+			tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange());
 
 			// Within LOS Distance.. but not too close (optimum firing range)
-			tempEnemy->GetTree()->GetRangedCombatNode()->SetIsWithinCombatRange(distance <= starShipRadius && distance <= 350);
+			tempEnemy->GetTree()->GetRangedCombatNode()->SetIsWithinCombatRange(distance >= tempEnemy->GetMinRange());
 
 		}
 	}
@@ -342,6 +343,11 @@ void PlayScene::SpawnEnemyTorpedo(Agent* enemyShooting)
 Player* PlayScene::GetTarget() const
 {
 	return m_pPlayer;
+}
+
+std::vector<PathNode*> PlayScene::GetGrid() const
+{
+	return m_pGrid;
 }
 
 void PlayScene::GUI_Function()

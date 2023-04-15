@@ -21,6 +21,9 @@ m_pScene(scene), m_fireCounter(0), m_fireCounterMax(60)
 
 	m_sprite = new PlaceholderSprite;
 
+	maxRangeDistance = 350;
+	minRangeDistance = 150;
+
 	m_sprite->SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("turtle"));
 
 	SetHealth(100);
@@ -167,6 +170,16 @@ glm::vec2 RangedCombatEnemy::GetDesiredVelocity() const
 	return m_desiredVelocity;
 }
 
+float RangedCombatEnemy::GetMaxRange() const
+{
+	return maxRangeDistance;
+}
+
+float RangedCombatEnemy::GetMinRange() const
+{
+	return minRangeDistance;
+}
+
 void RangedCombatEnemy::SetMaxSpeed(const float speed)
 {
 	m_maxSpeed = speed;
@@ -264,11 +277,17 @@ void RangedCombatEnemy::Patrol()
 
 void RangedCombatEnemy::MoveToRange()
 {
+	auto scene = dynamic_cast<PlayScene*>(m_pScene);
+
 	if (GetActionState() != ActionState::MOVE_TO_RANGE) {
 		// Initialize
 		SetActionState(ActionState::MOVE_TO_RANGE);
 	}
 	// TODO: setup another action to take when moving to the player.
+	for (const auto node : scene->GetGrid())
+	{
+
+	}
 }
 
 void RangedCombatEnemy::Flee()

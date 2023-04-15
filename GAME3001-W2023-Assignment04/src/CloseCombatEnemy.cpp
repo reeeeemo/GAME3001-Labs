@@ -31,6 +31,8 @@ m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 50
 	setIsCentered(true);
 	SetType(GameObjectType::AGENT);
 
+	maxRangeDistance = 100.0f;
+	minRangeDistance = 30.0f;
 	
 	SetCurrentHeading(0.0f); // Current facing angle
 	SetLOSDistance(400.0f);
@@ -161,6 +163,16 @@ float CloseCombatEnemy::GetAccelerationRate() const
 glm::vec2 CloseCombatEnemy::GetDesiredVelocity() const
 {
 	return m_desiredVelocity;
+}
+
+float CloseCombatEnemy::GetMaxRange() const
+{
+	return maxRangeDistance;
+}
+
+float CloseCombatEnemy::GetMinRange() const
+{
+	return minRangeDistance;
 }
 
 void CloseCombatEnemy::SetMaxSpeed(const float speed)

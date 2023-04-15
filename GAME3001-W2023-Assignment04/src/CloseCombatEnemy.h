@@ -30,6 +30,9 @@ public:
 	[[nodiscard]] float GetTurnRate() const;
 	[[nodiscard]] float GetAccelerationRate() const;
 	[[nodiscard]] glm::vec2 GetDesiredVelocity() const;
+	[[nodiscard]] float GetMaxRange() const;
+	[[nodiscard]] float GetMinRange() const;
+
 
 	void SetMaxSpeed(float speed);
 	void SetTurnRate(float angle);
@@ -78,6 +81,8 @@ private:
 	bool m_movingTowardsPlayer = false;
 	Sprite* m_sprite;
 
+	float maxRangeDistance;
+	float minRangeDistance;
 };
 
 #endif /* defined (__CLOSE_COMBAT_ENEMY_H__)*/

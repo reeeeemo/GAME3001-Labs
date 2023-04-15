@@ -43,6 +43,7 @@ public:
 	// New for Lab 8.
 	void SpawnEnemyTorpedo(Agent* enemyShooting);
 	[[nodiscard]] Player* GetTarget() const;
+	[[nodiscard]] std::vector<PathNode*> GetGrid() const;
 private:
 	// IMGUI Function
 	void GUI_Function();
