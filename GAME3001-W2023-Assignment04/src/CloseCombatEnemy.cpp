@@ -104,7 +104,14 @@ void CloseCombatEnemy::Draw()
 	SetHeight(m_sprite->GetAnimation(current_anim).frames[0].h);
 
 	// Draw the health based on the amount the enemy has
-	Util::DrawFilledRect(GetTransform()->position - glm::vec2((GetHealth() / GetMaxHealth() * 100) / 2, 60.0f), GetHealth() / GetMaxHealth() * 100, 10.0f, glm::vec4(0, 1.0f, 0, 1.0f));
+	if (GetHealth() > 0)
+	{
+		Util::DrawFilledRect(GetTransform()->position - glm::vec2((GetHealth() / GetMaxHealth() * 100) / 2, 60.0f), GetHealth() / GetMaxHealth() * 100.0f, 10.0f, glm::vec4(0, 1.0f, 0, 1.0f));
+	}
+	else
+	{
+		//Util::DrawFilledRect(GetTransform()->position - glm::vec2( 0.0f, 60.0f), GetHealth() / GetMaxHealth() * 100.0f, 10.0f, glm::vec4(0, 1.0f, 0, 1.0f));
+	}
 
 	if (EventManager::Instance().IsIMGUIActive()) 
 	{

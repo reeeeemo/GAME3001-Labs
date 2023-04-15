@@ -62,6 +62,10 @@ void PlayScene::Draw()
 
 void PlayScene::Update()
 {
+	if (m_pPlayer->GetHealth() <= 0)
+	{
+		// Change to lose scene condition :)
+	}
 	CheckCollision();
 	UpdateDisplayList();
 	for (const auto enemy : m_pEnemyPool->GetPool())
