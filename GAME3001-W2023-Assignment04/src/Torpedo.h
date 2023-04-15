@@ -7,6 +7,12 @@
 #include "GameObject.h"
 #include <vector>
 
+enum TORPEDO_TYPE
+{
+	ENEMY,
+	PLAYER,
+};
+
 class Torpedo : public Sprite
 {
 public:
@@ -26,6 +32,9 @@ public:
 	bool GetDeleteMe();
 	void SetDeleteMe(bool temp);
 
+	TORPEDO_TYPE GetTorpedoType();
+	void SetTorpedoType(TORPEDO_TYPE type);
+
 protected:
 	virtual void BuildAnimations();
 
@@ -36,6 +45,7 @@ protected:
 	float m_damage;
 	glm::vec2 m_direction;
 	bool m_deleteMe;
+	TORPEDO_TYPE m_type;
 };
 
 class TorpedoPool final : public DisplayObject

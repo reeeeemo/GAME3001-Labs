@@ -116,6 +116,16 @@ void Torpedo::SetDeleteMe(bool temp)
 	m_deleteMe = temp;
 }
 
+TORPEDO_TYPE Torpedo::GetTorpedoType()
+{
+	return m_type;
+}
+
+void Torpedo::SetTorpedoType(TORPEDO_TYPE type)
+{
+	m_type = type;
+}
+
 // Builds base class animations!
 void Torpedo::BuildAnimations()
 {

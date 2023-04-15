@@ -192,7 +192,9 @@ void PlayScene::HandleEvents()
 	if (EventManager::Instance().MousePressed(3))
 	{
 		std::cout << "Mouse 2 Pressed" << std::endl;
-		m_pTorpedoPool->FireTorpedo(new TorpedoFederation(5.0f, Util::Normalize({EventManager::Instance().GetMousePosition()-m_pPlayer->GetTransform()->position})));
+		Torpedo* temp = new TorpedoFederation(5.0f, Util::Normalize({ EventManager::Instance().GetMousePosition() - m_pPlayer->GetTransform()->position }));
+		temp->SetTorpedoType(PLAYER);
+		m_pTorpedoPool->FireTorpedo(temp);
 		m_pTorpedoPool->GetPool().back()->GetTransform()->position = m_pPlayer->GetTransform()->position; // Set the spawn point
 		SoundManager::Instance().SetSoundVolume(50);
 		SoundManager::Instance().PlaySoundFX("torpedo");
@@ -330,7 +332,9 @@ void PlayScene::SpawnEnemyTorpedo(Agent* enemyShooting)
 	glm::vec2 torpedo_direction = Util::Normalize(m_pPlayer->GetTransform()->position - spawn_point);
 
 	// Spawn the torpedo
-	m_pTorpedoPool->FireTorpedo(new TorpedoKlingon(5.0f, torpedo_direction));
+	Torpedo* temp = new TorpedoKlingon(5.0f, torpedo_direction);
+	temp->SetTorpedoType(ENEMY);
+	m_pTorpedoPool->FireTorpedo(temp);
 	m_pTorpedoPool->GetPool().back()->GetTransform()->position = spawn_point; // Set the initial position of the torpedo to the spawn point
 	SoundManager::Instance().PlaySoundFX("torpedo_k");
 }
@@ -426,24 +430,51 @@ void PlayScene::GUI_Function()
 
 void PlayScene::CheckCollision()
 {
-	bool canTorpedoHitEnemy = false;
+	for (const auto projectile : m_pTorpedoPool->GetPool())
+	{
+		bool canTorpedoHitEnemy;
+		bool canTorpedoHitPlayer;
 
-	for (auto enemy : m_pEnemyPool->GetPool()) {
-		for (auto projectile : m_pTorpedoPool->GetPool()) {
+		switch (projectile->GetTorpedoType())
+		{
+		case PLAYER:
+			for (const auto enemy : m_pEnemyPool->GetPool())
+			{
+				if (projectile->GetRigidBody()->isColliding)
+				{
+					canTorpedoHitEnemy = false;
+				}
+				else { canTorpedoHitEnemy = true; }
 
-			if (projectile->GetRigidBody()->isColliding) {
-				canTorpedoHitEnemy = false;
-			}
-			else { canTorpedoHitEnemy = true; }
-
-			if (CollisionManager::AABBCheck(enemy, projectile)) {
-				if (canTorpedoHitEnemy) {
-					projectile->SetDeleteMe(true);
-					enemy->TakeDamage(projectile->GetDamage());
+				if (CollisionManager::AABBCheck(enemy, projectile))
+				{
+					if (canTorpedoHitEnemy)
+					{
+						projectile->SetDeleteMe(true);
+						enemy->TakeDamage(projectile->GetDamage());
+					}
 				}
 			}
+				break;
+		case ENEMY:
+			if (projectile->GetRigidBody()->isColliding)
+			{
+				canTorpedoHitPlayer = false;
+			}
+			else { canTorpedoHitPlayer = true; }
+
+			if (CollisionManager::AABBCheck(m_pPlayer, projectile))
+			{
+				if (canTorpedoHitPlayer)
+				{
+					projectile->SetDeleteMe(true);
+					m_pPlayer->TakeDamage(projectile->GetDamage());
+				}
+			}
+			break;
 		}
 	}
+	
 	m_pPlayer->GetRigidBody()->isColliding=false;
 	for (auto obstacle : m_pObstacles)
 	{
