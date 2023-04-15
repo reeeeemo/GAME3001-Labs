@@ -265,6 +265,7 @@ void Enemy::MoveToCover()
 
 void Enemy::WaitBehindCover()
 {
+
     if (GetActionState() != ActionState::WAIT_BEHIND_COVER) {
         // Initialize
         SetActionState(ActionState::WAIT_BEHIND_COVER);
@@ -278,8 +279,12 @@ void Enemy::BuildAnimations()
 
 void Enemy::m_move()
 {
+    if (GetActionState() != ActionState::MOVE_TO_PLAYER)
+    {
+        SetTargetPosition(m_patrolPath[m_wayPoint]);
+        m_movingTowardsPlayer = false;
+    }
     Seek(); // Get our target for this frame
-
     //                      final Position  Position Term   Velocity      Acceleration Term
     // Kinematic Equation-> Pf            = Pi +            Vi * (time) + (0.5) * Ai * (time * time)
 

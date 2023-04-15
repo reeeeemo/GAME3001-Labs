@@ -156,72 +156,77 @@ void CloseCombatEnemy::Attack()
 }
 
 
-void CloseCombatEnemy::m_move()
-{
-	Seek(); // Get our target for this frame
-
-	//                      final Position  Position Term   Velocity      Acceleration Term
-	// Kinematic Equation-> Pf            = Pi +            Vi * (time) + (0.5) * Ai * (time * time)
-
-	const float dt = Game::Instance().GetDeltaTime();
-
-	// accessing the position Term
-	const glm::vec2 initial_position = GetTransform()->position;
-
-	// compute the velocity Term
-	const glm::vec2 velocity_term = GetRigidBody()->velocity * dt;
-
-	// compute the acceleration Term
-	const glm::vec2 acceleration_term = GetRigidBody()->acceleration * 0.5f; // * dt * dt
-
-
-	// compute the new position
-	glm::vec2 final_position = initial_position + velocity_term + acceleration_term;
-
-	GetTransform()->position = final_position;
-
-	// add our acceleration to velocity
-	GetRigidBody()->velocity += GetRigidBody()->acceleration;
-
-	// clamp our velocity at max speed
-	GetRigidBody()->velocity = Util::Clamp(GetRigidBody()->velocity, GetMaxSpeed());
-
-	float xDir = abs(GetCurrentDirection().x);
-	float yDir = abs(GetCurrentDirection().y);
-
-	if (xDir > yDir && GetCurrentDirection().x > 0)
-	{
-		SetAnimationState(EnemyAnimationState::ENEMY_RUN_RIGHT);
-	}
-	else if (xDir > yDir && GetCurrentDirection().x < 0)
-	{
-		SetAnimationState(EnemyAnimationState::ENEMY_RUN_LEFT);
-	}
-
-	if (yDir > xDir && GetCurrentDirection().y > 0)
-	{
-		SetAnimationState(EnemyAnimationState::ENEMY_RUN_UP);
-	}
-	else if (yDir > xDir && GetCurrentDirection().y < 0)
-	{
-		SetAnimationState(EnemyAnimationState::ENEMY_RUN_DOWN);
-	}
-
-	if (Util::Magnitude(GetRigidBody()->velocity) <= 5)
-	{
-		if (GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_LEFT || GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_RIGHT)
-		{
-			if (GetAnimationState() == EnemyAnimationState::ENEMY_RUN_LEFT)
-			{
-				SetAnimationState(EnemyAnimationState::ENEMY_IDLE_LEFT);
-			}
-			else
-			{
-				SetAnimationState(EnemyAnimationState::ENEMY_IDLE_RIGHT);
-			}
-		}
-	}
-}
+//void CloseCombatEnemy::m_move()
+//{
+//	if (GetActionState() != ActionState::MOVE_TO_PLAYER)
+//	{
+//		SetTargetPosition(m_patrolPath[m_wayPoint]);
+//		m_movingTowardsPlayer = false;
+//	}
+//	Seek(); // Get our target for this frame
+//
+//	                      final Position  Position Term   Velocity      Acceleration Term
+//	 Kinematic Equation-> Pf            = Pi +            Vi * (time) + (0.5) * Ai * (time * time)
+//
+//	const float dt = Game::Instance().GetDeltaTime();
+//
+//	 accessing the position Term
+//	const glm::vec2 initial_position = GetTransform()->position;
+//
+//	 compute the velocity Term
+//	const glm::vec2 velocity_term = GetRigidBody()->velocity * dt;
+//
+//	 compute the acceleration Term
+//	const glm::vec2 acceleration_term = GetRigidBody()->acceleration * 0.5f; // * dt * dt
+//
+//
+//	 compute the new position
+//	glm::vec2 final_position = initial_position + velocity_term + acceleration_term;
+//
+//	GetTransform()->position = final_position;
+//
+//	 add our acceleration to velocity
+//	GetRigidBody()->velocity += GetRigidBody()->acceleration;
+//
+//	 clamp our velocity at max speed
+//	GetRigidBody()->velocity = Util::Clamp(GetRigidBody()->velocity, GetMaxSpeed());
+//
+//	float xDir = abs(GetCurrentDirection().x);
+//	float yDir = abs(GetCurrentDirection().y);
+//
+//	if (xDir > yDir && GetCurrentDirection().x > 0)
+//	{
+//		SetAnimationState(EnemyAnimationState::ENEMY_RUN_RIGHT);
+//	}
+//	else if (xDir > yDir && GetCurrentDirection().x < 0)
+//	{
+//		SetAnimationState(EnemyAnimationState::ENEMY_RUN_LEFT);
+//	}
+//
+//	if (yDir > xDir && GetCurrentDirection().y > 0)
+//	{
+//		SetAnimationState(EnemyAnimationState::ENEMY_RUN_UP);
+//	}
+//	else if (yDir > xDir && GetCurrentDirection().y < 0)
+//	{
+//		SetAnimationState(EnemyAnimationState::ENEMY_RUN_DOWN);
+//	}
+//
+//	if (Util::Magnitude(GetRigidBody()->velocity) <= 5)
+//	{
+//		if (GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_LEFT || GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_RIGHT)
+//		{
+//			if (GetAnimationState() == EnemyAnimationState::ENEMY_RUN_LEFT)
+//			{
+//				SetAnimationState(EnemyAnimationState::ENEMY_IDLE_LEFT);
+//			}
+//			else
+//			{
+//				SetAnimationState(EnemyAnimationState::ENEMY_IDLE_RIGHT);
+//			}
+//		}
+//	}
+//}
 
 
 void CloseCombatEnemy::m_buildTree()
