@@ -295,21 +295,50 @@ void Enemy::Flee()
 
 void Enemy::MoveToCover()
 {
+    auto scene = dynamic_cast<PlayScene*>(m_pScene);
+    m_movingTowardsPlayer = true;
+    m_behindCover = true;
+
     if (GetActionState() != ActionState::MOVE_TO_COVER) {
         // Initialize
         SetActionState(ActionState::MOVE_TO_COVER);
     }
-    // TODO: setup another action to take when moving to the player.
+    
+    float distance = 1000.00f;
+    PathNode* curNode = nullptr;
+    for (const auto node : scene->GetGrid())
+    {
+        float temp = Util::Distance(node->GetTransform()->position, scene->GetTarget()->GetTransform()->position);
+        if (temp < distance && !node->HasLOS())
+        {
+            curNode = node;
+            distance = temp;
+        }
+    }
+    if (curNode != nullptr)
+    {
+        SetTargetPosition(curNode->GetTransform()->position);
+        coverTimer = rand() % 5;
+    }
+    m_move();
 }
 
 void Enemy::WaitBehindCover()
 {
-
+    auto scene = dynamic_cast<PlayScene*>(m_pScene);
     if (GetActionState() != ActionState::WAIT_BEHIND_COVER) {
         // Initialize
         SetActionState(ActionState::WAIT_BEHIND_COVER);
     }
     // TODO: setup another action to take when moving to the player.
+    if (m_behindCover)
+    {
+        if (coverTimer <= 0)
+        {
+            Patrol();
+        }
+        coverTimer -= Game::Instance().GetDeltaTime();
+    }
 }
 
 void Enemy::BuildAnimations()
@@ -318,7 +347,7 @@ void Enemy::BuildAnimations()
 
 void Enemy::m_move()
 {
-    if (GetActionState() != ActionState::MOVE_TO_PLAYER && GetActionState() != ActionState::MOVE_TO_LOS && GetActionState() != ActionState::MOVE_TO_RANGE)
+    if (GetActionState() == ActionState::PATROL)
     {
         SetTargetPosition(m_patrolPath[m_wayPoint]);
         m_movingTowardsPlayer = false;

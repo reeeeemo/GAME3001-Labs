@@ -52,6 +52,7 @@ public:
     void Attack() override = 0;
     void MoveToRange() override;
 
+
     // New for Lab 7.3
     void Flee() override;
     void MoveToCover() override;
@@ -74,6 +75,8 @@ private:
     DecisionTree* m_tree;
     Scene* m_pScene;
     bool m_movingTowardsPlayer;
+    bool m_behindCover;
+    float coverTimer;
 
     float m_maxRangeDistance;
     float m_minRangeDistance;
