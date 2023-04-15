@@ -75,7 +75,7 @@ void PlayScene::Update()
 
 		if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
 		{
-			auto tempEnemy = static_cast<CloseCombatEnemy*>(enemy);
+			const auto tempEnemy = dynamic_cast<CloseCombatEnemy*>(enemy);
 			tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
 			tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false);
 			tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
@@ -84,7 +84,7 @@ void PlayScene::Update()
 			tempEnemy->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance <= 30.0f);
 		}
 		else { // If ranged combat enemy
-			auto tempEnemy = static_cast<RangedCombatEnemy*>(enemy);
+			const auto tempEnemy = dynamic_cast<RangedCombatEnemy*>(enemy);
 			tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
 			tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false);
 			tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
@@ -115,11 +115,7 @@ void PlayScene::Update()
 		break;
 	}
 
-	// Collision check
-	/*for (const auto torpedo : m_pTorpedoPool->GetPool())
-	{
-		CollisionManager::CircleAABBCheck(torpedo, m_pPlayer);
-	}*/
+	m_RemainingEnemiesLabel->SetColour({128,128,128,255});
 	m_RemainingEnemiesLabel->SetText(std::to_string(m_pEnemyPool->GetPool().size()));
 }
 
