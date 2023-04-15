@@ -298,7 +298,7 @@ void Enemy::BuildAnimations()
 
 void Enemy::m_move()
 {
-    if (GetActionState() != ActionState::MOVE_TO_PLAYER)
+    if (GetActionState() != ActionState::MOVE_TO_PLAYER || GetActionState() != ActionState::MOVE_TO_LOS)
     {
         SetTargetPosition(m_patrolPath[m_wayPoint]);
         m_movingTowardsPlayer = false;
