@@ -294,8 +294,9 @@ void Enemy::Flee()
     // RUN AWAY!!!
     if (!m_isFleeing)
     {
+        std::cout << "fleeing\n";
         m_isFleeing = true;
-        SetTargetPosition(glm::vec2(rand() % (800 * 2) + 800, rand() % (600 * 2) + 600));
+        SetTargetPosition(glm::vec2(rand() % 800 + 800, rand() % 600 + 600));
     }
     m_move();
 }
@@ -358,6 +359,7 @@ void Enemy::m_move()
     {
         SetTargetPosition(m_patrolPath[m_wayPoint]);
         m_movingTowardsPlayer = false;
+        m_isFleeing = false;
     }
     Seek(); // Get our target for this frame
     //                      final Position  Position Term   Velocity      Acceleration Term

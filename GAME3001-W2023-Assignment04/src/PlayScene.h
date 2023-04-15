@@ -85,10 +85,12 @@ private:
 	// Debugging Variables
 	bool m_bDebugView;
 
+
 	// New for Assignment 4
 	EnemyPool* m_pEnemyPool;
 	TorpedoPool* m_pTorpedoPool;
 	Label* m_RemainingEnemiesLabel;
+	bool m_gameWon;
 };
 
 #endif /* defined (__PLAY_SCENE__) */

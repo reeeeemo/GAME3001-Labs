@@ -17,5 +17,5 @@ void FleeAction::Action()
 		std::cout << "Performing " << m_name << std::endl;
 		GetAgent()->SetActionState(ActionState::FLEE);
 	}
-	//GetAgent()->Flee();
+	GetAgent()->Flee();
 }

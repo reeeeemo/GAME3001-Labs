@@ -131,6 +131,26 @@ void PlayScene::Update()
 
 	m_RemainingEnemiesLabel->SetColour({128,128,128,255});
 	m_RemainingEnemiesLabel->SetText(std::to_string(m_pEnemyPool->GetPool().size()));
+
+	// Check to see if enemy is off screen, if so then spawn another enemy and destroy said enemy.
+	for (auto enemy : m_pEnemyPool->GetPool())
+	{
+		if (!m_gameWon)
+		{
+			if (enemy->GetTransform()->position.x > 800.0f || enemy->GetTransform()->position.x < 0
+			|| enemy->GetTransform()->position.y > 600.0f || enemy->GetTransform()->position.y < 0)
+			{
+				if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
+				{
+					m_pEnemyPool->SpawnEnemy(new CloseCombatEnemy(this), EnemyType::CLOSE_COMBAT);
+				}
+				else {
+					m_pEnemyPool->SpawnEnemy(new RangedCombatEnemy(this), EnemyType::RANGED);
+				}
+				enemy->SetDeleteMe(true);
+			}
+		}
+	}
 }
 
 void PlayScene::Clean()
@@ -294,7 +314,6 @@ void PlayScene::Start()
 	// Set the random enemy position!
 	for (const auto enemy : m_pEnemyPool->GetPool())
 	{
-		std::cout << "redsg\n";
 		enemy->GetTransform()->position = glm::vec2(rand() % 200 + 150, rand() % 300 + 200);
 	}
 	// Adding remaining Enemies label
@@ -323,6 +342,8 @@ void PlayScene::Start()
 	SoundManager::Instance().Load("../Assets/Audio/carrot.mp3", "carrot", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/pew.mp3", "pew", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/ouch.mp3", "ouch", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/Audio/boom.mp3", "boom", SoundType::SOUND_SFX);
+
 
 
 
@@ -512,6 +533,10 @@ void PlayScene::CheckCollision()
 				if(obstacle->GetType()==GameObjectType::DESTRUCT_OBSTACLE)
 				{
 					dynamic_cast<DestructibleObstacle*>(obstacle)->TakeDamage(proj->GetDamage());
+					if (dynamic_cast<DestructibleObstacle*>(obstacle)->GetHealth() <= 0)
+					{
+						SoundManager::Instance().PlaySoundFX("boom");
+					}
 				}
 			}
 		}
