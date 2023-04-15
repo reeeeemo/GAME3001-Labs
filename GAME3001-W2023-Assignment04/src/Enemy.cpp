@@ -263,6 +263,26 @@ void Enemy::MoveToPlayer()
     m_move();
 }
 
+void Enemy::MoveToRange()
+{
+    auto scene = dynamic_cast<PlayScene*>(m_pScene);
+    m_movingTowardsPlayer = true;
+
+    if (GetActionState() != ActionState::MOVE_TO_RANGE) {
+        // Initialize
+        SetActionState(ActionState::MOVE_TO_RANGE);
+    }
+    // TODO: setup another action to take when moving to the player.
+    for (const auto node : scene->GetGrid())
+    {
+        if (Util::Distance(scene->GetTarget()->GetTransform()->position, node->GetTransform()->position) >= GetMinRange() && node->HasLOS())
+        {
+            SetTargetPosition(node->GetTransform()->position);
+        }
+    }
+    m_move();
+}
+
 
 void Enemy::Flee()
 {
@@ -298,7 +318,7 @@ void Enemy::BuildAnimations()
 
 void Enemy::m_move()
 {
-    if (GetActionState() != ActionState::MOVE_TO_PLAYER || GetActionState() != ActionState::MOVE_TO_LOS)
+    if (GetActionState() != ActionState::MOVE_TO_PLAYER && GetActionState() != ActionState::MOVE_TO_LOS && GetActionState() != ActionState::MOVE_TO_RANGE)
     {
         SetTargetPosition(m_patrolPath[m_wayPoint]);
         m_movingTowardsPlayer = false;

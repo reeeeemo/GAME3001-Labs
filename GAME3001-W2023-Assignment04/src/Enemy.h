@@ -50,7 +50,7 @@ public:
     void MoveToLOS() override;
     void MoveToPlayer() override;
     void Attack() override = 0;
-    
+    void MoveToRange() override;
 
     // New for Lab 7.3
     void Flee() override;
