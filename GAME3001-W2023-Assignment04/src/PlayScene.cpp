@@ -509,9 +509,10 @@ void PlayScene::BuildObstaclePool()
 	while(!inFile.eof())
 	{
 		std::cout << "Obstacle " << std::endl;
-		auto obstacle = new Obstacle();
-		float x, y, w, h; // declare variables the same as how the file is organized
-		inFile >> x >> y >> w >> h; // read data from file line by line
+		float x, y, w, h;
+		int b; // declare variables the same as how the file is organized
+		inFile >> x >> y >> w >> h >> b; // read data from file line by line
+		auto obstacle = (b == 1) ? new DestructibleObstacle(): new Obstacle();
 		obstacle->GetTransform()->position = glm::vec2(x, y);
 		obstacle->SetWidth(static_cast<int>(w));
 		obstacle->SetHeight(static_cast<int>(h));

@@ -12,7 +12,8 @@ DestructibleObstacle::DestructibleObstacle()
     const auto size = TextureManager::Instance().GetTextureSize("destruct_obstacle");
     SetWidth(static_cast<int>(size.x));
     SetHeight(static_cast<int>(size.y));
-
+    SetHealth(100);
+    SetMaxHealth(100);
     GetTransform()->position = glm::vec2(400.0f, 300.0f);
     //GetRigidBody()->bounds = glm::vec2(GetWidth(), GetHeight());
     //setIsCentered(true);
