@@ -240,9 +240,7 @@ void Enemy::MoveToPlayer()
         SetActionState(ActionState::MOVE_TO_PLAYER);
     }
     // TODO: setup another action to take when moving to the player.
-    //glm::vec2 target_direction = Util::Normalize(scene->GetTarget()->GetTransform()->position - GetTransform()->position);
     SetTargetPosition(scene->GetTarget()->GetTransform()->position);
-    //LookWhereYoureGoing(target_direction);
     m_move();
 }
 

@@ -35,3 +35,13 @@ void Obstacle::Update()
 void Obstacle::Clean()
 {
 }
+
+bool Obstacle::GetDeleteMe() const
+{
+	return m_deleteMe;
+}
+
+void Obstacle::SetDeleteMe(bool deleteMe)
+{
+	m_deleteMe = deleteMe;
+}

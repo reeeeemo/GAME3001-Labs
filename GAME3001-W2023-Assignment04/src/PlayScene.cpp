@@ -69,6 +69,19 @@ void PlayScene::Update()
 	}
 	CheckCollision();
 	UpdateDisplayList();
+
+	// Delete any destructible obstacles that have to be destroyed
+	for (size_t i = 0; i < m_pObstacles.size(); i++)
+	{
+		if (m_pObstacles[i]->GetDeleteMe())
+		{
+			RemoveChild(m_pObstacles[i]);
+			m_pObstacles[i] = nullptr;
+			m_pObstacles.erase(i + m_pObstacles.begin());
+			m_pObstacles.shrink_to_fit();
+		}
+	}
+
 	for (const auto enemy : m_pEnemyPool->GetPool())
 	{
 		// Distance check between starship and target for detection radius

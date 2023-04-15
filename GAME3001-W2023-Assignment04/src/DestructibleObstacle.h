@@ -17,7 +17,6 @@ public:
 
     void TakeDamage(float dmg);
     
-
 private:
     float m_health;
     float m_maxHealth;
