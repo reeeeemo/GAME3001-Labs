@@ -235,7 +235,7 @@ void Enemy::MoveToLOS()
         if (!node->HasLOS())
         {
             float temp = Util::Distance(node->GetTransform()->position, scene->GetTarget()->GetTransform()->position);
-            if (temp < distance)
+            if (temp < distance && HasLOS())
             {
                 curNode = node;
                 distance = temp;
