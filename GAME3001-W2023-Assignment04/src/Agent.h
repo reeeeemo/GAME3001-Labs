@@ -35,12 +35,12 @@ public:
 	[[nodiscard]] glm::vec2 GetRightRightLOSEndPoint() const;
 	[[nodiscard]] EnemyType GetEnemyType() const;
 	[[nodiscard]] EnemyAnimationState GetAnimationState() const;
-	[[nodiscard]] int GetMaxHealth() const;
+	[[nodiscard]] float GetMaxHealth() const;
 	// New for Lab 7.3
-	[[nodiscard]] int GetHealth() const;
+	[[nodiscard]] float GetHealth() const;
 	[[nodiscard]] bool GetDeleteMe() const;
-	void SetHealth(int value);
-	void TakeDamage(int value);
+	void SetHealth(float value);
+	void TakeDamage(float value);
 
 
 	bool* GetCollisionWhiskers(); // Returns the entire array
@@ -72,7 +72,7 @@ public:
 	void SetActionState(ActionState state);
 	void SetAnimationState(EnemyAnimationState state);
 
-	void SetMaxHealth(int max_health);
+	void SetMaxHealth(float max_health);
 	void SetDeleteMe(bool deleteMe);
 
 	// utility function
@@ -117,8 +117,8 @@ private:
 	ActionState m_state;
 
 	// New for lab 7.3
-	int m_health = 100;
-	int m_maxHealth = 100;
+	float m_health = 100.0f;
+	float m_maxHealth = 100.0f;
 	EnemyType m_type;
 	EnemyAnimationState m_animState;
 	bool m_deleteMe;

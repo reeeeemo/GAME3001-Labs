@@ -75,12 +75,12 @@ EnemyAnimationState Agent::GetAnimationState() const
 	return m_animState;
 }
 
-int Agent::GetMaxHealth() const
+float Agent::GetMaxHealth() const
 {
 	return m_maxHealth;
 }
 
-int Agent::GetHealth() const
+float Agent::GetHealth() const
 {
 	return m_health;
 }
@@ -90,12 +90,12 @@ bool Agent::GetDeleteMe() const
 	return m_deleteMe;
 }
 
-void Agent::SetHealth(int value)
+void Agent::SetHealth(float value)
 {
 	m_health = value;
 }
 
-void Agent::TakeDamage(int value)
+void Agent::TakeDamage(float value)
 {
 	std::cout << "Took " << value << " damage.\n";
 	m_health -= value;
@@ -156,7 +156,7 @@ void Agent::SetAnimationState(EnemyAnimationState state)
 	m_animState = state;
 }
 
-void Agent::SetMaxHealth(int max_health)
+void Agent::SetMaxHealth(float max_health)
 {
 	m_maxHealth = max_health;
 }
