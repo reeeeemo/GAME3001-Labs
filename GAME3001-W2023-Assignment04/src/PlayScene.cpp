@@ -321,7 +321,9 @@ void PlayScene::Start()
 	SoundManager::Instance().Load("../Assets/Audio/yay.ogg", "yay", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/thunder.ogg", "thunder", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/carrot.mp3", "carrot", SoundType::SOUND_SFX);
-	SoundManager::Instance().Load("../Assets/Audio/torpedo_k.ogg", "torpedo_k", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/Audio/pew.mp3", "pew", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/Audio/ouch.mp3", "ouch", SoundType::SOUND_SFX);
+
 
 
 	// Preload music
@@ -350,7 +352,7 @@ void PlayScene::SpawnEnemyTorpedo(Agent* enemyShooting)
 	temp->SetTorpedoType(ENEMY);
 	m_pTorpedoPool->FireTorpedo(temp);
 	m_pTorpedoPool->GetPool().back()->GetTransform()->position = spawn_point; // Set the initial position of the torpedo to the spawn point
-	SoundManager::Instance().PlaySoundFX("torpedo_k");
+	SoundManager::Instance().PlaySoundFX("pew");
 }
 
 Player* PlayScene::GetTarget() const
@@ -488,6 +490,7 @@ void PlayScene::CheckCollision()
 				{
 					projectile->SetDeleteMe(true);
 					m_pPlayer->TakeDamage(projectile->GetDamage());
+					SoundManager::Instance().PlaySoundFX("ouch");
 				}
 			}
 			break;
