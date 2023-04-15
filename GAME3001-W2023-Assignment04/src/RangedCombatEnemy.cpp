@@ -144,9 +144,13 @@ void RangedCombatEnemy::Update()
 {
 	// Determine which action to perform
 	GetTree()->MakeDecision();
-	if(GetHealth()<=0)
+	if (GetTree()->GetEnemyHitNode()->GetHit())
 	{
-		Clean();
+		SetAnimationState(EnemyAnimationState::ENEMY_DAMAGE);
+	}
+	if (GetHealth() <= 0)
+	{
+		SetAnimationState(EnemyAnimationState::ENEMY_DEAD);
 	}
 }
 

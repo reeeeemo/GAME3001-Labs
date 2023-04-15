@@ -286,11 +286,18 @@ void Enemy::MoveToRange()
 
 void Enemy::Flee()
 {
+    m_movingTowardsPlayer = true;
     if (GetActionState() != ActionState::FLEE) {
         // Initialize
         SetActionState(ActionState::FLEE);
     }
-    // TODO: setup another action to take when moving to the player.
+    // RUN AWAY!!!
+    if (!m_isFleeing)
+    {
+        m_isFleeing = true;
+        SetTargetPosition(glm::vec2(rand() % (800 * 2) + 800, rand() % (600 * 2) + 600));
+    }
+    m_move();
 }
 
 void Enemy::MoveToCover()
@@ -382,38 +389,42 @@ void Enemy::m_move()
     float xDir = abs(GetCurrentDirection().x);
     float yDir = abs(GetCurrentDirection().y);
 
-    if (xDir > yDir && GetCurrentDirection().x > 0)
+    if (!GetTree()->GetEnemyHitNode()->GetHit() && GetHealth() > 0)
     {
-        SetAnimationState(EnemyAnimationState::ENEMY_RUN_RIGHT);
-    }
-    else if (xDir > yDir && GetCurrentDirection().x < 0)
-    {
-        SetAnimationState(EnemyAnimationState::ENEMY_RUN_LEFT);
-    }
-
-    if (yDir > xDir && GetCurrentDirection().y > 0)
-    {
-        SetAnimationState(EnemyAnimationState::ENEMY_RUN_UP);
-    }
-    else if (yDir > xDir && GetCurrentDirection().y < 0)
-    {
-        SetAnimationState(EnemyAnimationState::ENEMY_RUN_DOWN);
-    }
-
-    if (Util::Magnitude(GetRigidBody()->velocity) <= 5)
-    {
-        if (GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_LEFT || GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_RIGHT)
+        if (xDir > yDir && GetCurrentDirection().x > 0)
         {
-            if (GetAnimationState() == EnemyAnimationState::ENEMY_RUN_LEFT)
+            SetAnimationState(EnemyAnimationState::ENEMY_RUN_RIGHT);
+        }
+        else if (xDir > yDir && GetCurrentDirection().x < 0)
+        {
+            SetAnimationState(EnemyAnimationState::ENEMY_RUN_LEFT);
+        }
+
+        if (yDir > xDir && GetCurrentDirection().y > 0)
+        {
+            SetAnimationState(EnemyAnimationState::ENEMY_RUN_UP);
+        }
+        else if (yDir > xDir && GetCurrentDirection().y < 0)
+        {
+            SetAnimationState(EnemyAnimationState::ENEMY_RUN_DOWN);
+        }
+
+        if (Util::Magnitude(GetRigidBody()->velocity) <= 5)
+        {
+            if (GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_LEFT || GetAnimationState() != EnemyAnimationState::ENEMY_IDLE_RIGHT)
             {
-                SetAnimationState(EnemyAnimationState::ENEMY_IDLE_LEFT);
-            }
-            else
-            {
-                SetAnimationState(EnemyAnimationState::ENEMY_IDLE_RIGHT);
+                if (GetAnimationState() == EnemyAnimationState::ENEMY_RUN_LEFT)
+                {
+                    SetAnimationState(EnemyAnimationState::ENEMY_IDLE_LEFT);
+                }
+                else
+                {
+                    SetAnimationState(EnemyAnimationState::ENEMY_IDLE_RIGHT);
+                }
             }
         }
     }
+    
 }
 
 void Enemy::buildPatrolPath()

@@ -76,6 +76,7 @@ private:
     Scene* m_pScene;
     bool m_movingTowardsPlayer;
     bool m_behindCover;
+    bool m_isFleeing;
     float coverTimer;
 
     float m_maxRangeDistance;
