@@ -28,6 +28,9 @@ public:
 	[[nodiscard]] float GetTurnRate() const;
 	[[nodiscard]] float GetAccelerationRate() const;
 	[[nodiscard]] glm::vec2 GetDesiredVelocity() const;
+	[[nodiscard]] float GetMinRange() const;
+	[[nodiscard]] float GetMaxRange() const;
+
 
 	void SetMaxSpeed(float speed);
 	void SetTurnRate(float angle);
@@ -72,6 +75,9 @@ private:
 	// New for Lab 8
 	Scene* m_pScene; // PlayScene
 	bool m_movingTowardsPlayer = false;
+
+	float min_range;
+	float max_range;
 };
 
 #endif /* defined (__CLOSE_COMBAT_ENEMY_H__)*/

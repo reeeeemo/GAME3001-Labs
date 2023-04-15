@@ -38,6 +38,9 @@ m_turnRate(5.0f), m_accelerationRate(2.0f), m_startPosition(glm::vec2(300.0f, 50
 	m_tree = new DecisionTree(this); // Create a new Tree - AI Brain
 	m_buildTree();
 	m_tree->Display();
+
+	max_range = 200.0f;
+	min_range = 30.0f;
 }
 
 CloseCombatEnemy::~CloseCombatEnemy()
@@ -55,6 +58,16 @@ void CloseCombatEnemy::Draw()
 		Util::DrawLine(GetTransform()->position + GetCurrentDirection() * 0.5f * static_cast<float>(GetWidth()),
 			GetMiddleLOSEndPoint(), GetLOSColour());
 	}
+}
+
+float CloseCombatEnemy::GetMinRange() const
+{
+	return min_range;
+}
+
+float CloseCombatEnemy::GetMaxRange() const
+{
+	return max_range;
 }
 
 void CloseCombatEnemy::Update()
@@ -184,12 +197,30 @@ void CloseCombatEnemy::Patrol()
 
 void CloseCombatEnemy::MoveToLOS()
 {
+	if (GetActionState() != ActionState::MOVE_TO_LOS) {
+		// Initialize
+		SetActionState(ActionState::MOVE_TO_LOS);
+	}
 	auto scene = dynamic_cast<PlayScene*>(m_pScene);
 
 	//glm::vec2 target_direction = Util::Normalize(scene->GetTarget()->GetLOSDistance() - GetTransform()->position);
-	SetTargetPosition({ scene->GetTarget()->GetTransform()->position.x, scene->GetTarget()->GetTransform()->position.y - GetLOSDistance()});
+   // SetTargetPosition({ scene->GetTarget()->GetTransform()->position.x, scene->GetTarget()->GetTransform()->position.y - GetLOSDistance()});
 	//LookWhereYoureGoing(target_direction);
-	m_move();
+	m_movingTowardsPlayer = true;
+	float distance = 1000.00f;
+	PathNode* curNode = nullptr;
+	for (const auto node : scene->GetGrid())
+	{
+		if (!node->HasLOS())
+		{
+			float temp = Util::Distance(node->GetTransform()->position, scene->GetTarget()->GetTransform()->position);
+			if (temp < distance && HasLOS())
+			{
+				curNode = node;
+				distance = temp;
+			}
+		}
+	}
 }
 
 void CloseCombatEnemy::MoveToPlayer()
@@ -220,6 +251,12 @@ DecisionTree* CloseCombatEnemy::GetTree() const
 
 void CloseCombatEnemy::m_move()
 {
+	if (GetActionState() == ActionState::PATROL)
+	{
+		SetTargetPosition(m_patrolPath[m_wayPoint]);
+		m_movingTowardsPlayer = false;
+	}
+
 	Seek(); // Get our target for this frame
 
 	//                      final Position  Position Term   Velocity      Acceleration Term

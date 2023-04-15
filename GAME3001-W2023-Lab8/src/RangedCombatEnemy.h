@@ -25,6 +25,8 @@ public:
 	[[nodiscard]] float GetTurnRate() const;
 	[[nodiscard]] float GetAccelerationRate() const;
 	[[nodiscard]] glm::vec2 GetDesiredVelocity() const;
+	[[nodiscard]] float GetMinRange() const;
+	[[nodiscard]] float GetMaxRange() const;
 
 	void SetMaxSpeed(float speed);
 	void SetTurnRate(float angle);
@@ -38,7 +40,6 @@ public:
 
 	// New for Lab 7.2
 	void Patrol() override;
-	void MoveToRange() override;
 	DecisionTree* GetTree() const;
 
 	// New for Lab 7.3
@@ -47,6 +48,9 @@ public:
 	void MoveToCover() override;
 	void WaitBehindCover() override;
 	void Attack() override;
+
+	// New for lab 8
+	void MoveToRange() override;
 
 private:
 	// private movement variables
@@ -77,6 +81,10 @@ private:
 	int m_fireCounter; // Number of frames that have elapsed
 	int m_fireCounterMax; // Frame delay
 	Scene* m_pScene; // PlayScene
+	bool m_movingTowardsPlayer;
+
+	float min_range;
+	float max_range;
 };
 
 #endif /* defined (__RANGED_COMBAT_ENEMY_H__)*/

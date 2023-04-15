@@ -42,6 +42,9 @@ m_pScene(scene), m_fireCounter(0), m_fireCounterMax(60)
 	m_tree = new DecisionTree(this); // Create a new Tree - AI Brain
 	m_buildTree();
 	m_tree->Display();
+
+	max_range = 350.0f;
+	min_range = 250.0f;
 }
 
 RangedCombatEnemy::~RangedCombatEnemy()
@@ -62,6 +65,37 @@ void RangedCombatEnemy::Draw()
 
 	
 }
+
+float RangedCombatEnemy::GetMinRange() const
+{
+	return min_range;
+}
+
+float RangedCombatEnemy::GetMaxRange() const
+{
+	return max_range;
+}
+
+void RangedCombatEnemy::MoveToRange()
+{
+	auto scene = dynamic_cast<PlayScene*>(m_pScene);
+	m_movingTowardsPlayer = true;
+
+	if (GetActionState() != ActionState::MOVE_TO_RANGE) {
+		// Initialize
+		SetActionState(ActionState::MOVE_TO_RANGE);
+	}
+	// TODO: setup another action to take when moving to the player.
+	for (const auto node : scene->GetGrid())
+	{
+		if (Util::Distance(scene->GetTarget()->GetTransform()->position, node->GetTransform()->position) >= GetMinRange() && node->HasLOS())
+		{
+			SetTargetPosition(node->GetTransform()->position);
+		}
+	}
+	m_move();
+}
+
 
 void RangedCombatEnemy::Update()
 {
@@ -188,15 +222,6 @@ void RangedCombatEnemy::Patrol()
 	m_move();
 }
 
-void RangedCombatEnemy::MoveToRange()
-{
-	if (GetActionState() != ActionState::MOVE_TO_RANGE) {
-		// Initialize
-		SetActionState(ActionState::MOVE_TO_RANGE);
-	}
-	// TODO: setup another action to take when moving to the player.
-}
-
 DecisionTree* RangedCombatEnemy::GetTree() const
 {
 	return m_tree;
@@ -219,7 +244,28 @@ void RangedCombatEnemy::MoveToLOS()
 		// Initialize
 		SetActionState(ActionState::MOVE_TO_LOS);
 	}
-	// TODO: setup another action to take when moving to the player.
+
+	m_movingTowardsPlayer = true;
+	float distance = 1000.0f;
+	PathNode* curNode = nullptr;
+	for (PathNode* node : scene->GetGrid())
+	{
+		if (!node->HasLOS())
+		{
+			float temp = Util::Distance(node->GetTransform()->position, scene->GetTarget()->GetTransform()->position);
+			if (temp < distance && HasLOS())
+			{
+				curNode = node;
+				distance = temp;
+			}
+		}
+	}
+
+	if (curNode != nullptr)
+	{
+		SetTargetPosition(curNode->GetTransform()->position);
+	}
+	m_move();
 }
 
 void RangedCombatEnemy::MoveToCover()

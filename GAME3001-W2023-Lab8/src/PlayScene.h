@@ -37,6 +37,7 @@ public:
 	// New for Lab 8.
 	void SpawnEnemyTorpedo();
 	[[nodiscard]] Target* GetTarget() const;
+	[[nodiscard]] std::vector<PathNode*> GetGrid();
 private:
 	// IMGUI Function
 	void GUI_Function();
