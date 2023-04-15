@@ -83,10 +83,7 @@ void PlayScene::Update()
 			// Change to lose scene condition :)
 		}
 		// Win condition
-		if (m_gameWon)
-		{
-			Game::Instance().ChangeSceneState(SceneState::END);
-		}
+		
 		CheckCollision();
 
 		// Delete any destructible obstacles that have to be destroyed
@@ -99,8 +96,8 @@ void PlayScene::Update()
 				m_pObstacles.erase(i + m_pObstacles.begin());
 				m_pObstacles.shrink_to_fit();
 			}
+			
 		}
-
 		for (const auto enemy : m_pEnemyPool->GetPool())
 		{
 			// Distance check between starship and target for detection radius
@@ -169,6 +166,10 @@ void PlayScene::Update()
 					enemy->SetDeleteMe(true);
 				}
 			}
+		}
+		if (m_gameWon)
+		{
+			Game::Instance().ChangeSceneState(SceneState::END);
 		}
 	}
 }
