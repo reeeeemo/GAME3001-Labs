@@ -225,8 +225,27 @@ void Enemy::MoveToLOS()
     auto scene = dynamic_cast<PlayScene*>(m_pScene);
 
     //glm::vec2 target_direction = Util::Normalize(scene->GetTarget()->GetLOSDistance() - GetTransform()->position);
-    SetTargetPosition({ scene->GetTarget()->GetTransform()->position.x, scene->GetTarget()->GetTransform()->position.y - GetLOSDistance()});
+   // SetTargetPosition({ scene->GetTarget()->GetTransform()->position.x, scene->GetTarget()->GetTransform()->position.y - GetLOSDistance()});
     //LookWhereYoureGoing(target_direction);
+    m_movingTowardsPlayer = true;
+    float distance = 1000.00f;
+    PathNode* curNode = nullptr;
+    for (const auto node : scene->GetGrid())
+    {
+        if (!node->HasLOS())
+        {
+            float temp = Util::Distance(node->GetTransform()->position, scene->GetTarget()->GetTransform()->position);
+            if (temp < distance)
+            {
+                curNode = node;
+                distance = temp;
+            }
+        }
+    }
+    if (curNode != nullptr)
+    {
+        SetTargetPosition(curNode->GetTransform()->position);
+    }
     m_move();
 }
 
