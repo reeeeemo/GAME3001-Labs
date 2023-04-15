@@ -211,7 +211,7 @@ void PlayScene::HandleEvents()
 		m_pTorpedoPool->FireTorpedo(temp);
 		m_pTorpedoPool->GetPool().back()->GetTransform()->position = m_pPlayer->GetTransform()->position; // Set the spawn point
 		SoundManager::Instance().SetSoundVolume(50);
-		SoundManager::Instance().PlaySoundFX("torpedo");
+		SoundManager::Instance().PlaySoundFX("carrot");
 	}
 
 	if (Game::Instance().GetDebugMode())
@@ -320,7 +320,7 @@ void PlayScene::Start()
 
 	SoundManager::Instance().Load("../Assets/Audio/yay.ogg", "yay", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/thunder.ogg", "thunder", SoundType::SOUND_SFX);
-	SoundManager::Instance().Load("../Assets/Audio/torpedo.ogg", "torpedo", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/Audio/carrot.mp3", "carrot", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/torpedo_k.ogg", "torpedo_k", SoundType::SOUND_SFX);
 
 
