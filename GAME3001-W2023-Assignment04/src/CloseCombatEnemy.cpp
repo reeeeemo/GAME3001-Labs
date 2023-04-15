@@ -66,7 +66,7 @@ void CloseCombatEnemy::Draw()
 	case EnemyAnimationState::ENEMY_IDLE_RIGHT:
 		current_anim = "idle";
 		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation(current_anim),
-			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_HORIZONTAL);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_VERTICAL);
 		break;
 	case EnemyAnimationState::ENEMY_RUN_LEFT:
 		current_anim = "run";
@@ -76,7 +76,7 @@ void CloseCombatEnemy::Draw()
 	case EnemyAnimationState::ENEMY_RUN_RIGHT:
 		current_anim = "run";
 		TextureManager::Instance().PlayAnimation("turtle", m_sprite->GetAnimation(current_anim),
-			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_HORIZONTAL);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_VERTICAL);
 		break;
 	case EnemyAnimationState::ENEMY_RUN_DOWN:
 		current_anim = "run_back";
