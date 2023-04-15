@@ -286,8 +286,12 @@ void RangedCombatEnemy::MoveToRange()
 	// TODO: setup another action to take when moving to the player.
 	for (const auto node : scene->GetGrid())
 	{
-
+		if (Util::Distance(scene->GetTarget()->GetTransform()->position, node->GetTransform()->position) >= GetMinRange())
+		{
+			SetTargetPosition(node->GetTransform()->position);
+		}
 	}
+	m_move();
 }
 
 void RangedCombatEnemy::Flee()
