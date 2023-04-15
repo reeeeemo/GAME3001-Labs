@@ -22,12 +22,17 @@ PlayScene::~PlayScene()
 
 void PlayScene::Draw()
 {
-	for (const auto node : m_pGrid)
-	{
-		TextureManager::Instance().Draw("grass", node->GetTransform()->position,
-			0, 255, true, SDL_FLIP_NONE);
-	}
+	constexpr auto tile_size = Config::TILE_SIZE;
+	constexpr auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
 
+	for (int row = 0; row < Config::ROW_NUM * 2; ++row)
+	{
+		for (int col = 0; col < Config::COL_NUM * 2; ++col)
+		{
+			TextureManager::Instance().Draw("grass", glm::vec2(tile_size * row, tile_size * col) + offset,
+				0, 255, true, SDL_FLIP_NONE);
+		}
+	}
 
 	DrawDisplayList();
 
@@ -137,8 +142,8 @@ void PlayScene::Update()
 	{
 		if (!m_gameWon)
 		{
-			if (enemy->GetTransform()->position.x > 800.0f || enemy->GetTransform()->position.x < 0
-			|| enemy->GetTransform()->position.y > 600.0f || enemy->GetTransform()->position.y < 0)
+			if ((enemy->GetTransform()->position.x > 800.0f || enemy->GetTransform()->position.x < 0)
+			&& (enemy->GetTransform()->position.y > 600.0f || enemy->GetTransform()->position.y < 0))
 			{
 				if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
 				{
