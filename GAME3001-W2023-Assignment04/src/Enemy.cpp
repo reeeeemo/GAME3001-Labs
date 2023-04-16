@@ -244,7 +244,7 @@ void Enemy::MoveToLOS()
     {
         if (node->HasLOS())
         {
-            float temp = Util::Distance(node->GetTransform()->position, scene->GetTarget()->GetTransform()->position);
+            float temp = Util::Distance(node->GetTransform()->position, GetTransform()->position);
             if (temp < distance && HasLOS() && distance >= GetMinRange())
             {
                 curNode = node;
@@ -261,16 +261,24 @@ void Enemy::MoveToLOS()
 
 void Enemy::MoveToPlayer()
 {
-    auto scene = dynamic_cast<PlayScene*>(m_pScene);
-    m_movingTowardsPlayer = true;
-
-    if (GetActionState() != ActionState::MOVE_TO_PLAYER) {
-        // Initialize
-        SetActionState(ActionState::MOVE_TO_PLAYER);
+    if (!HasLOS())
+    {
+        MoveToLOS();
     }
-    // TODO: setup another action to take when moving to the player.
-    SetTargetPosition(scene->GetTarget()->GetTransform()->position);
-    m_move();
+    else
+    {
+        auto scene = dynamic_cast<PlayScene*>(m_pScene);
+        m_movingTowardsPlayer = true;
+
+        if (GetActionState() != ActionState::MOVE_TO_PLAYER) {
+            // Initialize
+            SetActionState(ActionState::MOVE_TO_PLAYER);
+        }
+        // TODO: setup another action to take when moving to the player.
+        SetTargetPosition(scene->GetTarget()->GetTransform()->position);
+        m_move();
+    }
+    
 }
 
 void Enemy::MoveToRange()

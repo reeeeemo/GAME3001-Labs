@@ -647,8 +647,8 @@ void PlayScene::m_buildGrid()
 				// add the Obstacle Buffer TODO: this can be improved
 				const auto buffer = new Obstacle();
 				buffer->GetTransform()->position = obstacle->GetTransform()->position;
-				buffer->SetWidth(obstacle->GetWidth() + 40);
-				buffer->SetHeight(obstacle->GetHeight() + 40);
+				buffer->SetWidth(obstacle->GetWidth() + 80);
+				buffer->SetHeight(obstacle->GetHeight() + 80);
 
 				// determine which path_nodes to keep
 				if(CollisionManager::AABBCheck(path_node, buffer))
