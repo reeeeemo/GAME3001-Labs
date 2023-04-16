@@ -23,6 +23,7 @@ public:
     [[nodiscard]] std::vector<glm::vec2> GetPatrolPath() const;
     [[nodiscard]] int GetWaypoint() const;
     [[nodiscard]] bool GetMovingTowardsPlayer() const;
+    [[nodiscard]] bool GetIsHit() const;
 
     void SetMaxSpeed(float speed);
     void SetTurnRate(float angle);
@@ -38,6 +39,7 @@ public:
     void SetPatrolPath(std::vector<glm::vec2> path);
     void SetWaypoint(int waypoint);
     void SetMovingTowardsPlayer(bool towards);
+    void SetIsHit(bool hit);
 
     // public functions
     virtual void Seek();
@@ -78,6 +80,7 @@ private:
     bool m_behindCover;
     bool m_isFleeing;
     float coverTimer;
+    bool m_isHit;
 
     float m_maxRangeDistance;
     float m_minRangeDistance;

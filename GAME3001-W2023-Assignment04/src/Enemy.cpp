@@ -76,6 +76,16 @@ bool Enemy::GetMovingTowardsPlayer() const
     return m_movingTowardsPlayer;
 }
 
+bool Enemy::GetIsHit() const
+{
+    return m_isHit;
+}
+
+void Enemy::SetIsHit(bool hit)
+{
+    m_isHit = hit;
+}
+
 void Enemy::SetMaxRange(float range)
 {
     m_maxRangeDistance = range;

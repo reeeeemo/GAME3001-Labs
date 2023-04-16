@@ -39,13 +39,13 @@ void EnemyPool::Clean()
 	m_pEnemies.shrink_to_fit();
 }
 
-void EnemyPool::SpawnEnemy(Agent* enemyToSpawn, EnemyType type)
+void EnemyPool::SpawnEnemy(Enemy* enemyToSpawn, EnemyType type)
 {
 	enemyToSpawn->SetEnemyType(type);
 	m_pEnemies.push_back(enemyToSpawn);
 }
 
-std::vector<Agent*> EnemyPool::GetPool()
+std::vector<Enemy*> EnemyPool::GetPool()
 {
 	return m_pEnemies;
 }

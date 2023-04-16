@@ -111,7 +111,7 @@ void PlayScene::Update()
 			{
 				const auto tempEnemy = dynamic_cast<CloseCombatEnemy*>(enemy);
 				tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
-				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false); //change this to get stuff to work
+				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(tempEnemy->GetIsHit()); 
 				tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
 
 				//tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange());
@@ -122,7 +122,7 @@ void PlayScene::Update()
 			else { // If ranged combat enemy
 				const auto tempEnemy = dynamic_cast<RangedCombatEnemy*>(enemy);
 				tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
-				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false); //change this to get stuff to work
+				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(tempEnemy->GetIsHit()); 
 				tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
 
 				// Radius detection.. Just outside of LOS Range (around 300px)
@@ -253,6 +253,11 @@ void PlayScene::HandleEvents()
 				if (Util::GetClosestEdge(m_pPlayer->GetTransform()->position, enemy) <= m_pPlayer->GetRangeOfAttack()) {
 					m_pPlayer->MeleeAttack();
 					enemy->TakeDamage(m_pPlayer->GetDamage());
+					enemy->SetIsHit(true);
+				}
+				else
+				{
+					enemy->SetIsHit(false);
 				}
 			}
 
@@ -308,11 +313,11 @@ void PlayScene::HandleEvents()
 
 					if (enemy->GetEnemyType() == EnemyType::CLOSE_COMBAT)
 					{
-						dynamic_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(false);
+						dynamic_cast<CloseCombatEnemy*>(enemy)->SetIsHit(true);
 						dynamic_cast<CloseCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
 					}
 					else { // if (enemy->GetType() == EnemyType::RANGED)
-						dynamic_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetEnemyHitNode()->SetHit(false);
+						dynamic_cast<CloseCombatEnemy*>(enemy)->SetIsHit(true);
 						dynamic_cast<RangedCombatEnemy*>(enemy)->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(false);
 					}
 
@@ -534,9 +539,14 @@ void PlayScene::CheckCollision()
 				{
 					if (canTorpedoHitEnemy)
 					{
+						enemy->SetIsHit(true);
 						projectile->SetDeleteMe(true);
 						enemy->TakeDamage(projectile->GetDamage());
 					}
+				}
+				else
+				{
+					enemy->SetIsHit(false);
 				}
 			}
 				break;

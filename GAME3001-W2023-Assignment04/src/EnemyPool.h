@@ -23,12 +23,12 @@ public:
 	void Clean() override;
 
 	// Spawn in enemy
-	void SpawnEnemy(Agent* enemyToSpawn, EnemyType type);
+	void SpawnEnemy(Enemy* enemyToSpawn, EnemyType type);
 
 	// Getter for vector of enemies
-	std::vector<Agent*> GetPool();
+	std::vector<Enemy*> GetPool();
 private:
-	std::vector<Agent*> m_pEnemies;
+	std::vector<Enemy*> m_pEnemies;
 };
 
 #endif //!__ENEMY_POOL_H__
