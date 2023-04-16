@@ -111,21 +111,24 @@ void PlayScene::Update()
 			{
 				const auto tempEnemy = dynamic_cast<CloseCombatEnemy*>(enemy);
 				tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
-				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false);
+				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false); //change this to get stuff to work
 				tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
 
-				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange());
+				//tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange());
+				//tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(tempEnemy->HasLOS() && distance < tempEnemy->GetMaxRange() );
+				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(tempEnemy->HasLOS());
 				tempEnemy->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance <= tempEnemy->GetMinRange());
 			}
 			else { // If ranged combat enemy
 				const auto tempEnemy = dynamic_cast<RangedCombatEnemy*>(enemy);
 				tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
-				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false);
+				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(false); //change this to get stuff to work
 				tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
 
 				// Radius detection.. Just outside of LOS Range (around 300px)
-				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange());
-
+				//tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange());
+				//tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(tempEnemy->HasLOS() && distance < tempEnemy->GetMaxRange() );
+				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(tempEnemy->HasLOS());
 				// Within LOS Distance.. but not too close (optimum firing range)
 				tempEnemy->GetTree()->GetRangedCombatNode()->SetIsWithinCombatRange(distance >= tempEnemy->GetMinRange());
 
