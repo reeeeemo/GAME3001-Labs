@@ -242,10 +242,10 @@ void Enemy::MoveToLOS()
     PathNode* curNode = nullptr;
     for (const auto node : scene->GetGrid())
     {
-        if (!node->HasLOS())
+        if (node->HasLOS())
         {
             float temp = Util::Distance(node->GetTransform()->position, scene->GetTarget()->GetTransform()->position);
-            if (temp < distance && HasLOS())
+            if (temp < distance && HasLOS() && distance >= GetMinRange())
             {
                 curNode = node;
                 distance = temp;

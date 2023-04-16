@@ -26,7 +26,7 @@ RangedCombatEnemy::RangedCombatEnemy(Scene* scene) :  m_fireCounter(0), m_fireCo
 	SetSprite(new PlaceholderSprite);
 
 	SetMaxRange(350);
-	SetMinRange(300);
+	SetMinRange(100);
 
 	GetSprite()->SetSpriteSheet(TextureManager::Instance().GetSpriteSheet("turtle"));
 

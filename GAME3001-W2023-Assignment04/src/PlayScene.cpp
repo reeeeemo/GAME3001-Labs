@@ -113,24 +113,28 @@ void PlayScene::Update()
 				tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
 				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(tempEnemy->GetIsHit()); 
 				tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
+				
+				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange() || tempEnemy->HasLOS());
+				tempEnemy->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance<= tempEnemy->GetMaxRange() && distance >= tempEnemy->GetMinRange());
 
+				//tempEnemy->GetTree()->GetRadiusNode()->SetIsWithinRadius(distance<= tempEnemy->GetMaxRange() && distance >= tempEnemy->GetMinRange());
 				//tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange());
 				//tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(tempEnemy->HasLOS() && distance < tempEnemy->GetMaxRange() );
-				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(tempEnemy->HasLOS());
-				tempEnemy->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance <= tempEnemy->GetMinRange());
 			}
 			else { // If ranged combat enemy
 				const auto tempEnemy = dynamic_cast<RangedCombatEnemy*>(enemy);
 				tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
 				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(tempEnemy->GetIsHit()); 
 				tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
+				
+				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange()|| tempEnemy->HasLOS());
+				// Within LOS Distance.. but not too close (optimum firing range)
+				tempEnemy->GetTree()->GetRangedCombatNode()->SetIsWithinCombatRange(distance<= tempEnemy->GetMaxRange() && distance >= tempEnemy->GetMinRange());
 
+				//tempEnemy->GetTree()->GetRadiusNode()->SetIsWithinRadius(distance<= tempEnemy->GetMaxRange() && distance >= tempEnemy->GetMinRange());
 				// Radius detection.. Just outside of LOS Range (around 300px)
 				//tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange());
 				//tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(tempEnemy->HasLOS() && distance < tempEnemy->GetMaxRange() );
-				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(tempEnemy->HasLOS());
-				// Within LOS Distance.. but not too close (optimum firing range)
-				tempEnemy->GetTree()->GetRangedCombatNode()->SetIsWithinCombatRange(distance >= tempEnemy->GetMinRange());
 
 			}
 		}
@@ -267,7 +271,7 @@ void PlayScene::HandleEvents()
 		if (EventManager::Instance().MousePressed(3))
 		{
 			std::cout << "Mouse 2 Pressed" << std::endl;
-			if (m_pTorpedoPool->GetPool().size() < 1)
+			if (m_pTorpedoPool->GetPool().size() < 2)
 			{
 				Torpedo* temp = new TorpedoFederation(5.0f, Util::Normalize({ EventManager::Instance().GetMousePosition() - m_pPlayer->GetTransform()->position }));
 				temp->SetTorpedoType(PLAYER);
@@ -339,7 +343,7 @@ void PlayScene::Start()
 	Game::Instance().SetDebugMode(true);
 
 	// Setup a few more fields
-	m_LOSMode = LOSMode::SHIP;
+	m_LOSMode = LOSMode::TARGET;
 	m_pathNodeLOSDistance = 1000; // 1000px distance
 	m_setPathNodeLOSDistance(m_pathNodeLOSDistance);
 
@@ -419,7 +423,7 @@ void PlayScene::SpawnEnemyTorpedo(Agent* enemyShooting)
 		glm::vec2 torpedo_direction = Util::Normalize(m_pPlayer->GetTransform()->position - spawn_point);
 
 		// Spawn the torpedo
-		Torpedo* temp = new TorpedoKlingon(5.0f, torpedo_direction);
+		Torpedo* temp = new TorpedoKlingon(7.5f, torpedo_direction);
 		temp->SetTorpedoType(ENEMY);
 		m_pTorpedoPool->FireTorpedo(temp);
 		m_pTorpedoPool->GetPool().back()->GetTransform()->position = spawn_point; // Set the initial position of the torpedo to the spawn point
@@ -586,6 +590,7 @@ void PlayScene::CheckCollision()
 			if(CollisionManager::AABBCheck(proj,obstacle))
 			{
 				proj->GetRigidBody()->isColliding=true;
+				proj->SetDeleteMe(true);
 				if(obstacle->GetType()==GameObjectType::DESTRUCT_OBSTACLE)
 				{
 					dynamic_cast<DestructibleObstacle*>(obstacle)->TakeDamage(proj->GetDamage());

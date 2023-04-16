@@ -35,8 +35,8 @@ CloseCombatEnemy::CloseCombatEnemy(Scene* scene)
 	setIsCentered(true);
 	SetType(GameObjectType::AGENT);
 
-	SetMaxRange(100.0f);
-	SetMinRange(30.0f);
+	SetMaxRange(50.0f);
+	SetMinRange(5.0f);
 	
 	SetCurrentHeading(0.0f); // Current facing angle
 	SetLOSDistance(400.0f);

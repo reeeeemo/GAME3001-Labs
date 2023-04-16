@@ -120,7 +120,7 @@ void Player::Move()
 {
 	if (GetRigidBody()->isColliding)
 	{
-		GetRigidBody()->velocity = -GetRigidBody()->velocity * 2.0f;
+		GetRigidBody()->velocity = -GetRigidBody()->velocity * 1.05f;
 	}
 	const float dt = Game::Instance().GetDeltaTime();
 	const glm::vec2 initial_position = GetTransform()->position;
