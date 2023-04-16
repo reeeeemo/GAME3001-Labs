@@ -156,7 +156,19 @@ void CloseCombatEnemy::Clean()
 
 void CloseCombatEnemy::Attack()
 {
-
+	auto scene = dynamic_cast<PlayScene*>(GetScene());
+	if (GetActionState() != ActionState::ATTACK) {
+		// Initialize
+		SetActionState(ActionState::ATTACK);
+	}
+	if (timerUntilHit <= 0)
+	{
+		timerUntilHit = 2.5f;
+		scene->GetTarget()->TakeDamage(10.0f);
+	}
+	else {
+		timerUntilHit -= Game::Instance().GetDeltaTime();
+	}
 }
 
 

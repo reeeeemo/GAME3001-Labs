@@ -31,6 +31,7 @@ private:
 	void BuildAnimations() override;
 	//void m_move() override;
 	void m_buildTree() override;
+	float timerUntilHit;
 };
 
 

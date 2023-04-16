@@ -181,6 +181,7 @@ void PlayScene::Update()
 		}
 		else if(m_gameLost)
 		{
+			SoundManager::Instance().PlaySoundFX("lose");
 			Game::Instance().ChangeSceneState(SceneState::LOSE);
 		}
 	}
@@ -389,6 +390,7 @@ void PlayScene::Start()
 	SoundManager::Instance().Load("../Assets/Audio/ouch.mp3", "ouch", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/boom.mp3", "boom", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/yippe.mp3", "yippe", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/Audio/lose.mp3", "lose", SoundType::SOUND_SFX);
 
 
 
