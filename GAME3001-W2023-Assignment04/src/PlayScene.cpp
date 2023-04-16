@@ -112,7 +112,7 @@ void PlayScene::Update()
 				const auto tempEnemy = dynamic_cast<CloseCombatEnemy*>(enemy);
 				tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
 				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(tempEnemy->GetIsHit()); 
-				tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
+				//tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
 				
 				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange() || tempEnemy->HasLOS());
 				tempEnemy->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance<= tempEnemy->GetMaxRange() && distance >= tempEnemy->GetMinRange());
@@ -125,7 +125,7 @@ void PlayScene::Update()
 				const auto tempEnemy = dynamic_cast<RangedCombatEnemy*>(enemy);
 				tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
 				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(tempEnemy->GetIsHit()); 
-				tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
+				//tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
 				
 				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange()|| tempEnemy->HasLOS());
 				// Within LOS Distance.. but not too close (optimum firing range)
@@ -143,7 +143,7 @@ void PlayScene::Update()
 		switch (m_LOSMode)
 		{
 		case LOSMode::TARGET:
-			m_checkAllNodesWithTarget(m_pPlayer);
+			m_checkAllNodesWithTarget(GetTarget());
 			break;
 		case LOSMode::SHIP:
 			for (const auto enemy : m_pEnemyPool->GetPool())
@@ -694,35 +694,28 @@ void PlayScene::m_clearNodes()
 
 bool PlayScene::m_checkAgentLOS(Agent* agent, DisplayObject* target_object) const
 {
-	bool has_LOS = false; // default - No LOS
-	agent->SetHasLOS(has_LOS);
-
-	// if ship to target distance is less than or equal to the LOS Distance (Range)
-	const auto agent_to_range = Util::GetClosestEdge(agent->GetTransform()->position, target_object);
-	if (agent_to_range <= agent->GetLOSDistance())
+	bool hasLOS = false;
+	agent->SetHasLOS(hasLOS);
+	// If ship to target distance is <= LOS distance
+	auto AgentToTargetDist = Util::GetClosestEdge(agent->GetTransform()->position, target_object);
+	if (AgentToTargetDist <= agent->GetLOSDistance())
 	{
-		// we are in within LOS Distance 
-		std::vector<DisplayObject*> contact_list;
-		for (auto display_object : GetDisplayList())
+		std::vector<DisplayObject*> contactList;
+		for (auto object : GetDisplayList())
 		{
-			if((display_object->GetType() != GameObjectType::AGENT)
-				&& (display_object->GetType() != GameObjectType::PATH_NODE)
-				&& (display_object->GetType() != GameObjectType::TARGET))
+			
+			if (object->GetType() == GameObjectType::OBSTACLE || object->GetType()== GameObjectType::DESTRUCT_OBSTACLE)
 			{
-				const auto agent_to_object_distance = Util::GetClosestEdge(agent->GetTransform()->position, display_object);
-
-				if (agent_to_object_distance > agent_to_range) { contact_list.push_back(display_object); } // target is out of range
-
+				auto AgentToObjectDist = Util::GetClosestEdge(agent->GetTransform()->position, object);
+				if (AgentToObjectDist > AgentToTargetDist) continue;
+				contactList.push_back(object);
 			}
 		}
-
-		const glm::vec2 agent_LOS_endPoint = agent->GetTransform()->position + agent->GetCurrentDirection() * agent->GetLOSDistance();
-		has_LOS = CollisionManager::LOSCheck(agent, agent_LOS_endPoint, contact_list, target_object);
-
-		const auto LOSColour = (target_object->GetType() == GameObjectType::AGENT) ? glm::vec4(0, 0, 1, 1) : glm::vec4(0, 1, 0, 1);
-		agent->SetHasLOS(has_LOS, LOSColour);
+		const glm::vec2 agentEndPoint = agent->GetTransform()->position + agent->GetCurrentDirection() * agent->GetLOSDistance();
+		hasLOS = CollisionManager::LOSCheck(agent, agentEndPoint, contactList, target_object);
+		agent->SetHasLOS(hasLOS);
 	}
-	return has_LOS;
+	return hasLOS;
 }
 
 bool PlayScene::m_checkPathNodeLOS(PathNode* path_node, DisplayObject* target_object) const

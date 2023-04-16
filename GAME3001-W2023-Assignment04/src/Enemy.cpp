@@ -326,7 +326,7 @@ void Enemy::MoveToCover()
     PathNode* curNode = nullptr;
     for (const auto node : scene->GetGrid())
     {
-        float temp = Util::Distance(node->GetTransform()->position, scene->GetTarget()->GetTransform()->position);
+        float temp = Util::Distance(node->GetTransform()->position, GetTransform()->position);
         if (temp < distance && !node->HasLOS())
         {
             curNode = node;
