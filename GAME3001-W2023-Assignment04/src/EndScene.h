@@ -9,7 +9,7 @@
 class EndScene final : public Scene
 {
 public:
-	EndScene();
+	EndScene(bool win);
 	~EndScene() override;
 
 	// Inherited via Scene
@@ -23,6 +23,7 @@ private:
 	Label* m_label{};
 
 	Button* m_pRestartButton{};
+	bool m_win;
 };
 
 #endif /* defined (__END_SCENE__) */

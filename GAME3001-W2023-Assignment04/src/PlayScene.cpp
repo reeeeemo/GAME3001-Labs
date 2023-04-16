@@ -68,7 +68,7 @@ void PlayScene::Draw()
 
 void PlayScene::Update()
 {
-	if (!m_gameWon)
+	if (!m_gameWon && !m_gameLost)
 	{
 		UpdateDisplayList();
 
@@ -76,6 +76,10 @@ void PlayScene::Update()
 		if (m_pEnemyPool->GetPool().size() < 1)
 		{
 			m_gameWon = true;
+		}
+		if(m_pPlayer->GetHealth()<=0)
+		{
+			m_gameLost = true;
 		}
 		// Loss condition
 		if (m_pPlayer->GetHealth() <= 0)
@@ -169,7 +173,11 @@ void PlayScene::Update()
 		}
 		if (m_gameWon)
 		{
-			Game::Instance().ChangeSceneState(SceneState::END);
+			Game::Instance().ChangeSceneState(SceneState::WIN);
+		}
+		else if(m_gameLost)
+		{
+			Game::Instance().ChangeSceneState(SceneState::LOSE);
 		}
 	}
 }
@@ -204,7 +212,7 @@ void PlayScene::HandleEvents()
 
 		if (EventManager::Instance().IsKeyDown(SDL_SCANCODE_2))
 		{
-			Game::Instance().ChangeSceneState(SceneState::END);
+			Game::Instance().ChangeSceneState(SceneState::LOSE);
 		}
 
 		// Player movement stuff

@@ -6,7 +6,8 @@ enum class SceneState
 	NO_SCENE = -1,
 	START,
 	PLAY,
-	END,
+	WIN,
+	LOSE,
 	NUM_OF_SCENES
 };
 #endif /* defined (__SCENE_STATE__) */

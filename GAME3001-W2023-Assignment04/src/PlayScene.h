@@ -91,6 +91,7 @@ private:
 	TorpedoPool* m_pTorpedoPool;
 	Label* m_RemainingEnemiesLabel;
 	bool m_gameWon;
+	bool m_gameLost;
 };
 
 #endif /* defined (__PLAY_SCENE__) */
