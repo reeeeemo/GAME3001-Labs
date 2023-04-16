@@ -112,7 +112,7 @@ void PlayScene::Update()
 				const auto tempEnemy = dynamic_cast<CloseCombatEnemy*>(enemy);
 				tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
 				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(tempEnemy->GetIsHit()); 
-				//tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
+				tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
 				
 				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange() || tempEnemy->HasLOS());
 				tempEnemy->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance<= tempEnemy->GetMaxRange() && distance >= tempEnemy->GetMinRange());
@@ -125,7 +125,7 @@ void PlayScene::Update()
 				const auto tempEnemy = dynamic_cast<RangedCombatEnemy*>(enemy);
 				tempEnemy->GetTree()->GetEnemyHealthNode()->SetHealthy(tempEnemy->GetHealth() > 25);
 				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(tempEnemy->GetIsHit()); 
-				//tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
+				tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
 				
 				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange()|| tempEnemy->HasLOS());
 				// Within LOS Distance.. but not too close (optimum firing range)
