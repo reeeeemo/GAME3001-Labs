@@ -176,6 +176,7 @@ void PlayScene::Update()
 		}
 		if (m_gameWon)
 		{
+			SoundManager::Instance().PlaySoundFX("yippe");
 			Game::Instance().ChangeSceneState(SceneState::WIN);
 		}
 		else if(m_gameLost)
@@ -387,6 +388,7 @@ void PlayScene::Start()
 	SoundManager::Instance().Load("../Assets/Audio/pew.mp3", "pew", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/ouch.mp3", "ouch", SoundType::SOUND_SFX);
 	SoundManager::Instance().Load("../Assets/Audio/boom.mp3", "boom", SoundType::SOUND_SFX);
+	SoundManager::Instance().Load("../Assets/Audio/yippe.mp3", "yippe", SoundType::SOUND_SFX);
 
 
 
