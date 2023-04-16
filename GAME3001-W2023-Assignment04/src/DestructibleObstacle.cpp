@@ -7,7 +7,7 @@
 
 DestructibleObstacle::DestructibleObstacle()
 {
-    TextureManager::Instance().Load("../Assets/textures/cloud.png", "destruct_obstacle");
+    TextureManager::Instance().Load("../Assets/sprites/background/crackedRock.png", "destruct_obstacle");
 
     const auto size = TextureManager::Instance().GetTextureSize("destruct_obstacle");
     SetWidth(static_cast<int>(size.x));
