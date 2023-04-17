@@ -227,7 +227,19 @@ void Enemy::Patrol()
         // Initialize
         SetActionState(ActionState::PATROL);
     }
-    m_move();
+    auto tempnode = new PathNode();
+    tempnode->GetTransform()->position=m_patrolPath[m_wayPoint];
+    if(CheckAgentLOSToTarget(tempnode,dynamic_cast<PlayScene*>(GetScene())->GetObstacles()))
+    {
+        SetTargetPosition(m_patrolPath[m_wayPoint]);
+        m_move();
+    }
+    else
+    {
+        MoveToLOS();
+    }
+    m_movingTowardsPlayer = false;
+    m_isFleeing = false;
 }
 
 void Enemy::MoveToLOS()
@@ -399,12 +411,6 @@ void Enemy::BuildAnimations()
 
 void Enemy::m_move()
 {
-    if (GetActionState() == ActionState::PATROL)
-    {
-        SetTargetPosition(m_patrolPath[m_wayPoint]);
-        m_movingTowardsPlayer = false;
-        m_isFleeing = false;
-    }
     Seek(); // Get our target for this frame
     //                      final Position  Position Term   Velocity      Acceleration Term
     // Kinematic Equation-> Pf            = Pi +            Vi * (time) + (0.5) * Ai * (time * time)
@@ -419,8 +425,7 @@ void Enemy::m_move()
 
     // compute the acceleration Term
     const glm::vec2 acceleration_term = GetRigidBody()->acceleration * 0.5f; // * dt * dt
-
-
+    
     // compute the new position
     glm::vec2 final_position = initial_position + velocity_term + acceleration_term;
 
