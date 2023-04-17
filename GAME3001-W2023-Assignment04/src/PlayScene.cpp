@@ -95,10 +95,29 @@ void PlayScene::Update()
 		{
 			if (m_pObstacles[i]->GetDeleteMe())
 			{
+				float height;
+				float width;
+				glm::vec2 pos;
+				constexpr auto tile_size = Config::TILE_SIZE;
+				constexpr auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
+				pos = m_pObstacles[i]->GetTransform()->position;
+				height = m_pObstacles[i]->GetHeight();
+				width = m_pObstacles[i]->GetWidth();
+				for (float x = pos.x-width/2; x < pos.x+width/2; x+=tile_size)
+				{
+					for (float y = pos.y-height/2; y < pos.y+height/2; y+=tile_size)
+					{
+						auto path_node = new PathNode();
+						path_node->GetTransform()->position = glm::vec2(x,y);
+						AddChild(path_node);
+						m_pGrid.push_back(path_node);
+					}
+				}
 				RemoveChild(m_pObstacles[i]);
 				m_pObstacles[i] = nullptr;
 				m_pObstacles.erase(i + m_pObstacles.begin());
 				m_pObstacles.shrink_to_fit();
+				//spawn new nodes
 			}
 			
 		}
