@@ -44,6 +44,7 @@ public:
 	void SpawnEnemyTorpedo(Agent* enemyShooting);
 	[[nodiscard]] Player* GetTarget() const;
 	[[nodiscard]] std::vector<PathNode*> GetGrid() const;
+	[[nodiscard]] std::vector<Obstacle*> GetObstacles() const;
 private:
 	// IMGUI Function
 	void GUI_Function();

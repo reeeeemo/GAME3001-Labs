@@ -269,6 +269,7 @@ void Enemy::MoveToPlayer()
     {
         auto scene = dynamic_cast<PlayScene*>(m_pScene);
         m_movingTowardsPlayer = true;
+        
 
         if (GetActionState() != ActionState::MOVE_TO_PLAYER) {
             // Initialize
@@ -285,6 +286,8 @@ void Enemy::MoveToRange()
 {
     auto scene = dynamic_cast<PlayScene*>(m_pScene);
     m_movingTowardsPlayer = true;
+    PathNode* curNode = nullptr;
+    float distance = 1000.00f;
 
     if (GetActionState() != ActionState::MOVE_TO_RANGE) {
         // Initialize
@@ -293,12 +296,26 @@ void Enemy::MoveToRange()
     // TODO: setup another action to take when moving to the player.
     for (const auto node : scene->GetGrid())
     {
-        if (Util::Distance(scene->GetTarget()->GetTransform()->position, node->GetTransform()->position) >= GetMinRange() && node->HasLOS())
+        float temp = Util::Distance(scene->GetTarget()->GetTransform()->position, node->GetTransform()->position);
+        if (temp >= GetMinRange() && node->HasLOS() && temp < distance)
         {
-            SetTargetPosition(node->GetTransform()->position);
+            curNode = node;
+            distance = temp;
         }
     }
-    m_move();
+    if (curNode != nullptr)
+    {
+        if(CheckAgentLOSToTarget(curNode, dynamic_cast<PlayScene*>(GetScene())->GetObstacles()))
+        {
+            SetTargetPosition(curNode->GetTransform()->position);
+            m_move();
+        }
+        else
+        {
+            MoveToLOS();
+        }
+    }
+    //m_move();
 }
 
 
@@ -343,10 +360,19 @@ void Enemy::MoveToCover()
     }
     if (curNode != nullptr)
     {
-        SetTargetPosition(curNode->GetTransform()->position);
+        if(CheckAgentLOSToTarget(curNode, dynamic_cast<PlayScene*>(GetScene())->GetObstacles()))
+        {
+            SetTargetPosition(curNode->GetTransform()->position);
+            m_move();
+        }
+        else
+        {
+            MoveToLOS();
+        }
         coverTimer = rand() % 5;
     }
-    m_move();
+    
+   // m_move();
 }
 
 void Enemy::WaitBehindCover()
