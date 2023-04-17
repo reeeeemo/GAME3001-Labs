@@ -103,12 +103,12 @@ void PlayScene::Update()
 				pos = m_pObstacles[i]->GetTransform()->position;
 				height = m_pObstacles[i]->GetHeight();
 				width = m_pObstacles[i]->GetWidth();
-				for (float x = pos.x-width/2; x < pos.x+width/2; x+=tile_size)
+				for (float x = pos.x-width/2; x < pos.x+width/2+tile_size; x+=tile_size)
 				{
-					for (float y = pos.y-height/2; y < pos.y+height/2; y+=tile_size)
+					for (float y = pos.y-height/2; y < pos.y+height/2+tile_size; y+=tile_size)
 					{
 						auto path_node = new PathNode();
-						path_node->GetTransform()->position = glm::vec2(x,y);
+						path_node->GetTransform()->position = glm::vec2(x-offset.x,y-offset.y);
 						AddChild(path_node);
 						m_pGrid.push_back(path_node);
 					}
