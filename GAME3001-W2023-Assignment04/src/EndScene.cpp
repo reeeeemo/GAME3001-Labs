@@ -74,5 +74,8 @@ void EndScene::Start()
 
 	AddChild(m_pRestartButton);
 
+	m_pBackground = new Background();
+	AddChild(m_pBackground);
+	m_pBackground->GetTransform()->position = { 400, 200 };
 	ImGuiWindowFrame::Instance().SetDefaultGuiFunction();
 }

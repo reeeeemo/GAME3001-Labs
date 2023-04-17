@@ -4,7 +4,7 @@
 
 Background::Background()
 {
-	TextureManager::Instance().Load("../Assets/sprites/background/grass.png", "background");
+	TextureManager::Instance().Load("../Assets/sprites/background/Winton.png", "background");
 
 	const auto size = TextureManager::Instance().GetTextureSize("background");
 	SetWidth(size.x);
