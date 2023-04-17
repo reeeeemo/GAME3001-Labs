@@ -240,6 +240,7 @@ void Enemy::Patrol()
     }
     m_movingTowardsPlayer = false;
     m_isFleeing = false;
+    m_behindCover = false;
 }
 
 void Enemy::MoveToLOS()
@@ -399,7 +400,8 @@ void Enemy::WaitBehindCover()
     {
         if (coverTimer <= 0)
         {
-            Patrol();
+            coverTimer = rand() % 5;
+            SetIsHit(false);
         }
         coverTimer -= Game::Instance().GetDeltaTime();
     }
