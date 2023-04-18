@@ -2,6 +2,9 @@
 #ifndef __PLAY_SCENE__
 #define __PLAY_SCENE__
 
+#include <map>
+#include <array>
+
 #include "LOSMode.h"
 #include "Obstacle.h"
 #include "Scene.h"
@@ -26,6 +29,7 @@
 #include "EnemyPool.h"
 
 //#define CLOSE_COMBAT
+typedef std::array<float, 2> floatArr;
 
 class PlayScene : public Scene
 {
@@ -93,6 +97,7 @@ private:
 	Label* m_RemainingEnemiesLabel;
 	bool m_gameWon;
 	bool m_gameLost;
+	std::map<floatArr, int> m_randomTileMap;
 };
 
 #endif /* defined (__PLAY_SCENE__) */

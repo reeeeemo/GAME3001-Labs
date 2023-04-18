@@ -22,23 +22,39 @@ PlayScene::~PlayScene()
 
 void PlayScene::Draw()
 {
+	//				
+
 	if (!m_gameWon)
 	{
 		constexpr auto tile_size = Config::TILE_SIZE;
 		constexpr auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
 
-		for (int row = 0; row < Config::ROW_NUM * 2; ++row)
+		for (std::pair<floatArr, int> m_pair : m_randomTileMap)
 		{
-			for (int col = 0; col < Config::COL_NUM * 2; ++col)
+			switch (m_pair.second)
 			{
-				TextureManager::Instance().Draw("grass", glm::vec2(tile_size * row, tile_size * col) + offset,
+			case 0:
+				TextureManager::Instance().Draw("grass", { m_pair.first[0], m_pair.first[1] },
 					0, 255, true, SDL_FLIP_NONE);
+				break;
+			case 1:
+				TextureManager::Instance().Draw("grass1", { m_pair.first[0], m_pair.first[1] },
+					0, 255, true, SDL_FLIP_NONE);
+				break;
+			case 2:
+				TextureManager::Instance().Draw("grass2", { m_pair.first[0], m_pair.first[1] },
+					0, 255, true, SDL_FLIP_NONE);
+				break;
+			case 3:
+				TextureManager::Instance().Draw("grass3", { m_pair.first[0], m_pair.first[1] },
+					0, 255, true, SDL_FLIP_NONE);
+				break;
 			}
 		}
 
 		DrawDisplayList();
 
-
+		
 
 		if (m_isGridEnabled)
 		{
@@ -357,7 +373,11 @@ void PlayScene::Start()
 {
 	// Set GUI Title
 	m_guiTitle = "Assignment 4";
-	TextureManager::Instance().Load("../Assets/sprites/background/grass.png", "grass");
+	TextureManager::Instance().Load("../Assets/sprites/background/grass1.png", "grass");
+	TextureManager::Instance().Load("../Assets/sprites/background/grass2.png", "grass1");
+	TextureManager::Instance().Load("../Assets/sprites/background/grass3.png", "grass2");
+	TextureManager::Instance().Load("../Assets/sprites/background/grass4.png", "grass3");
+
 
 	Game::Instance().SetDebugMode(true);
 	// Add Obstacles
@@ -417,7 +437,15 @@ void PlayScene::Start()
 	SoundManager::Instance().Load("../Assets/Audio/lose.mp3", "lose", SoundType::SOUND_SFX);
 
 
+	constexpr auto offset = glm::vec2(Config::TILE_SIZE * 0.5f, Config::TILE_SIZE * 0.5f);
 
+	for (int row = 0; row < Config::ROW_NUM * 2; ++row)
+	{
+		for (int col = 0; col < Config::COL_NUM * 2; ++col)
+		{
+			m_randomTileMap.emplace(std::pair <floatArr, int>({ (Config::TILE_SIZE * row) + offset.x, (Config::TILE_SIZE * col) + offset.y }, rand() % 4));
+		}
+	}
 
 	// Preload music
 	SoundManager::Instance().Load("../Assets/Audio/Klingon.mp3", "klingon", SoundType::SOUND_MUSIC);
