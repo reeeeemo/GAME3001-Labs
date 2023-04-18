@@ -153,8 +153,8 @@ void PlayScene::Update()
 				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(tempEnemy->GetIsHit()); 
 				tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
 				
-				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange() || tempEnemy->HasLOS());
-				tempEnemy->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance<= tempEnemy->GetMaxRange() && distance >= tempEnemy->GetMinRange());
+				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange() && tempEnemy->HasLOS());
+				tempEnemy->GetTree()->GetCloseCombatNode()->SetIsWithinCombatRange(distance <= tempEnemy->GetMinRange());
 
 				//tempEnemy->GetTree()->GetRadiusNode()->SetIsWithinRadius(distance<= tempEnemy->GetMaxRange() && distance >= tempEnemy->GetMinRange());
 				//tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange());
@@ -452,11 +452,11 @@ void PlayScene::Start()
 	}
 
 	// Preload music
-	SoundManager::Instance().Load("../Assets/Audio/Klingon.mp3", "klingon", SoundType::SOUND_MUSIC);
-	SoundManager::Instance().SetMusicVolume(16);
+	SoundManager::Instance().Load("../Assets/Audio/music.mp3", "bgMusic", SoundType::SOUND_MUSIC);
+	SoundManager::Instance().SetMusicVolume(8);
 
 	// Play Music
-	SoundManager::Instance().PlayMusic("klingon");
+	SoundManager::Instance().PlayMusic("bgMusic");
 
 	
 

@@ -233,6 +233,7 @@ void Enemy::Reset()
 
 void Enemy::Patrol()
 {
+    m_fleeTimer = 3.0f;
     if (GetActionState() != ActionState::PATROL) {
         // Initialize
         SetActionState(ActionState::PATROL);
@@ -338,13 +339,37 @@ void Enemy::Flee()
         // Initialize
         SetActionState(ActionState::FLEE);
     }
-    // RUN AWAY!!!
+    // RUN AWAY!!! If you haven't already tried to hide and regen health first.
+    if (m_alreadyHid)
+    {
+        SetTargetPosition({ static_cast<float>(rand() % 800 + 800), static_cast<float>(rand() % 600 + 600) });
+    }
+    else {
+        
+        if (m_fleeTimer < 0)
+        {
+            m_fleeTimer = 3.0f;
+            if (GetHealth() >= GetMaxHealth())
+            {
+                m_alreadyHid = true;
+                SetHealth(GetMaxHealth());
+            }
+            else
+            {
+                m_alreadyHid = true;
+                SetHealth(GetHealth() + 50.0f);
+            }
+        }
+        m_fleeTimer -= Game::Instance().GetDeltaTime();
+    }
+   
     if (!m_isFleeing)
     {
         std::cout << "fleeing\n";
         m_isFleeing = true;
         SetTargetPosition(GetFleePos());
     }
+
     m_move();
     
 }
@@ -409,6 +434,15 @@ void Enemy::m_move()
     Seek(); // Get our target for this frame
     //                      final Position  Position Term   Velocity      Acceleration Term
     // Kinematic Equation-> Pf            = Pi +            Vi * (time) + (0.5) * Ai * (time * time)
+
+    if (GetActionState() == ActionState::PATROL)
+    {
+        m_isFleeing = false;
+        m_movingTowardsPlayer = false;
+        m_behindCover = false;
+        m_isFleeing = false;
+    }
+
     auto tempnode = new PathNode();
     tempnode->GetTransform()->position=GetTargetPosition();
     tempnode->SetHeight(10);

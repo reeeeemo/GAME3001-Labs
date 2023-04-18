@@ -88,5 +88,7 @@ private:
 
     float m_maxRangeDistance;
     float m_minRangeDistance;
+    float m_fleeTimer;
+    bool m_alreadyHid;
 
 };
