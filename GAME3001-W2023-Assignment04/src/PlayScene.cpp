@@ -124,6 +124,10 @@ void PlayScene::Update()
 					for (float y = pos.y-height/2; y < pos.y+height/2+tile_size; y+=tile_size)
 					{
 						auto path_node = new PathNode();
+						if (!m_isGridEnabled)
+						{
+							path_node->SetVisible(false);
+						}
 						path_node->GetTransform()->position = glm::vec2(x-offset.x-5,y-offset.y+5);
 						AddChild(path_node);
 						m_pGrid.push_back(path_node);
