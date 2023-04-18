@@ -26,6 +26,7 @@ public:
     [[nodiscard]] bool GetIsHit() const;
     [[nodiscard]] glm::vec2 GetFleePos() const;
 
+
     void SetMaxSpeed(float speed);
     void SetTurnRate(float angle);
     void SetAccelerationRate(float rate);
@@ -87,5 +88,5 @@ private:
 
     float m_maxRangeDistance;
     float m_minRangeDistance;
-    
+
 };

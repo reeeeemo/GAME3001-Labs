@@ -7,3 +7,12 @@ run_front1 0 192 64 64
 run_front2 64 192 64 64
 dead 0 256 64 64
 damaged 0 320 64 64
+shoot1 0 384 64 64
+shoot2 64 384 64 64
+shoot_up1 0 448 64 64
+shoot_up2 64 448 64 64
+shoot_down1 0 448 64 64
+shoot_down2 64 448 64 64
+bite 0 512 64 64
+bite_up 0 576 64 64
+bite_down 0 640 64 64

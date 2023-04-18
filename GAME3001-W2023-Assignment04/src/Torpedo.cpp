@@ -59,7 +59,6 @@ std::vector<Torpedo*> TorpedoPool::GetPool()
 
 Torpedo::Torpedo()
 {
-	m_currentAnimationState = TorpedoAnimationState::FIRED;
 	m_speed = 0.0f;
 }
 
@@ -69,16 +68,7 @@ Torpedo::~Torpedo()
 // Renders the torpedo based on their position.
 void Torpedo::Draw()
 {
-	// draw the Torpedo according to animation state
-	switch (m_currentAnimationState)
-	{
-	case TorpedoAnimationState::FIRED:
-		TextureManager::Instance().PlayAnimation(m_textureKey, GetAnimation("fire"),
-			GetTransform()->position, 0.25f, 0, 255, true);
-		break;
-	default:
-		break;
-	}
+	TextureManager::Instance().Draw(m_textureKey, GetTransform()->position, 0, 255, true);
 }
 
 // Updates the torpedo's position
@@ -99,11 +89,6 @@ void Torpedo::Update()
 // Cleanup!
 void Torpedo::Clean()
 {
-}
-
-void Torpedo::SetAnimationState(const TorpedoAnimationState new_state)
-{
-	m_currentAnimationState = new_state;
 }
 
 bool Torpedo::GetDeleteMe()
@@ -127,21 +112,21 @@ void Torpedo::SetTorpedoType(TORPEDO_TYPE type)
 }
 
 // Builds base class animations!
-void Torpedo::BuildAnimations()
-{
-	auto fire_animation = Animation();
-
-	fire_animation.name = "fire";
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired1"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired2"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired3"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired4"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired5"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired6"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired7"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired8"));
-
-	SetAnimation(fire_animation);
-}
+//void Torpedo::BuildAnimations()
+//{
+//	auto fire_animation = Animation();
+//
+//	fire_animation.name = "fire";
+//	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired1"));
+//	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired2"));
+//	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired3"));
+//	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired4"));
+//	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired5"));
+//	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired6"));
+//	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired7"));
+//	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired8"));
+//
+//	SetAnimation(fire_animation);
+//}
 
 

@@ -11,7 +11,6 @@ public:
 	TorpedoKlingon(float speed, glm::vec2 direction, float damage = 30.0f);
 
 private:
-	void BuildAnimations() override;
 };
 
 #endif /* defined (__TORPEDOK___) */

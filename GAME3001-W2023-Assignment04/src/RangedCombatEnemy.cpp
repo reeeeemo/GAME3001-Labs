@@ -16,7 +16,7 @@
 RangedCombatEnemy::RangedCombatEnemy(Scene* scene) :  m_fireCounter(0), m_fireCounterMax(60)
 {				
 	TextureManager::Instance().LoadSpriteSheet("../Assets/sprites/Player/turtle_sheet.txt",
-		"../Assets/sprites/Player/turtle_sheet.png", "turtle");
+		"../Assets/sprites/Player/turtle_sheet_revised.png", "turtle");
 
 	SetMaxSpeed(20.0f);
 	SetTurnRate(5.0f);
@@ -72,34 +72,58 @@ void RangedCombatEnemy::Draw()
 	{
 	case EnemyAnimationState::ENEMY_IDLE_LEFT:
 		current_anim = "idle";
+		if (GetActionState() == ActionState::ATTACK)
+		{
+			current_anim = "shoot";
+		}
 		TextureManager::Instance().PlayAnimation("turtle", GetSprite()->GetAnimation(current_anim),
-			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
-		
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading() - 180), 255, true);
+
 		break;
 	case EnemyAnimationState::ENEMY_IDLE_RIGHT:
 		current_anim = "idle";
+		if (GetActionState() == ActionState::ATTACK)
+		{
+			current_anim = "shoot";
+		}
 		TextureManager::Instance().PlayAnimation("turtle", GetSprite()->GetAnimation(current_anim),
 			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_HORIZONTAL);
 		break;
 	case EnemyAnimationState::ENEMY_RUN_LEFT:
 		current_anim = "run";
+		if (GetActionState() == ActionState::ATTACK)
+		{
+			current_anim = "shoot";
+		}
 		TextureManager::Instance().PlayAnimation("turtle", GetSprite()->GetAnimation(current_anim),
-			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading() - 180), 255, true);
 		break;
 	case EnemyAnimationState::ENEMY_RUN_RIGHT:
 		current_anim = "run";
+		if (GetActionState() == ActionState::ATTACK)
+		{
+			current_anim = "shoot";
+		}
 		TextureManager::Instance().PlayAnimation("turtle", GetSprite()->GetAnimation(current_anim),
 			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_HORIZONTAL);
 		break;
 	case EnemyAnimationState::ENEMY_RUN_DOWN:
 		current_anim = "run_back";
+		if (GetActionState() == ActionState::ATTACK)
+		{
+			current_anim = "shoot_down";
+		}
 		TextureManager::Instance().PlayAnimation("turtle", GetSprite()->GetAnimation(current_anim),
-			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading() + 90.0f), 255, true, SDL_FLIP_NONE);
 		break;
 	case EnemyAnimationState::ENEMY_RUN_UP:
 		current_anim = "run_front";
+		if (GetActionState() == ActionState::ATTACK)
+		{
+			current_anim = "shoot_up";
+		}
 		TextureManager::Instance().PlayAnimation("turtle", GetSprite()->GetAnimation(current_anim),
-			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading() - 90.0f), 255, true, SDL_FLIP_NONE);
 		break;
 	case EnemyAnimationState::ENEMY_DAMAGE:
 		current_anim = "damaged";
@@ -227,6 +251,30 @@ void RangedCombatEnemy::BuildAnimations()
 	damage_animation.frames.push_back(GetSprite()->GetSpriteSheet()->GetFrame("damaged"));
 
 	GetSprite()->SetAnimation(damage_animation);
+
+	Animation shoot_animation = Animation();
+
+	shoot_animation.name = "shoot";
+	shoot_animation.frames.push_back(GetSprite()->GetSpriteSheet()->GetFrame("shoot1"));
+	shoot_animation.frames.push_back(GetSprite()->GetSpriteSheet()->GetFrame("shoot2"));
+
+	GetSprite()->SetAnimation(shoot_animation);
+
+	Animation shoot_up_animation = Animation();
+
+	shoot_up_animation.name = "shoot_up";
+	shoot_up_animation.frames.push_back(GetSprite()->GetSpriteSheet()->GetFrame("shoot_up1"));
+	shoot_up_animation.frames.push_back(GetSprite()->GetSpriteSheet()->GetFrame("shoot_up2"));
+
+	GetSprite()->SetAnimation(shoot_up_animation);
+
+	Animation shoot_down_animation = Animation();
+
+	shoot_down_animation.name = "shoot_down";
+	shoot_down_animation.frames.push_back(GetSprite()->GetSpriteSheet()->GetFrame("shoot_down1"));
+	shoot_down_animation.frames.push_back(GetSprite()->GetSpriteSheet()->GetFrame("shoot_down2"));
+
+	GetSprite()->SetAnimation(shoot_down_animation);
 }
 
 //void RangedCombatEnemy::m_move()

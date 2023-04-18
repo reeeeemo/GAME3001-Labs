@@ -4,17 +4,12 @@
 TorpedoKlingon::TorpedoKlingon(float speed = 0.0f, glm::vec2 direction = { 0.0, 0.0 }, float damage)
 {
 	// Variable initialization.
-	m_currentAnimationState = TorpedoAnimationState::FIRED;
 	m_speed = speed;
 
-	m_textureKey = "TorpedoKlingon";
+	m_textureKey = "projectile";
 
 
-	TextureManager::Instance().LoadSpriteSheet(
-		"../Assets/sprites/torpedo.txt",
-		"../Assets/sprites/torpedo_k.png", 
-		m_textureKey);
-
+	TextureManager::Instance().Load("../Assets/sprites/Player/projectile.png", m_textureKey);
 
 	SetSpriteSheet(TextureManager::Instance().GetSpriteSheet(m_textureKey));
 	SetDamage(damage);
@@ -32,7 +27,6 @@ TorpedoKlingon::TorpedoKlingon(float speed = 0.0f, glm::vec2 direction = { 0.0, 
 
 	m_direction = { direction.x * speed, direction.y * speed };
 	
-	BuildAnimations();
 }
 
 
@@ -50,19 +44,3 @@ TorpedoKlingon::TorpedoKlingon(float speed = 0.0f, glm::vec2 direction = { 0.0, 
 //	}
 //}
 
-void TorpedoKlingon::BuildAnimations()
-{
-	auto fire_animation = Animation();
-
-	fire_animation.name = "fire";
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired1"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired2"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired3"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired4"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired5"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired6"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired7"));
-	fire_animation.frames.push_back(GetSpriteSheet()->GetFrame("fired8"));
-
-	SetAnimation(fire_animation);
-}

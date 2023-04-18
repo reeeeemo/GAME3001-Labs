@@ -11,7 +11,7 @@
 CloseCombatEnemy::CloseCombatEnemy(Scene* scene)
 {
 	TextureManager::Instance().LoadSpriteSheet("../Assets/sprites/Player/turtle_sheet.txt",
-		"../Assets/sprites/Player/turtle_sheet.png", "turtle");
+		"../Assets/sprites/Player/turtle_sheet_revised.png", "turtle");
 
 	SetMaxSpeed(20.0f);
 	SetTurnRate(5.0f);
@@ -66,34 +66,57 @@ void CloseCombatEnemy::Draw()
 	{
 	case EnemyAnimationState::ENEMY_IDLE_LEFT:
 		current_anim = "idle";
+		if (GetActionState() == ActionState::ATTACK)
+		{
+			current_anim = "bite";
+		}
 		TextureManager::Instance().PlayAnimation("turtle", GetSprite()->GetAnimation(current_anim),
-			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
-
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading() - 180), 255, true);
 		break;
 	case EnemyAnimationState::ENEMY_IDLE_RIGHT:
 		current_anim = "idle";
+		if (GetActionState() == ActionState::ATTACK)
+		{
+			current_anim = "bite";
+		}
 		TextureManager::Instance().PlayAnimation("turtle", GetSprite()->GetAnimation(current_anim),
-			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_VERTICAL);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_HORIZONTAL);
 		break;
 	case EnemyAnimationState::ENEMY_RUN_LEFT:
 		current_anim = "run";
+		if (GetActionState() == ActionState::ATTACK)
+		{
+			current_anim = "bite";
+		}
 		TextureManager::Instance().PlayAnimation("turtle", GetSprite()->GetAnimation(current_anim),
-			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading() - 180), 255, true);
 		break;
 	case EnemyAnimationState::ENEMY_RUN_RIGHT:
 		current_anim = "run";
+		if (GetActionState() == ActionState::ATTACK)
+		{
+			current_anim = "bite";
+		}
 		TextureManager::Instance().PlayAnimation("turtle", GetSprite()->GetAnimation(current_anim),
-			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_VERTICAL);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true, SDL_FLIP_HORIZONTAL);
 		break;
 	case EnemyAnimationState::ENEMY_RUN_DOWN:
 		current_anim = "run_back";
+		if (GetActionState() == ActionState::ATTACK)
+		{
+			current_anim = "bite_down";
+		}
 		TextureManager::Instance().PlayAnimation("turtle", GetSprite()->GetAnimation(current_anim),
-			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading() + 90.0f), 255, true, SDL_FLIP_NONE);
 		break;
 	case EnemyAnimationState::ENEMY_RUN_UP:
 		current_anim = "run_front";
+		if (GetActionState() == ActionState::ATTACK)
+		{
+			current_anim = "bite_up";
+		}
 		TextureManager::Instance().PlayAnimation("turtle", GetSprite()->GetAnimation(current_anim),
-			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
+			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading() - 90.0f), 255, true, SDL_FLIP_NONE);
 		break;
 	case EnemyAnimationState::ENEMY_DAMAGE:
 		current_anim = "damaged";
@@ -106,6 +129,7 @@ void CloseCombatEnemy::Draw()
 			GetTransform()->position, 0.12f, static_cast<double>(GetCurrentHeading()), 255, true);
 		break;
 	}
+
 
 	SetWidth(GetSprite()->GetAnimation(current_anim).frames[0].w);
 	SetHeight(GetSprite()->GetAnimation(current_anim).frames[0].h);
@@ -170,6 +194,8 @@ void CloseCombatEnemy::Attack()
 	else {
 		timerUntilHit -= Game::Instance().GetDeltaTime();
 	}
+
+	
 }
 
 
@@ -359,4 +385,25 @@ void CloseCombatEnemy::BuildAnimations()
 	damage_animation.frames.push_back(GetSprite()->GetSpriteSheet()->GetFrame("damaged"));
 
 	GetSprite()->SetAnimation(damage_animation);
+
+	Animation bite_animation = Animation();
+
+	bite_animation.name = "bite";
+	bite_animation.frames.push_back(GetSprite()->GetSpriteSheet()->GetFrame("bite"));
+
+	GetSprite()->SetAnimation(bite_animation);
+
+	Animation bite_up_animation = Animation();
+
+	bite_up_animation.name = "bite_up";
+	bite_up_animation.frames.push_back(GetSprite()->GetSpriteSheet()->GetFrame("bite_up"));
+
+	GetSprite()->SetAnimation(bite_up_animation);
+
+	Animation bite_down_animation = Animation();
+
+	bite_down_animation.name = "bite_down";
+	bite_down_animation.frames.push_back(GetSprite()->GetSpriteSheet()->GetFrame("bite_down"));
+
+	GetSprite()->SetAnimation(bite_down_animation);
 }

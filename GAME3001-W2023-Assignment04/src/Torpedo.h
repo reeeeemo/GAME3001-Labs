@@ -25,7 +25,6 @@ public:
 	virtual void Clean() override;
 
 	// setters
-	virtual void SetAnimationState(TorpedoAnimationState new_state);
 	void SetDamage(float damage){m_damage=damage;}
 	float GetDamage(){return m_damage;}
 
@@ -36,9 +35,6 @@ public:
 	void SetTorpedoType(TORPEDO_TYPE type);
 
 protected:
-	virtual void BuildAnimations();
-
-	TorpedoAnimationState m_currentAnimationState;
 
 	std::string m_textureKey;
 	float m_speed;

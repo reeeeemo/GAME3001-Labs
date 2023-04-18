@@ -32,6 +32,7 @@ private:
 	//void m_move() override;
 	void m_buildTree() override;
 	float timerUntilHit;
+	SDL_RendererFlip m_flip;
 };
 
 
