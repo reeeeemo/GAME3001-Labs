@@ -9,6 +9,7 @@ class Background final : public DisplayObject
 public:
 	// constructors
 	Background();
+	Background(std::string fileName, std::string textureFile);
 
 	// destructor
 	~Background();
@@ -18,7 +19,7 @@ public:
 	void Update() override;
 	void Clean() override;
 private:
-
+	std::string m_key;
 };
 
 #endif /* defined (__OBSTACLE__) */

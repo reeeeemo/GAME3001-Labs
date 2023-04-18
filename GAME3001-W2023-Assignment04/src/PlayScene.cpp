@@ -166,7 +166,7 @@ void PlayScene::Update()
 				tempEnemy->GetTree()->GetEnemyHitNode()->SetHit(tempEnemy->GetIsHit()); 
 				tempEnemy->CheckAgentLOSToTarget(m_pPlayer, m_pObstacles);
 				
-				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange()|| tempEnemy->HasLOS());
+				tempEnemy->GetTree()->GetPlayerDetectedNode()->SetPlayerDetected(distance < tempEnemy->GetMaxRange() && tempEnemy->HasLOS());
 				// Within LOS Distance.. but not too close (optimum firing range)
 				tempEnemy->GetTree()->GetRangedCombatNode()->SetIsWithinCombatRange(distance<= tempEnemy->GetMaxRange() && distance >= tempEnemy->GetMinRange());
 
