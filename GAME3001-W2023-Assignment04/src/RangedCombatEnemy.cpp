@@ -24,6 +24,7 @@ RangedCombatEnemy::RangedCombatEnemy(Scene* scene) :  m_fireCounter(0), m_fireCo
 	SetStartPos(glm::vec2(300.0f, 500.0f));
 	SetScene(scene);
 	SetSprite(new PlaceholderSprite);
+	SetFleePos(glm::vec2(rand() % 800 + 800, rand() % 600 + 600));
 
 	SetMaxRange(350);
 	SetMinRange(100);

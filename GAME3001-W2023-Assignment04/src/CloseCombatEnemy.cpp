@@ -19,6 +19,7 @@ CloseCombatEnemy::CloseCombatEnemy(Scene* scene)
 	SetStartPos(glm::vec2(300.0f, 500.0f));
 	SetScene(scene);
 	SetSprite(new PlaceholderSprite);
+	SetFleePos(glm::vec2(rand() % 800 + 800, rand() % 600 + 600));
 
 	SetHealth(100);
 

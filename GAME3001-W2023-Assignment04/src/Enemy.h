@@ -24,6 +24,7 @@ public:
     [[nodiscard]] int GetWaypoint() const;
     [[nodiscard]] bool GetMovingTowardsPlayer() const;
     [[nodiscard]] bool GetIsHit() const;
+    [[nodiscard]] glm::vec2 GetFleePos() const;
 
     void SetMaxSpeed(float speed);
     void SetTurnRate(float angle);
@@ -40,6 +41,7 @@ public:
     void SetWaypoint(int waypoint);
     void SetMovingTowardsPlayer(bool towards);
     void SetIsHit(bool hit);
+    void SetFleePos(glm::vec2 fleePos);
 
     // public functions
     virtual void Seek();
@@ -81,6 +83,7 @@ private:
     bool m_isFleeing;
     float coverTimer;
     bool m_isHit;
+    glm::vec2 m_fleePos;
 
     float m_maxRangeDistance;
     float m_minRangeDistance;

@@ -81,9 +81,19 @@ bool Enemy::GetIsHit() const
     return m_isHit;
 }
 
+glm::vec2 Enemy::GetFleePos() const
+{
+    return m_fleePos;
+}
+
 void Enemy::SetIsHit(bool hit)
 {
     m_isHit = hit;
+}
+
+void Enemy::SetFleePos(glm::vec2 fleePos)
+{
+    m_fleePos = fleePos;
 }
 
 void Enemy::SetMaxRange(float range)
@@ -258,7 +268,7 @@ void Enemy::MoveToLOS()
         if (node->HasLOS())
         {
             float temp = Util::Distance(node->GetTransform()->position, GetTransform()->position);
-            if (temp < distance && HasLOS() && distance >= GetMinRange())
+            if (temp < distance  && distance >= GetMinRange())
             {
                 curNode = node;
                 distance = temp;
@@ -274,24 +284,18 @@ void Enemy::MoveToLOS()
 
 void Enemy::MoveToPlayer()
 {
-    if (!HasLOS())
-    {
-        MoveToLOS();
-    }
-    else
-    {
-        auto scene = dynamic_cast<PlayScene*>(m_pScene);
-        m_movingTowardsPlayer = true;
-        
+    
+    auto scene = dynamic_cast<PlayScene*>(m_pScene);
+    m_movingTowardsPlayer = true;
+    
 
-        if (GetActionState() != ActionState::MOVE_TO_PLAYER) {
-            // Initialize
-            SetActionState(ActionState::MOVE_TO_PLAYER);
-        }
-        // TODO: setup another action to take when moving to the player.
-        SetTargetPosition(scene->GetTarget()->GetTransform()->position);
-        m_move();
+    if (GetActionState() != ActionState::MOVE_TO_PLAYER) {
+        // Initialize
+        SetActionState(ActionState::MOVE_TO_PLAYER);
     }
+    // TODO: setup another action to take when moving to the player.
+    SetTargetPosition(scene->GetTarget()->GetTransform()->position);
+    m_move();
     
 }
 
@@ -310,7 +314,7 @@ void Enemy::MoveToRange()
     for (const auto node : scene->GetGrid())
     {
         float temp = Util::Distance(scene->GetTarget()->GetTransform()->position, node->GetTransform()->position);
-        if (temp >= GetMinRange() && node->HasLOS() && temp < distance)
+        if (temp >= GetMinRange() && node->HasLOS()&& temp < distance)
         {
             curNode = node;
             distance = temp;
@@ -321,14 +325,9 @@ void Enemy::MoveToRange()
         if(CheckAgentLOSToTarget(curNode, dynamic_cast<PlayScene*>(GetScene())->GetObstacles()))
         {
             SetTargetPosition(curNode->GetTransform()->position);
-            m_move();
-        }
-        else
-        {
-            MoveToLOS();
         }
     }
-    //m_move();
+    m_move();
 }
 
 
@@ -344,16 +343,16 @@ void Enemy::Flee()
     {
         std::cout << "fleeing\n";
         m_isFleeing = true;
-        SetTargetPosition(glm::vec2(rand() % 800 + 800, rand() % 600 + 600));
+        SetTargetPosition(GetFleePos());
     }
     m_move();
+    
 }
 
 void Enemy::MoveToCover()
 {
     auto scene = dynamic_cast<PlayScene*>(m_pScene);
     m_movingTowardsPlayer = true;
-    m_behindCover = true;
 
     if (GetActionState() != ActionState::MOVE_TO_COVER) {
         // Initialize
@@ -376,21 +375,15 @@ void Enemy::MoveToCover()
         if(CheckAgentLOSToTarget(curNode, dynamic_cast<PlayScene*>(GetScene())->GetObstacles()))
         {
             SetTargetPosition(curNode->GetTransform()->position);
-            m_move();
-        }
-        else
-        {
-            MoveToLOS();
         }
         coverTimer = rand() % 5;
     }
-    
-   // m_move();
+    m_move();
 }
 
 void Enemy::WaitBehindCover()
 {
-    auto scene = dynamic_cast<PlayScene*>(m_pScene);
+    m_behindCover = true;
     if (GetActionState() != ActionState::WAIT_BEHIND_COVER) {
         // Initialize
         SetActionState(ActionState::WAIT_BEHIND_COVER);
@@ -416,7 +409,30 @@ void Enemy::m_move()
     Seek(); // Get our target for this frame
     //                      final Position  Position Term   Velocity      Acceleration Term
     // Kinematic Equation-> Pf            = Pi +            Vi * (time) + (0.5) * Ai * (time * time)
-
+    auto tempnode = new PathNode();
+    tempnode->GetTransform()->position=GetTargetPosition();
+    tempnode->SetHeight(10);
+    tempnode->SetWidth(10);
+    if(!CheckAgentLOSToTarget(tempnode, dynamic_cast<PlayScene*>(GetScene())->GetObstacles()))
+    {
+        auto scene = dynamic_cast<PlayScene*>(m_pScene);
+        float distance = 1000.00f;
+        PathNode* curNode = nullptr;
+        for (const auto node : scene->GetGrid())
+        {
+            float temp = Util::Distance(node->GetTransform()->position, GetTransform()->position);
+            if (temp < distance && !node->HasLOS())
+            {
+                curNode = node;
+                distance = temp;
+            }
+        }
+        if (curNode != nullptr)
+        {
+            SetTargetPosition(curNode->GetTransform()->position);
+        }
+    }
+    
     const float dt = Game::Instance().GetDeltaTime();
 
     // accessing the position Term
