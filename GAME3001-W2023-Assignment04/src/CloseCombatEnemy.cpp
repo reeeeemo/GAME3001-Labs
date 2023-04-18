@@ -40,7 +40,7 @@ CloseCombatEnemy::CloseCombatEnemy(Scene* scene)
 	SetMinRange(5.0f);
 	
 	SetCurrentHeading(0.0f); // Current facing angle
-	SetLOSDistance(400.0f);
+	SetLOSDistance(800.0f);
 	SetWhiskerAngle(45.0f);
 	SetLOSColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)); // Default LOS Colour = Red
 
